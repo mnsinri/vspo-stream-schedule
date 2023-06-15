@@ -3,50 +3,32 @@ import styled from "styled-components";
 import { animated, useSpring } from "@react-spring/web";
 import { DateBorderProps } from "../types";
 import { useTheme, useTime } from "../hooks";
-import { theme } from "../theme";
 import { getFormatedDate, parseJST } from "../utils";
 
-const Container = styled.div``;
-
-const MainBorder = styled(animated.div)`
-  position: absolute;
-  left: 0;
-  width: 100vw;
-  height: 25px;
-  z-index: -1;
+const Container = styled.div`
+  display: flex;
+  height: 50px;
 `;
 
-const SubBorder = styled(animated.div)`
-  position: absolute;
-  left: 60%;
-  margin-top: 15px;
-  width: 40%;
-  height: 15px;
-  border-radius: 8px 0 0 8px;
-  z-index: -1;
+const Icon = styled.div`
+  display: flex;
+  gap: 5px;
+  margin-top: auto;
+  width: 30px;
+  aspect-ratio: 1;
 `;
 
-const LabelContainer = styled.div`
-  position: relative;
-  width: 100%;
+const Bar = styled(animated.div)`
+  margin-top: auto;
+  width: 5px;
 `;
 
 const DateLabel = styled(animated.div)`
-  position: absolute;
-  left: 30px;
-  top: -16px;
-  font-size: 40px;
+  font-size: 48px;
   font-family: "Itim", cursive;
-
-  ${theme.breakpoint.md`
-    left: 60px;
-  `}
+  letter-spacing: -0.03em;
+  margin-top: 5px;
 `;
-
-const toTextShadow = (color: string) =>
-  `2px 2px 1px ${color}, -2px 2px 1px ${color}, 2px -2px 1px ${color},
-  -2px -2px 1px ${color}, 2px 0px 1px ${color}, 0px 2px 1px ${color},
-  -2px 0px 1px ${color}, 0px -2px 1px ${color}`;
 
 export const DateBorder: React.FC<DateBorderProps> = ({
   dateString,
@@ -82,24 +64,38 @@ export const DateBorder: React.FC<DateBorderProps> = ({
     return dateString;
   };
 
-  const { textShadow } = useSpring({
-    textShadow: toTextShadow(colors.base.primary),
+  const calcHeight = (max: number) => max - 7 * Math.random();
+
+  const { lh, mh, rh } = useSpring({
+    from: {
+      lh: 0,
+      mh: 0,
+      rh: 0,
+    },
+    to: {
+      lh: calcHeight(30),
+      mh: calcHeight(20),
+      rh: calcHeight(16),
+    },
+    config: colors.config,
   });
 
   return (
     <Container {...props}>
-      <MainBorder style={{ backgroundColor: springColors.main.primary }} />
-      <SubBorder style={{ backgroundColor: springColors.main.secondary }} />
-      <LabelContainer>
-        <DateLabel
-          style={{
-            color: springColors.text.primary,
-            textShadow,
-          }}
-        >
-          {parseDateforView(dateString)}
-        </DateLabel>
-      </LabelContainer>
+      <Icon>
+        <Bar
+          style={{ height: lh, backgroundColor: springColors.main.primary }}
+        />
+        <Bar
+          style={{ height: mh, backgroundColor: springColors.main.secondary }}
+        />
+        <Bar
+          style={{ height: rh, backgroundColor: springColors.main.primary }}
+        />
+      </Icon>
+      <DateLabel style={{ color: springColors.text.primary }}>
+        {parseDateforView(dateString)}
+      </DateLabel>
     </Container>
   );
 };

@@ -36,14 +36,22 @@ const Container = styled(animated.div)<{ vh: string }>`
   `}
 `;
 
-const LabelContainer = styled.div`
-  margin: 0 auto;
-  padding: 25px 0 50px 0;
+const Spacer = styled.div`
+  height: 20px;
 `;
 
 const TableContainer = styled.div`
-  width: 90%;
+  width: 87%;
   margin: 0 auto;
+  padding-bottom: 50px;
+
+  ${theme.breakpoint.lg`
+    width: 75%;
+  `}
+
+  ${theme.breakpoint.xl`
+    width: 87%;
+  `}
 `;
 
 export const StreamingView: React.FC = () => {
@@ -73,16 +81,12 @@ export const StreamingView: React.FC = () => {
       {Array.from(streamMap)
         .sort((a, b) => (a[0] > b[0] ? 1 : -1))
         .map((m) => (
-          <div key={m[0]}>
-            <LabelContainer>
-              <DateBorder dateString={m[0]} />
-            </LabelContainer>
-            <TableContainer>
-              <StreamingTable streams={m[1]} />
-            </TableContainer>
-          </div>
+          <TableContainer key={m[0]}>
+            <DateBorder dateString={m[0]} />
+            <Spacer />
+            <StreamingTable streams={m[1]} />
+          </TableContainer>
         ))}
-      <div style={{ paddingBottom: "50px" }} />
     </Container>
   );
 };

@@ -11,8 +11,7 @@ const Container = styled(animated.div)`
   display: grid;
   grid-template-columns: repeat(auto-fill, 160px);
   grid-gap: 20px 0px;
-  justify-content: space-around;
-  align-content: space-around;
+  justify-content: space-between;
 
   ${theme.breakpoint.md`
     grid-template-columns: repeat(auto-fill, 320px);
