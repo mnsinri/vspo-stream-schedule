@@ -36,13 +36,9 @@ const Container = styled(animated.div)<{ vh: string }>`
   `}
 `;
 
-const Spacer = styled.div`
-  height: 20px;
-`;
-
-const TableContainer = styled.div`
-  width: 87%;
+const InnerContainer = styled(animated.div)`
   margin: 0 auto;
+  width: 87%;
   padding-bottom: 50px;
 
   ${theme.breakpoint.lg`
@@ -52,6 +48,15 @@ const TableContainer = styled.div`
   ${theme.breakpoint.xl`
     width: 87%;
   `}
+`;
+
+const Spacer = styled.div`
+  height: 20px;
+`;
+
+const TableContainer = styled.div`
+  width: 100%;
+  margin: 0 auto;
 `;
 
 export const StreamingView: React.FC = () => {
@@ -77,16 +82,18 @@ export const StreamingView: React.FC = () => {
 
   return (
     <Container vh={`${y}px`}>
-      <Header />
-      {Array.from(streamMap)
-        .sort((a, b) => (a[0] > b[0] ? 1 : -1))
-        .map((m) => (
-          <TableContainer key={m[0]}>
-            <DateBorder dateString={m[0]} />
-            <Spacer />
-            <StreamingTable streams={m[1]} />
-          </TableContainer>
-        ))}
+      <InnerContainer>
+        <Header />
+        {Array.from(streamMap)
+          .sort((a, b) => (a[0] > b[0] ? 1 : -1))
+          .map((m) => (
+            <TableContainer key={m[0]}>
+              <DateBorder dateString={m[0]} />
+              <Spacer />
+              <StreamingTable streams={m[1]} />
+            </TableContainer>
+          ))}
+      </InnerContainer>
     </Container>
   );
 };
