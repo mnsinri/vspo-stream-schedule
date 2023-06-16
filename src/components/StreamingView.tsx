@@ -63,8 +63,10 @@ export const StreamingView: React.FC = () => {
   const { streams } = useVspoStreams();
   const { y } = useWindowSize();
 
-  const streamMap = streams.youtube.reduce(
-    (map: Map<string, StreamingInfo[]>, cur: StreamingInfo) => {
+  const streamMap = streams.youtube
+    //uploadが新しい順→古い順
+    .reverse()
+    .reduce((map: Map<string, StreamingInfo[]>, cur: StreamingInfo) => {
       const fDate = getFormatedDate(
         parseJST(Date.parse(cur.scheduledStartTime))
       );
@@ -76,23 +78,24 @@ export const StreamingView: React.FC = () => {
       }
 
       return map;
-    },
-    new Map<string, StreamingInfo[]>()
+    }, new Map<string, StreamingInfo[]>());
+
+  //日付が古い順にソート
+  const sortedStreams = Array.from(streamMap).sort((a, b) =>
+    a[0] > b[0] ? 1 : -1
   );
 
   return (
     <Container vh={`${y}px`}>
       <InnerContainer>
         <Header />
-        {Array.from(streamMap)
-          .sort((a, b) => (a[0] > b[0] ? 1 : -1))
-          .map((m) => (
-            <TableContainer key={m[0]}>
-              <DateBorder dateString={m[0]} />
-              <Spacer />
-              <StreamingTable streams={m[1]} />
-            </TableContainer>
-          ))}
+        {sortedStreams.map((m) => (
+          <TableContainer key={m[0]}>
+            <DateBorder dateString={m[0]} />
+            <Spacer />
+            <StreamingTable streams={m[1]} />
+          </TableContainer>
+        ))}
       </InnerContainer>
     </Container>
   );
