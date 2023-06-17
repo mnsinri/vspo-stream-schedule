@@ -22,15 +22,6 @@ export const VspoStreamingProvider: React.FC<ChildrenNode> = ({ children }) => {
     return v;
   });
 
-  // youtubeStreams.push({
-  //   channelId: "UCyLGcqYs7RsBb3L0SJfzGYA",
-  //   id: "zDZMvolfkps",
-  //   scheduledStartTime: "2023-06-16T10:00:00Z",
-  //   thumbnail: "https://i.ytimg.com/vi/zDZMvolfkps/mqdefault_live.jpg",
-  //   title: "【BLUEPROTOCOL】一筋の光【 ぶいすぽ  / 花芽すみれ 】",
-  //   service: "youtube",
-  // });
-
   const streams = {
     streams: {
       youtube: youtubeStreams,

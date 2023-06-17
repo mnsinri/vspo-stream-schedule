@@ -31,25 +31,29 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
   return (
     <Container {...props}>
       {checkStream() ? (
-        streams.map((s) => {
-          const ch = channels.youtube.find((c) => c.id === s.channelId);
-          if (ch === undefined) {
-            return null;
-          }
+        streams
+          .sort((a, b) =>
+            a.scheduledStartTime > b.scheduledStartTime ? 1 : -1
+          )
+          .map((s) => {
+            const ch = channels.youtube.find((c) => c.id === s.channelId);
+            if (ch === undefined) {
+              return null;
+            }
 
-          return (
-            <StreamingCard
-              key={s.id}
-              title={s.title}
-              thumbnail={s.thumbnail}
-              name={ch.name}
-              icon={ch.thumbnail}
-              service={s.service}
-              url={streamingLink(s.id)}
-              scheduledStartTime={s.scheduledStartTime}
-            />
-          );
-        })
+            return (
+              <StreamingCard
+                key={s.id}
+                title={s.title}
+                thumbnail={s.thumbnail}
+                name={ch.name}
+                icon={ch.thumbnail}
+                service={s.service}
+                url={streamingLink(s.id)}
+                scheduledStartTime={s.scheduledStartTime}
+              />
+            );
+          })
       ) : (
         <h1>No data GG</h1>
       )}

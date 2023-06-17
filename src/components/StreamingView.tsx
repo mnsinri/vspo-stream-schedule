@@ -39,7 +39,6 @@ const Container = styled(animated.div)<{ vh: string }>`
 const InnerContainer = styled(animated.div)`
   margin: 0 auto;
   width: 87%;
-  padding-bottom: 50px;
 
   ${theme.breakpoint.lg`
     width: 75%;
@@ -57,6 +56,7 @@ const Spacer = styled.div`
 const TableContainer = styled.div`
   width: 100%;
   margin: 0 auto;
+  padding-bottom: 40px;
 `;
 
 export const StreamingView: React.FC = () => {
