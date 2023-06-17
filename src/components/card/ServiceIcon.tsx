@@ -3,51 +3,50 @@ import { ServiceIconProps } from "../../types";
 import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { FaYoutube } from "react-icons/fa";
-import { useTheme, useTime, useWindowSize } from "../../hooks";
+import { useTheme, useWindowSize } from "../../hooks";
 import { theme } from "../../theme";
 import { parseJST } from "../../utils";
 
 const IconPanel = styled(animated.div)`
   display: flex;
-  height: 16px;
+  height: 18px;
   border-radius: 8px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
   ${theme.breakpoint.md`
-    height: 30px;
+    height: 28px;
     border-radius: 15px;
-    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
   `}
 `;
 
 const IconContainer = styled(animated.div)`
   display: flex;
+  align-items: center;
   gap: 2px;
   height: 14px;
   margin: auto;
-  padding-top: 1px;
 
   ${theme.breakpoint.md`
     gap: 5px;
-    height: 23px;
-    padding-top: 2px;
+    height: 24px;
   `}
 `;
 
 const Icon = styled(animated(FaYoutube))`
-  height: 12px;
+  height: 90%;
   width: 12px;
-  margin: auto 0;
+  margin-top: 1px;
 
   ${theme.breakpoint.md`
-    height: 20px;
     width: 20px;
-  `}
+  `};
 `;
 
 const StateText = styled(animated.div)`
   font-weight: bold;
   font-size: 10px;
+  margin-bottom: 1px;
 
   ${theme.breakpoint.md`
     font-size: 16px;
@@ -65,13 +64,12 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   isExpand,
   ...props
 }) => {
-  const time = useTime();
   const { colors } = useTheme();
   const startTime = useRef(new Date(scheduledStartTime));
   const { isMobile } = useWindowSize();
 
-  const checkLive = () => startTime.current.getTime() < time.current.getTime();
-  const [isLive, setLive] = useState(checkLive());
+  const checkLive = () => startTime.current.getTime() < Date.now();
+  const [isLive, setLive] = useState(false);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -79,7 +77,12 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
         setLive(true);
         clearInterval(timerId);
       }
-    }, 1000);
+    }, 30000);
+
+    if (checkLive()) {
+      setLive(true);
+      clearInterval(timerId);
+    }
 
     return () => clearInterval(timerId);
   }, []);
@@ -95,7 +98,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   };
 
   const mobileSpringConfig = {
-    width: isExpand ? "48px" : "16px",
+    width: isExpand ? "50px" : "22px",
   };
 
   const { width, display, color } = useSpring({

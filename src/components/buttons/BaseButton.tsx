@@ -6,8 +6,8 @@ import { BaseButtonProps } from "../../types";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 27px;
+  height: 27px;
 `;
 
 export const BaseButton: React.FC<BaseButtonProps> = ({

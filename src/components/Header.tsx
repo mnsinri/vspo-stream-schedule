@@ -34,28 +34,30 @@ const Title = styled.div`
 const Icon = styled.img`
   width: 60px;
   height: 60px;
-  display: flex;
-  justify-content: center;
 
   ${theme.breakpoint.md`
-    width: 40px;
-    height: 40px;
-    margin-left: 35px;
+    width: 50px;
+    height: 50px;
   `}
 `;
 
 const TitleText = styled(animated.div)`
   margin-left: 10px;
-  margin-top: 2px;
+  margin-top: 8px;
   font-size: 28px;
   font-family: "Itim", cursive;
   letter-spacing: -0.05em;
 `;
 
 const Wrapper = styled.div`
-  width: 120px;
+  width: 35px;
   display: flex;
   justify-content: center;
+
+  ${theme.breakpoint.md`
+    width: 120px;
+    justify-content: flex-end;
+  `}
 `;
 
 export const Header: React.FC = () => {

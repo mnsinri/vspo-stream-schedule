@@ -5,7 +5,7 @@ import { theme } from "../theme";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
 import { useVspoStreams, useWindowSize } from "../hooks";
-import { StreamingInfo } from "../types";
+import { StreamInfo } from "../types";
 import { parseJST, getFormatedDate } from "../utils";
 import { Header } from "./Header";
 
@@ -36,22 +36,37 @@ const Container = styled(animated.div)<{ vh: string }>`
   `}
 `;
 
-const LabelContainer = styled.div`
+const InnerContainer = styled(animated.div)`
   margin: 0 auto;
-  padding: 25px 0 50px 0;
+  width: 87%;
+
+  ${theme.breakpoint.lg`
+    width: 75%;
+  `}
+
+  ${theme.breakpoint.xl`
+    width: 87%;
+  `}
+`;
+
+const Spacer = styled.div`
+  height: 20px;
 `;
 
 const TableContainer = styled.div`
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
+  padding-bottom: 40px;
 `;
 
 export const StreamingView: React.FC = () => {
-  const { streams } = useVspoStreams();
+  const { youtube } = useVspoStreams();
   const { y } = useWindowSize();
 
-  const streamMap = streams.youtube.reduce(
-    (map: Map<string, StreamingInfo[]>, cur: StreamingInfo) => {
+  const streamMap = youtube
+    //uploadが新しい順→古い順
+    .reverse()
+    .reduce((map: Map<string, StreamInfo[]>, cur: StreamInfo) => {
       const fDate = getFormatedDate(
         parseJST(Date.parse(cur.scheduledStartTime))
       );
@@ -63,26 +78,25 @@ export const StreamingView: React.FC = () => {
       }
 
       return map;
-    },
-    new Map<string, StreamingInfo[]>()
+    }, new Map<string, StreamInfo[]>());
+
+  //日付が古い順にソート
+  const sortedStreams = Array.from(streamMap).sort((a, b) =>
+    a[0] > b[0] ? 1 : -1
   );
 
   return (
     <Container vh={`${y}px`}>
-      <Header />
-      {Array.from(streamMap)
-        .sort((a, b) => (a[0] > b[0] ? 1 : -1))
-        .map((m) => (
-          <div key={m[0]}>
-            <LabelContainer>
-              <DateBorder dateString={m[0]} />
-            </LabelContainer>
-            <TableContainer>
-              <StreamingTable streams={m[1]} />
-            </TableContainer>
-          </div>
+      <InnerContainer>
+        <Header />
+        {sortedStreams.map((m) => (
+          <TableContainer key={m[0]}>
+            <DateBorder dateString={m[0]} />
+            <Spacer />
+            <StreamingTable streams={m[1]} />
+          </TableContainer>
         ))}
-      <div style={{ paddingBottom: "50px" }} />
+      </InnerContainer>
     </Container>
   );
 };

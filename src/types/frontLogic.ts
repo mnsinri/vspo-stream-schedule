@@ -1,4 +1,4 @@
-export type ChannelInfo = {
+export type ChannelDTO = {
   id: string;
   name: string;
   thumbnail: string;
@@ -6,7 +6,7 @@ export type ChannelInfo = {
   service: "youtube" | "twitch";
 };
 
-export type StreamingInfo = {
+export type StreamDTO = {
   channelId: string;
   id: string;
   title: string;
@@ -16,12 +16,12 @@ export type StreamingInfo = {
 };
 
 export type ChannelCache = {
-  channels: ChannelInfo[];
+  channels: ChannelDTO[];
   timestamp: string;
 };
 
 export type StreamingCache = {
-  streams: StreamingInfo[];
+  streams: StreamDTO[];
   timestamp: string;
 };
 
@@ -29,11 +29,17 @@ export type ChildrenNode = {
   children: React.ReactNode;
 };
 
+export type StreamInfo = {
+  id: string;
+  title: string;
+  thumbnail: string;
+  scheduledStartTime: string;
+  service: "youtube" | "twitch";
+  channelId: string;
+  name: string;
+  icon: string;
+};
+
 export type VspoStreams = {
-  streams: {
-    youtube: StreamingInfo[];
-  };
-  channels: {
-    youtube: ChannelInfo[];
-  };
+  youtube: StreamInfo[];
 };
