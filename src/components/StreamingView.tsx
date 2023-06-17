@@ -5,7 +5,7 @@ import { theme } from "../theme";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
 import { useVspoStreams, useWindowSize } from "../hooks";
-import { StreamingInfo } from "../types";
+import { StreamInfo } from "../types";
 import { parseJST, getFormatedDate } from "../utils";
 import { Header } from "./Header";
 
@@ -60,13 +60,13 @@ const TableContainer = styled.div`
 `;
 
 export const StreamingView: React.FC = () => {
-  const { streams } = useVspoStreams();
+  const { youtube } = useVspoStreams();
   const { y } = useWindowSize();
 
-  const streamMap = streams.youtube
+  const streamMap = youtube
     //uploadが新しい順→古い順
     .reverse()
-    .reduce((map: Map<string, StreamingInfo[]>, cur: StreamingInfo) => {
+    .reduce((map: Map<string, StreamInfo[]>, cur: StreamInfo) => {
       const fDate = getFormatedDate(
         parseJST(Date.parse(cur.scheduledStartTime))
       );
@@ -78,7 +78,7 @@ export const StreamingView: React.FC = () => {
       }
 
       return map;
-    }, new Map<string, StreamingInfo[]>());
+    }, new Map<string, StreamInfo[]>());
 
   //日付が古い順にソート
   const sortedStreams = Array.from(streamMap).sort((a, b) =>

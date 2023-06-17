@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { animated } from "@react-spring/web";
-
 import { StreamingTableProps } from "../types";
-import { useVspoStreams } from "../hooks";
 import { StreamingCard } from "./card";
 import { theme } from "../theme";
 
@@ -22,9 +20,7 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
   streams,
   ...props
 }) => {
-  const { channels } = useVspoStreams();
-
-  const checkStream = () => channels.youtube.length > 0;
+  const checkStream = () => streams.length > 0;
   const streamingLink = (videoId: string) =>
     `https://www.youtube.com/watch?v=${videoId}`;
 
@@ -36,18 +32,13 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
             a.scheduledStartTime > b.scheduledStartTime ? 1 : -1
           )
           .map((s) => {
-            const ch = channels.youtube.find((c) => c.id === s.channelId);
-            if (ch === undefined) {
-              return null;
-            }
-
             return (
               <StreamingCard
                 key={s.id}
                 title={s.title}
                 thumbnail={s.thumbnail}
-                name={ch.name}
-                icon={ch.thumbnail}
+                name={s.name}
+                icon={s.icon}
                 service={s.service}
                 url={streamingLink(s.id)}
                 scheduledStartTime={s.scheduledStartTime}

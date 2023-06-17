@@ -1,4 +1,4 @@
-import { StreamingInfo } from "./frontLogic";
+import { StreamInfo } from "./frontLogic";
 
 export type ThumbnailBlockProps = {
   title: string;
@@ -8,10 +8,11 @@ export type ThumbnailBlockProps = {
   isExpand: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export type ServiceIconProps = Pick<
-  StreamingInfo,
-  "service" | "scheduledStartTime"
-> & { isExpand: boolean } & React.HTMLAttributes<HTMLDivElement>;
+export type ServiceIconProps = {
+  scheduledStartTime: string;
+  service: "youtube" | "twitch";
+  isExpand: boolean;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 export type StreamingHeaderProps = Omit<ThumbnailBlockProps, "thumbnail">;
 
@@ -23,7 +24,7 @@ export type StreamingCardProps = Omit<
 };
 
 export type StreamingTableProps = {
-  streams: StreamingInfo[];
+  streams: StreamInfo[];
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export type DateBorderProps = {
