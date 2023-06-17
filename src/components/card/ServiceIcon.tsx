@@ -3,7 +3,7 @@ import { ServiceIconProps } from "../../types";
 import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { FaYoutube } from "react-icons/fa";
-import { useTheme, useTime, useWindowSize } from "../../hooks";
+import { useTheme, useWindowSize } from "../../hooks";
 import { theme } from "../../theme";
 import { parseJST } from "../../utils";
 
@@ -64,13 +64,12 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   isExpand,
   ...props
 }) => {
-  const time = useTime();
   const { colors } = useTheme();
   const startTime = useRef(new Date(scheduledStartTime));
   const { isMobile } = useWindowSize();
 
-  const checkLive = () => startTime.current.getTime() < time.current.getTime();
-  const [isLive, setLive] = useState(checkLive());
+  const checkLive = () => startTime.current.getTime() < Date.now();
+  const [isLive, setLive] = useState(false);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -78,7 +77,12 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
         setLive(true);
         clearInterval(timerId);
       }
-    }, 1000);
+    }, 30000);
+
+    if (checkLive()) {
+      setLive(true);
+      clearInterval(timerId);
+    }
 
     return () => clearInterval(timerId);
   }, []);

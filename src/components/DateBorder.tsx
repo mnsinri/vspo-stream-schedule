@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { animated, useSpring } from "@react-spring/web";
 import { DateBorderProps } from "../types";
-import { useTheme, useTime } from "../hooks";
+import { useTheme } from "../hooks";
 import { getFormatedDate, parseJST } from "../utils";
 
 const Container = styled.div`
@@ -35,10 +35,9 @@ export const DateBorder: React.FC<DateBorderProps> = ({
   ...props
 }) => {
   const { springColors, colors } = useTheme();
-  const time = useTime();
 
   const parseDateforView = (dateString: string) => {
-    const today = parseJST(time.current.getTime());
+    const today = parseJST(Date.now());
     if (getFormatedDate(today) === dateString) {
       return "Today";
     }
