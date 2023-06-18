@@ -17,4 +17,5 @@ export const YOUTUBE_CHANNEL_IDS: string[] = [
   "UCIjdfjcSaEgdjwbgjxC3ZWg", //@tsuna_nekota
   "UCurEA8YoqFwimJcAuSHU0MQ", //@lisahanabusa
   "UCjXBuHmWkieBApgBhDuJMMQ", //@yakumo_beni
+  "UCS5l_Y0oMVTjEos2LuyeSZQ", //@akarindao
 ];
