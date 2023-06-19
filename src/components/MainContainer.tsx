@@ -4,14 +4,24 @@ import { animated } from "@react-spring/web";
 import { theme } from "../theme";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
-import { useVspoStreams, useWindowSize } from "../hooks";
+import { useVspoStreams } from "../hooks";
 import { StreamInfo } from "../types";
 import { parseJST, getFormatedDate } from "../utils";
 import { Header } from "./Header";
 
-const Container = styled(animated.div)<{ vh: string }>`
+const ScrollArea = styled.div`
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const Container = styled(animated.div)`
   margin: 0 auto;
-  min-height: ${(p) => p.vh};
+  height: 100%;
   background: rgba(240, 240, 240, 0.08);
   box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
 
@@ -59,9 +69,8 @@ const TableContainer = styled.div`
   padding-bottom: 40px;
 `;
 
-export const StreamingView: React.FC = () => {
+export const MainContainer: React.FC = () => {
   const { youtube } = useVspoStreams();
-  const { y } = useWindowSize();
 
   const streamMap = youtube
     //uploadが新しい順→古い順
@@ -86,17 +95,19 @@ export const StreamingView: React.FC = () => {
   );
 
   return (
-    <Container vh={`${y}px`}>
-      <InnerContainer>
-        <Header />
-        {sortedStreams.map((m) => (
-          <TableContainer key={m[0]}>
-            <DateBorder dateString={m[0]} />
-            <Spacer />
-            <StreamingTable streams={m[1]} />
-          </TableContainer>
-        ))}
-      </InnerContainer>
-    </Container>
+    <ScrollArea>
+      <Container>
+        <InnerContainer>
+          <Header />
+          {sortedStreams.map((m) => (
+            <TableContainer key={m[0]}>
+              <DateBorder dateString={m[0]} />
+              <Spacer />
+              <StreamingTable streams={m[1]} />
+            </TableContainer>
+          ))}
+        </InnerContainer>
+      </Container>
+    </ScrollArea>
   );
 };

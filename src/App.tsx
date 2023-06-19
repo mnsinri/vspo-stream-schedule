@@ -2,20 +2,18 @@ import React from "react";
 import {
   VspoStreamingProvider,
   ThemeProvider,
-  StreamingView,
+  MainContainer,
   Background,
 } from "./components";
-// import { Test } from "./Test";
 
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <Background>
         <VspoStreamingProvider>
-          <StreamingView />
+          <MainContainer />
         </VspoStreamingProvider>
       </Background>
     </ThemeProvider>
-    // <Test />
   );
 };
