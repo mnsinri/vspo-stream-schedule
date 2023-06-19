@@ -71,7 +71,6 @@ const TableContainer = styled.div`
 
 export const StreamingView: React.FC = () => {
   const { youtube } = useVspoStreams();
-  // const { y } = useWindowSize();
 
   const streamMap = youtube
     //uploadが新しい順→古い順

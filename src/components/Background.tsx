@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { animated } from "@react-spring/web";
 import { ChildrenNode } from "../types";
-import { useTheme, useWindowSize } from "../hooks";
+import { useTheme } from "../hooks";
 
 const Container = styled(animated.div)`
   position: absolute;
@@ -13,7 +13,6 @@ const Container = styled(animated.div)`
 
 export const Background: React.FC<ChildrenNode> = ({ children, ...props }) => {
   const { springColors } = useTheme();
-  // const { y } = useWindowSize();
   return (
     <Container style={{ background: springColors.base.primary }} {...props}>
       {children}
