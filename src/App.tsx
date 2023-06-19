@@ -5,7 +5,6 @@ import {
   StreamingView,
   Background,
 } from "./components";
-// import { Test } from "./Test";
 
 export const App: React.FC = () => {
   return (
@@ -16,6 +15,5 @@ export const App: React.FC = () => {
         </VspoStreamingProvider>
       </Background>
     </ThemeProvider>
-    // <Test />
   );
 };
