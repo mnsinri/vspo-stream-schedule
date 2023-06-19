@@ -5,10 +5,8 @@ import { ChildrenNode } from "../types";
 import { useTheme } from "../hooks";
 
 const Container = styled(animated.div)`
-  position: absolute;
   height: 100%;
   width: 100%;
-  z-index: -1;
 `;
 
 export const Background: React.FC<ChildrenNode> = ({ children, ...props }) => {

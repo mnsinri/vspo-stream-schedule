@@ -25,7 +25,7 @@ export const useDB = <T>(
       cache.put(path, new Response(JSON.stringify(newCache)));
     });
 
-    console.log(`[useDB:${path}] Cached`);
+    // console.log(`[useDB:${path}] Cached`);
   };
 
   useEffect(() => {
@@ -41,10 +41,10 @@ export const useDB = <T>(
         cache?.timestamp &&
         Date.now() - Date.parse(cache.timestamp) <= cacheAvailableTime
       ) {
-        console.log(`[useDB:${path}] Use Cache`);
+        // console.log(`[useDB:${path}] Use Cache`);
         setValue(cache.data);
       } else {
-        console.log(`[useDB:${path}] Get from DB`);
+        // console.log(`[useDB:${path}] Get from DB`);
         const data = await get(resp);
         if (data.exists()) {
           const val = data.val().map(parser);
@@ -56,7 +56,7 @@ export const useDB = <T>(
       //subscribe DB listener after 2 min
       const timerId = setTimeout(() => {
         const unsubscriber = onValue(resp, (snap) => {
-          console.log(`[useDB:${path}] OnValue`);
+          // console.log(`[useDB:${path}] OnValue`);
           if (snap.exists()) {
             const val = snap.val().map(parser);
             doCache(val);
@@ -68,7 +68,7 @@ export const useDB = <T>(
         const handleOnce = () => {
           unsubscriber();
           document.removeEventListener(eventName, handleOnce);
-          console.log(`[useDB:${path}] Remove listener onValue`);
+          // console.log(`[useDB:${path}] Remove listener onValue`);
         };
         document.addEventListener(eventName, handleOnce);
       }, 2 * 60 * 1000);
@@ -77,16 +77,16 @@ export const useDB = <T>(
       const handleOnce = () => {
         clearTimeout(timerId);
         document.removeEventListener(eventName, handleOnce);
-        console.log(`[useDB:${path}] Remove listener timeout`);
+        // console.log(`[useDB:${path}] Remove listener timeout`);
       };
       document.addEventListener(eventName, handleOnce);
 
-      console.log(`[useDB:${path}] init`);
+      // console.log(`[useDB:${path}] init`);
     })();
 
     return () => {
       document.dispatchEvent(event);
-      console.log(`[useDB:${path}] dispatch events on unmounted`);
+      // console.log(`[useDB:${path}] dispatch events on unmounted`);
     };
   }, []);
 

@@ -4,7 +4,7 @@ import { animated } from "@react-spring/web";
 import { theme } from "../theme";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
-import { useVspoStreams, useWindowSize } from "../hooks";
+import { useVspoStreams } from "../hooks";
 import { StreamInfo } from "../types";
 import { parseJST, getFormatedDate } from "../utils";
 import { Header } from "./Header";
@@ -69,7 +69,7 @@ const TableContainer = styled.div`
   padding-bottom: 40px;
 `;
 
-export const StreamingView: React.FC = () => {
+export const MainContainer: React.FC = () => {
   const { youtube } = useVspoStreams();
 
   const streamMap = youtube

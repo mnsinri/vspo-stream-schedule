@@ -2,7 +2,7 @@ import React from "react";
 import {
   VspoStreamingProvider,
   ThemeProvider,
-  StreamingView,
+  MainContainer,
   Background,
 } from "./components";
 
@@ -11,7 +11,7 @@ export const App: React.FC = () => {
     <ThemeProvider>
       <Background>
         <VspoStreamingProvider>
-          <StreamingView />
+          <MainContainer />
         </VspoStreamingProvider>
       </Background>
     </ThemeProvider>
