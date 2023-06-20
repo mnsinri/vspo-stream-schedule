@@ -20,6 +20,9 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
   streams,
   ...props
 }) => {
+  const sortedStreams = streams.sort((a, b) =>
+    a.scheduledStartTime + a.name > b.scheduledStartTime + b.name ? 1 : -1
+  );
   const checkStream = () => streams.length > 0;
   const streamingLink = (videoId: string) =>
     `https://www.youtube.com/watch?v=${videoId}`;
@@ -27,24 +30,20 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
   return (
     <Container {...props}>
       {checkStream() ? (
-        streams
-          .sort((a, b) =>
-            a.scheduledStartTime > b.scheduledStartTime ? 1 : -1
-          )
-          .map((s) => {
-            return (
-              <StreamingCard
-                key={s.id}
-                title={s.title}
-                thumbnail={s.thumbnail}
-                name={s.name}
-                icon={s.icon}
-                service={s.service}
-                url={streamingLink(s.id)}
-                scheduledStartTime={s.scheduledStartTime}
-              />
-            );
-          })
+        sortedStreams.map((s) => {
+          return (
+            <StreamingCard
+              key={s.id}
+              title={s.title}
+              thumbnail={s.thumbnail}
+              name={s.name}
+              icon={s.icon}
+              service={s.service}
+              url={streamingLink(s.id)}
+              scheduledStartTime={s.scheduledStartTime}
+            />
+          );
+        })
       ) : (
         <h1>No data GG</h1>
       )}

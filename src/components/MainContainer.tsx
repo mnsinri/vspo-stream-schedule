@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { animated } from "@react-spring/web";
 import { theme } from "../theme";
@@ -9,7 +9,12 @@ import { StreamInfo } from "../types";
 import { parseJST, getFormatedDate } from "../utils";
 import { Header } from "./Header";
 
-const ScrollArea = styled.div`
+const Container = styled(animated.div)`
+  margin: 0 auto;
+  background: rgba(240, 240, 240, 0.08);
+  box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
+
+  height: 100vh;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -17,13 +22,6 @@ const ScrollArea = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
-
-const Container = styled(animated.div)`
-  margin: 0 auto;
-  height: 100%;
-  background: rgba(240, 240, 240, 0.08);
-  box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
 
   ${theme.breakpoint.sm`
     width: 640px;
@@ -70,44 +68,41 @@ const TableContainer = styled.div`
 `;
 
 export const MainContainer: React.FC = () => {
-  const { youtube } = useVspoStreams();
+  const streams = useVspoStreams();
 
-  const streamMap = youtube
-    //uploadが新しい順→古い順
-    .reverse()
-    .reduce((map: Map<string, StreamInfo[]>, cur: StreamInfo) => {
-      const fDate = getFormatedDate(
-        parseJST(Date.parse(cur.scheduledStartTime))
-      );
+  const sortedStreams = useMemo(() => {
+    const stMap = streams.reduce(
+      (map: Map<string, StreamInfo[]>, cur: StreamInfo) => {
+        const fDate = getFormatedDate(
+          parseJST(Date.parse(cur.scheduledStartTime))
+        );
 
-      if (map.has(fDate)) {
-        map.get(fDate)?.push(cur);
-      } else {
-        map.set(fDate, [cur]);
-      }
+        if (map.has(fDate)) {
+          map.get(fDate)?.push(cur);
+        } else {
+          map.set(fDate, [cur]);
+        }
 
-      return map;
-    }, new Map<string, StreamInfo[]>());
+        return map;
+      },
+      new Map<string, StreamInfo[]>()
+    );
 
-  //日付が古い順にソート
-  const sortedStreams = Array.from(streamMap).sort((a, b) =>
-    a[0] > b[0] ? 1 : -1
-  );
+    return Array.from(stMap).sort((a, b) => (a[0] > b[0] ? 1 : -1));
+  }, [streams]);
 
   return (
-    <ScrollArea>
-      <Container>
-        <InnerContainer>
-          <Header />
-          {sortedStreams.map((m) => (
-            <TableContainer key={m[0]}>
-              <DateBorder dateString={m[0]} />
-              <Spacer />
-              <StreamingTable streams={m[1]} />
-            </TableContainer>
-          ))}
-        </InnerContainer>
-      </Container>
-    </ScrollArea>
+    <Container>
+      <InnerContainer>
+        <Header />
+        {sortedStreams.map((m) => (
+          <TableContainer key={m[0]}>
+            <DateBorder dateString={m[0]} />
+            <Spacer />
+            <StreamingTable streams={m[1]} />
+          </TableContainer>
+        ))}
+      </InnerContainer>
+    </Container>
   );
 };
