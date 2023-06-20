@@ -39,7 +39,3 @@ export type StreamInfo = {
   name: string;
   icon: string;
 };
-
-export type VspoStreams = {
-  youtube: StreamInfo[];
-};

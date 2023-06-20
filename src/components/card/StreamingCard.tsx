@@ -26,41 +26,33 @@ const Card = styled(animated.div)`
   `}
 `;
 
-export const StreamingCard: React.FC<StreamingCardProps> = ({
-  title,
-  thumbnail,
-  name,
-  icon,
-  service,
-  url,
-  scheduledStartTime,
-  ...props
-}) => {
-  const { hovered, hoverSpread } = useHover();
-  const { isDesktop } = useWindowSize();
+export const StreamingCard = React.memo<StreamingCardProps>(
+  ({ title, thumbnail, name, icon, service, url, scheduledStartTime }) => {
+    const { hovered, hoverSpread } = useHover();
+    const { isDesktop } = useWindowSize();
 
-  return (
-    <Container>
-      <Card
-        onClick={() => window.open(url)}
-        aria-label={title}
-        {...props}
-        {...(isDesktop ? hoverSpread : {})}
-      >
-        <ServiceIcon
-          service={service}
-          scheduledStartTime={scheduledStartTime}
-          isExpand={hovered || !isDesktop}
-          style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}
-        />
-        <ThumbnailBlock
-          title={title}
-          thumbnail={thumbnail}
-          name={name}
-          icon={icon}
-          isExpand={hovered || !isDesktop}
-        />
-      </Card>
-    </Container>
-  );
-};
+    return (
+      <Container>
+        <Card
+          onClick={() => window.open(url)}
+          aria-label={title}
+          {...(isDesktop ? hoverSpread : {})}
+        >
+          <ServiceIcon
+            service={service}
+            scheduledStartTime={scheduledStartTime}
+            isExpand={hovered || !isDesktop}
+            style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}
+          />
+          <ThumbnailBlock
+            title={title}
+            thumbnail={thumbnail}
+            name={name}
+            icon={icon}
+            isExpand={hovered || !isDesktop}
+          />
+        </Card>
+      </Container>
+    );
+  }
+);

@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { createContext, useCallback, useMemo, useState } from "react";
 import {
   ChildrenNode,
   SpringColors,
@@ -7,6 +7,7 @@ import {
 } from "../../types";
 import { theme } from "../../theme";
 import { easings, useSpring } from "@react-spring/web";
+import { useWindowSize } from "../../hooks";
 
 export const ThemeContext = createContext<ThemeContextType>({
   colors: {} as ThemeColors,
@@ -15,13 +16,14 @@ export const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
 });
 
-const config = {
-  duration: 500,
-  easing: easings.easeInOutSine,
-};
-
 export const ThemeProvider: React.FC<ChildrenNode> = ({ children }) => {
   const [isDark, setDark] = useState<Boolean>(false);
+  const { isMobile } = useWindowSize();
+
+  const config = {
+    duration: isMobile ? 0 : 500,
+    easing: easings.easeInOutSine,
+  };
 
   const main = {
     primary: isDark ? theme.colors.pink : theme.colors.blue,
@@ -49,11 +51,13 @@ export const ThemeProvider: React.FC<ChildrenNode> = ({ children }) => {
     text: useSpring({ ...text, config }),
   };
 
+  const toggleTheme = useCallback(() => setDark((isDark) => !isDark), []);
+
   const context = useMemo<ThemeContextType>(
     () => ({
       colors,
       springColors,
-      toggleTheme: () => setDark((isDark) => !isDark),
+      toggleTheme,
       isDark,
     }),
     [isDark]
