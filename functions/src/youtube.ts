@@ -1,6 +1,5 @@
 import * as logger from "firebase-functions/logger";
 import { google, youtube_v3 } from "googleapis";
-import { YOUTUBE_CHANNEL_IDS } from "./vspo";
 
 export type ChannelInfo = {
   id: string;
@@ -24,12 +23,12 @@ type LiveInfo = {
 export type StreamingInfo = VideoInfo & LiveInfo;
 
 //ChannelIdの2文字目を'U'にするとそのチャンネルのuploadedPlaylistIdになる
-const getPlaylistIds = () => {
-  return YOUTUBE_CHANNEL_IDS.map((id) => id.replace(/(?<=^.{1})./, "U"));
+const getPlaylistIds = (channelIds: string[]) => {
+  return channelIds.map((id) => id.replace(/(?<=^.{1})./, "U"));
 };
 
-export const getStreamings = async (apiKey: string) => {
-  const playlistIds = getPlaylistIds();
+export const getStreamings = async (apiKey: string, channelIds: string[]) => {
+  const playlistIds = getPlaylistIds(channelIds);
   const maxResult = 10;
 
   //get uploaded video info
@@ -99,11 +98,11 @@ export const getStreamings = async (apiKey: string) => {
   });
 };
 
-export const getChannels = async (apiKey: string) => {
+export const getChannels = async (apiKey: string, channelIds: string[]) => {
   const res = await google.youtube("v3").channels.list({
     key: apiKey,
     part: ["snippet", "contentDetails"],
-    id: YOUTUBE_CHANNEL_IDS,
+    id: channelIds,
   });
 
   if (res.status < 200 && 299 < res.status) {

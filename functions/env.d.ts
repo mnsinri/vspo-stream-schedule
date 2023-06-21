@@ -3,8 +3,9 @@ declare module "process" {
     namespace NodeJS {
       interface ProcessEnv {
         YOUTUBE_API: string;
-        DATABASE_CHANNELS_PATH: string;
-        DATABASE_STREAMS_PATH: string;
+        VSPO_YOUTUBE_CHANNELS_PATH: string;
+        YOUTUBE_STREAMS_DATA_PATH: string;
+        YOUTUBE_CHANNELS_DATA_PATH: string;
       }
     }
   }

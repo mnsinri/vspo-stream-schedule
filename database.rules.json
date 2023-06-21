@@ -1,7 +1,13 @@
 {
   /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    ".read": true,
-    ".write": false
+    "vspo": {
+      ".read": false,
+      ".write": false
+    },
+    "data": {
+      ".read": true,
+      ".write": false
+    }
   }
 }
