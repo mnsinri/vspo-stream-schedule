@@ -151,9 +151,14 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
 
   return (
     <Panel style={{ height, backgroundColor }} {...props}>
-      <Thumbnail style={{ borderRadius }} src={thumbnail} alt={title} />
+      <Thumbnail
+        style={{ borderRadius }}
+        src={thumbnail}
+        alt={title}
+        loading="lazy"
+      />
       <Header>
-        <Icon src={icon} alt={name} style={{ filter: shadow }} />
+        <Icon src={icon} alt={name} style={{ filter: shadow }} loading="lazy" />
         <Contents style={{ opacity, color }}>
           <Title style={{ display }}>{title}</Title>
           <Name style={{ display }}>{name}</Name>
