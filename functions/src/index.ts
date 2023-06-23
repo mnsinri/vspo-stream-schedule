@@ -6,7 +6,7 @@ import * as logger from "firebase-functions/logger";
 
 admin.initializeApp();
 
-const API_KEY = process.env.YOUTUBE_API;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API;
 const VSPO_YOUTUBE_CHANNELS_PATH = process.env.VSPO_YOUTUBE_CHANNELS_PATH;
 const YOUTUBE_CHANNELS_DATA_PATH = process.env.YOUTUBE_CHANNELS_DATA_PATH;
 const YOUTUBE_STREAMS_DATA_PATH = process.env.YOUTUBE_STREAMS_DATA_PATH;
@@ -31,8 +31,13 @@ db.ref(VSPO_YOUTUBE_CHANNELS_PATH).on("value", (snap) => {
 export const updateChannels = onSchedule(
   { schedule: "0 15 * * *", secrets: ["YOUTUBE_API"] },
   async (_) => {
+    if (!cache.youtubeChannelIds.length) {
+      const snap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+      cache.youtubeChannelIds = snap.val();
+    }
+
     const channels = await youtube.getChannels(
-      API_KEY,
+      YOUTUBE_API_KEY,
       cache.youtubeChannelIds
     );
     db.ref(YOUTUBE_CHANNELS_DATA_PATH).set(channels);
@@ -44,8 +49,13 @@ export const updateChannels = onSchedule(
 export const updateStreams = onSchedule(
   { schedule: "0,10,20,30,40,50 * * * *", secrets: ["YOUTUBE_API"] },
   async (_) => {
+    if (!cache.youtubeChannelIds.length) {
+      const snap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+      cache.youtubeChannelIds = snap.val();
+    }
+
     const streams = await youtube.getStreamings(
-      API_KEY,
+      YOUTUBE_API_KEY,
       cache.youtubeChannelIds
     );
     db.ref(YOUTUBE_STREAMS_DATA_PATH).set(streams);
