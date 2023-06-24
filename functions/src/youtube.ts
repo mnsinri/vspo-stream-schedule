@@ -13,6 +13,7 @@ type VideoInfo = {
   id: string;
   title: string;
   thumbnail: string;
+  url: string;
 };
 
 type LiveInfo = {
@@ -20,14 +21,14 @@ type LiveInfo = {
   scheduledStartTime: string;
 };
 
-export type StreamingInfo = VideoInfo & LiveInfo;
+export type StreamInfo = VideoInfo & LiveInfo;
 
 //ChannelIdの2文字目を'U'にするとそのチャンネルのuploadedPlaylistIdになる
 const getPlaylistIds = (channelIds: string[]) => {
   return channelIds.map((id) => id.replace(/(?<=^.{1})./, "U"));
 };
 
-export const getStreamings = async (apiKey: string, channelIds: string[]) => {
+export const getStreams = async (apiKey: string, channelIds: string[]) => {
   const playlistIds = getPlaylistIds(channelIds);
   const maxResult = 10;
 
@@ -55,6 +56,7 @@ export const getStreamings = async (apiKey: string, channelIds: string[]) => {
             id: item.snippet?.resourceId?.videoId,
             title: item.snippet?.title,
             thumbnail: item.snippet?.thumbnails?.medium?.url,
+            url: `https://www.youtube.com/watch?v=${item.snippet?.resourceId?.videoId}`,
           } as VideoInfo;
         }) ?? []
     )
@@ -94,7 +96,7 @@ export const getStreamings = async (apiKey: string, channelIds: string[]) => {
     .flat();
 
   return streamingVideos.map((li) => {
-    return { ...li, ...uploads.find((vi) => vi.id === li.id) } as StreamingInfo;
+    return { ...li, ...uploads.find((vi) => vi.id === li.id) } as StreamInfo;
   });
 };
 
@@ -107,13 +109,13 @@ export const getChannels = async (apiKey: string, channelIds: string[]) => {
 
   if (res.status < 200 && 299 < res.status) {
     logger.error(
-      "The Channels:list API returned an error: status=" + res.status
+      "[Youtube] The Channels:list API returned an error: status=" + res.status
     );
     return [];
   }
 
   if (res.data.items === undefined || res.data.items.length == 0) {
-    logger.error("No channel found.");
+    logger.error("[Youtube] No channel found.");
     return [];
   }
 

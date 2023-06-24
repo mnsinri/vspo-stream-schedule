@@ -11,6 +11,7 @@ export type StreamDTO = {
   id: string;
   title: string;
   thumbnail: string;
+  url: string;
   scheduledStartTime: string;
   service: "youtube" | "twitch";
 };
@@ -33,6 +34,7 @@ export type StreamInfo = {
   id: string;
   title: string;
   thumbnail: string;
+  url: string;
   scheduledStartTime: string;
   service: "youtube" | "twitch";
   channelId: string;

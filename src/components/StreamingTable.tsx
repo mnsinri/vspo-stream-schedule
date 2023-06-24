@@ -24,8 +24,6 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
     a.scheduledStartTime + a.name > b.scheduledStartTime + b.name ? 1 : -1
   );
   const checkStream = () => streams.length > 0;
-  const streamingLink = (videoId: string) =>
-    `https://www.youtube.com/watch?v=${videoId}`;
 
   return (
     <Container {...props}>
@@ -39,7 +37,7 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
               name={s.name}
               icon={s.icon}
               service={s.service}
-              url={streamingLink(s.id)}
+              url={s.url}
               scheduledStartTime={s.scheduledStartTime}
             />
           );

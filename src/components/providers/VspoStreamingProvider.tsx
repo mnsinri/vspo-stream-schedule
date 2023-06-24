@@ -37,6 +37,7 @@ export const VspoStreamingProvider: React.FC<ChildrenNode> = ({ children }) => {
         id: s.id,
         title: s.title,
         thumbnail: s.thumbnail,
+        url: s.url,
         scheduledStartTime: s.scheduledStartTime,
         service: s.service,
         channelId: ch.id,
