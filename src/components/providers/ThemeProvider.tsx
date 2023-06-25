@@ -26,8 +26,12 @@ export const ThemeProvider: React.FC<ChildrenNode> = ({ children }) => {
   };
 
   const main = {
-    primary: isDark ? theme.colors.pink : theme.colors.blue,
-    secondary: isDark ? theme.colors.blue : theme.colors.pink,
+    primary: isDark
+      ? theme.colors.logoColors.vspo.pink
+      : theme.colors.logoColors.vspo.blue,
+    secondary: isDark
+      ? theme.colors.logoColors.vspo.blue
+      : theme.colors.logoColors.vspo.pink,
   };
   const base = {
     primary: isDark ? theme.colors.black[50] : theme.colors.white[50],

@@ -12,7 +12,12 @@ export const colors: BaseColors = {
     200: "#616161",
   },
 
-  //Vspo logo colors
-  pink: "#FF6FA3",
-  blue: "#7266CF",
+  logoColors: {
+    vspo: {
+      pink: "#FF6FA3",
+      blue: "#7266CF",
+    },
+    youtube: "#ff0000",
+    twitch: "#6441a5",
+  },
 };

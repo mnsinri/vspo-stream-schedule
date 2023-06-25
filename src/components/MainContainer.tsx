@@ -73,9 +73,7 @@ export const MainContainer: React.FC = () => {
   const sortedStreams = useMemo(() => {
     const stMap = streams.reduce(
       (map: Map<string, StreamInfo[]>, cur: StreamInfo) => {
-        const fDate = getFormatedDate(
-          parseJST(Date.parse(cur.scheduledStartTime))
-        );
+        const fDate = getFormatedDate(parseJST(Date.parse(cur.startAt)));
 
         if (map.has(fDate)) {
           map.get(fDate)?.push(cur);

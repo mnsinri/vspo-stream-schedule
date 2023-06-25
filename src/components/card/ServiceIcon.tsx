@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ServiceIconProps } from "../../types";
 import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
-import { FaYoutube } from "react-icons/fa";
+import { IconContext } from "react-icons";
+import { FaYoutube, FaTwitch } from "react-icons/fa";
 import { useTheme, useWindowSize } from "../../hooks";
 import { theme } from "../../theme";
 import { parseJST } from "../../utils";
 
-const IconPanel = styled(animated.div)`
+const Panel = styled(animated.div)`
   display: flex;
   height: 18px;
   border-radius: 8px;
@@ -20,9 +21,8 @@ const IconPanel = styled(animated.div)`
   `}
 `;
 
-const IconContainer = styled(animated.div)`
+const InnerContainer = styled(animated.div)`
   display: flex;
-  align-items: center;
   gap: 2px;
   height: 14px;
   margin: auto;
@@ -33,20 +33,16 @@ const IconContainer = styled(animated.div)`
   `}
 `;
 
-const Icon = styled(animated(FaYoutube))`
-  height: 90%;
-  width: 12px;
-  margin-top: 1px;
-
-  ${theme.breakpoint.md`
-    width: 20px;
-  `};
+const Icon = styled(animated.div)`
+  height: 75%;
+  display: flex;
+  align-self: center;
 `;
 
-const StateText = styled(animated.div)`
+const StateText = styled(animated.span)`
   font-weight: bold;
   font-size: 10px;
-  margin-bottom: 1px;
+  vertical-align: middle;
 
   ${theme.breakpoint.md`
     font-size: 16px;
@@ -60,16 +56,28 @@ const getStartTime = (timeString: string) => {
 
 export const ServiceIcon: React.FC<ServiceIconProps> = ({
   service,
-  scheduledStartTime,
+  startAt,
   isExpand,
   ...props
 }) => {
   const { colors } = useTheme();
-  const startTime = useRef(new Date(scheduledStartTime));
+  const startTime = useRef(new Date(startAt));
   const { isMobile } = useWindowSize();
+  const serviceColor = useRef<string>();
 
   const checkLive = () => startTime.current.getTime() < Date.now();
   const [isLive, setLive] = useState(false);
+
+  const ServiceFaIcon = useCallback(() => {
+    switch (service) {
+      case "youtube":
+        serviceColor.current = theme.colors.logoColors.youtube;
+        return <FaYoutube />;
+      case "twitch":
+        serviceColor.current = theme.colors.logoColors.twitch;
+        return <FaTwitch />;
+    }
+  }, [service]);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -90,7 +98,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   const baseSpringConfig = {
     display: isExpand ? "block" : "none",
     width: isExpand ? "85px" : "30px",
-    color: isLive ? "red" : colors.text.primary,
+    color: isLive ? serviceColor.current : colors.text.primary,
     config: {
       duration: 150,
       easing: easings.easeInOutSine,
@@ -121,14 +129,18 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
 
   return (
     <div {...props}>
-      <IconPanel style={{ width, backgroundColor }}>
-        <IconContainer>
-          <Icon style={{ color }} />
+      <Panel style={{ width, backgroundColor }}>
+        <InnerContainer>
+          <Icon style={{ color }}>
+            <IconContext.Provider value={{ size: "100%" }}>
+              <ServiceFaIcon />
+            </IconContext.Provider>
+          </Icon>
           <StateText style={{ display, opacity, color: textColor }}>
-            {isLive ? "LIVE" : getStartTime(scheduledStartTime)}
+            {isLive ? "LIVE" : getStartTime(startAt)}
           </StateText>
-        </IconContainer>
-      </IconPanel>
+        </InnerContainer>
+      </Panel>
     </div>
   );
 };

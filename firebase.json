@@ -1,6 +1,17 @@
 {
   "functions": {
-    "source": "functions"
+    "source": "functions",
+    "ignore": [
+      "**/node_modules/**",
+      "**/src/**",
+      ".eslintrc.js",
+      ".gitignore",
+      "tsconfig.dev.json",
+      "tsconfig.json",
+      "env.d.ts",
+      "*.log",
+      "test.mjs"
+    ]
   },
   "hosting": {
     "public": "build",

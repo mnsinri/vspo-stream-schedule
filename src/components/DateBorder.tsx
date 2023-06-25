@@ -30,71 +30,70 @@ const DateLabel = styled(animated.div)`
   margin-top: 5px;
 `;
 
-export const DateBorder: React.FC<DateBorderProps> = ({
-  dateString,
-  ...props
-}) => {
-  const { springColors, colors } = useTheme();
+export const DateBorder = React.memo<DateBorderProps>(
+  ({ dateString, ...props }) => {
+    const { springColors, colors } = useTheme();
 
-  const parseDateforView = (dateString: string) => {
-    const today = parseJST(Date.now());
-    if (getFormatedDate(today) === dateString) {
-      return "Today";
-    }
+    const parseDateforView = (dateString: string) => {
+      const today = parseJST(Date.now());
+      if (getFormatedDate(today) === dateString) {
+        return "Today";
+      }
 
-    const tomorrow = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() + 1
+      const tomorrow = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 1
+      );
+      if (getFormatedDate(tomorrow) === dateString) {
+        return "Tomorrow";
+      }
+
+      const yesterday = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() - 1
+      );
+      if (getFormatedDate(yesterday) === dateString) {
+        return "Yesterday";
+      }
+
+      return dateString;
+    };
+
+    const calcHeight = (max: number) => max - 7 * Math.random();
+
+    const { lh, mh, rh } = useSpring({
+      from: {
+        lh: 0,
+        mh: 0,
+        rh: 0,
+      },
+      to: {
+        lh: calcHeight(30),
+        mh: calcHeight(20),
+        rh: calcHeight(16),
+      },
+      config: colors.config,
+    });
+
+    return (
+      <Container {...props}>
+        <Icon>
+          <Bar
+            style={{ height: lh, backgroundColor: springColors.main.primary }}
+          />
+          <Bar
+            style={{ height: mh, backgroundColor: springColors.main.secondary }}
+          />
+          <Bar
+            style={{ height: rh, backgroundColor: springColors.main.primary }}
+          />
+        </Icon>
+        <DateLabel style={{ color: springColors.text.primary }}>
+          {parseDateforView(dateString)}
+        </DateLabel>
+      </Container>
     );
-    if (getFormatedDate(tomorrow) === dateString) {
-      return "Tomorrow";
-    }
-
-    const yesterday = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() - 1
-    );
-    if (getFormatedDate(yesterday) === dateString) {
-      return "Yesterday";
-    }
-
-    return dateString;
-  };
-
-  const calcHeight = (max: number) => max - 7 * Math.random();
-
-  const { lh, mh, rh } = useSpring({
-    from: {
-      lh: 0,
-      mh: 0,
-      rh: 0,
-    },
-    to: {
-      lh: calcHeight(30),
-      mh: calcHeight(20),
-      rh: calcHeight(16),
-    },
-    config: colors.config,
-  });
-
-  return (
-    <Container {...props}>
-      <Icon>
-        <Bar
-          style={{ height: lh, backgroundColor: springColors.main.primary }}
-        />
-        <Bar
-          style={{ height: mh, backgroundColor: springColors.main.secondary }}
-        />
-        <Bar
-          style={{ height: rh, backgroundColor: springColors.main.primary }}
-        />
-      </Icon>
-      <DateLabel style={{ color: springColors.text.primary }}>
-        {parseDateforView(dateString)}
-      </DateLabel>
-    </Container>
-  );
-};
+  }
+);

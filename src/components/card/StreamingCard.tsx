@@ -27,7 +27,7 @@ const Card = styled(animated.div)`
 `;
 
 export const StreamingCard = React.memo<StreamingCardProps>(
-  ({ title, thumbnail, name, icon, service, url, scheduledStartTime }) => {
+  ({ title, thumbnail, name, icon, service, url, startAt }) => {
     const { hovered, hoverSpread } = useHover();
     const { isDesktop } = useWindowSize();
 
@@ -40,7 +40,7 @@ export const StreamingCard = React.memo<StreamingCardProps>(
         >
           <ServiceIcon
             service={service}
-            scheduledStartTime={scheduledStartTime}
+            startAt={startAt}
             isExpand={hovered || !isDesktop}
             style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}
           />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { database } from "../Firebase";
 import { get, onValue, ref } from "firebase/database";
+import { StreamDTO } from "../types";
 
 const cacheVersion = "vspo";
 const eventName = "OnUnmounted";
@@ -8,8 +9,7 @@ const event = new CustomEvent(eventName);
 
 export const useDB = <T>(
   path: string,
-  cacheAvailableTime: number, //sec
-  parser: (v: T) => T
+  cacheAvailableTime: number //sec
 ): T[] => {
   const [value, setValue] = useState<T[]>([]);
   const resp = ref(database, path);
@@ -47,7 +47,7 @@ export const useDB = <T>(
         // console.log(`[useDB:${path}] Get from DB`);
         const data = await get(resp);
         if (data.exists()) {
-          const val = data.val().map(parser);
+          const val = data.val() as T[];
           doCache(val);
           setValue([...val]);
         }
@@ -58,7 +58,7 @@ export const useDB = <T>(
         const unsubscriber = onValue(resp, (snap) => {
           // console.log(`[useDB:${path}] OnValue`);
           if (snap.exists()) {
-            const val = snap.val().map(parser);
+            const val = snap.val() as T[];
             doCache(val);
             setValue([...val]);
           }
