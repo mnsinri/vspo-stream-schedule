@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { database } from "../Firebase";
 import { get, onValue, ref } from "firebase/database";
-import { StreamDTO } from "../types";
 
 const cacheVersion = "vspo";
 const eventName = "OnUnmounted";
