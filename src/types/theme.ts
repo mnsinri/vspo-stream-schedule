@@ -14,8 +14,14 @@ export type Colorlevel = {
 export type BaseColors = {
   black: Colorlevel;
   white: Colorlevel;
-  pink: string;
-  blue: string;
+  logoColors: {
+    vspo: {
+      pink: string;
+      blue: string;
+    };
+    youtube: string;
+    twitch: string;
+  };
 };
 
 export type SpringColorLevel = {

@@ -21,7 +21,7 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
   ...props
 }) => {
   const sortedStreams = streams.sort((a, b) =>
-    a.scheduledStartTime + a.name > b.scheduledStartTime + b.name ? 1 : -1
+    a.startAt + a.name > b.startAt + b.name ? 1 : -1
   );
   const checkStream = () => streams.length > 0;
 
@@ -38,7 +38,7 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({
               icon={s.icon}
               service={s.service}
               url={s.url}
-              scheduledStartTime={s.scheduledStartTime}
+              startAt={s.startAt}
             />
           );
         })

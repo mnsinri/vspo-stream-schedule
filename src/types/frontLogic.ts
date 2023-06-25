@@ -1,9 +1,12 @@
+export type Services = {
+  service: "youtube" | "twitch";
+};
+
 export type ChannelDTO = {
   id: string;
   name: string;
   thumbnail: string;
-  uploads: string;
-  service: "youtube" | "twitch";
+  uploads?: string;
 };
 
 export type StreamDTO = {
@@ -12,8 +15,8 @@ export type StreamDTO = {
   title: string;
   thumbnail: string;
   url: string;
-  scheduledStartTime: string;
-  service: "youtube" | "twitch";
+  startAt: string;
+  gameName?: string;
 };
 
 export type ChannelCache = {
@@ -35,9 +38,9 @@ export type StreamInfo = {
   title: string;
   thumbnail: string;
   url: string;
-  scheduledStartTime: string;
-  service: "youtube" | "twitch";
+  startAt: string;
   channelId: string;
   name: string;
   icon: string;
-};
+  gameName?: string;
+} & Services;
