@@ -1,21 +1,6 @@
 import * as logger from "firebase-functions/logger";
 import axios from "axios";
-
-export type ChannelInfo = {
-  id: string;
-  name: string;
-  icon: string;
-};
-
-export type StreamInfo = {
-  id: string;
-  userId: string;
-  startedAt: string;
-  title: string;
-  thumbnail: string;
-  gameName: string;
-  url: string;
-};
+import { ChannelInfo, StreamInfo } from "./types";
 
 const usersURL = "https://api.twitch.tv/helix/users";
 const streamsURL = "https://api.twitch.tv/helix/streams";
@@ -54,7 +39,7 @@ export const getChannels = async (
   return await requestGetTwitchApi<ChannelInfo>(url, token, clientId, (v) => ({
     id: v.id,
     name: v.display_name,
-    icon: v.profile_image_url,
+    thumbnail: v.profile_image_url,
   }));
 };
 
@@ -69,11 +54,13 @@ export const getStreams = async (
 
   return await requestGetTwitchApi<StreamInfo>(url, token, clientId, (v) => ({
     id: v.id,
-    userId: v.user_id,
-    startedAt: v.started_at,
+    channelId: v.user_id,
     title: v.title,
-    thumbnail: v.thumbnail_url,
-    gameName: v.game_name,
+    thumbnail: v.thumbnail_url
+      .replace("{width}", "320")
+      .replace("{height}", "180"),
     url: `https://www.twitch.tv/${v.user_login}`,
+    startAt: v.started_at,
+    gameName: v.game_name,
   }));
 };

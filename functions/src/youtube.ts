@@ -1,27 +1,35 @@
 import * as logger from "firebase-functions/logger";
 import { google, youtube_v3 } from "googleapis";
+import { ChannelInfo, StreamInfo, VideoInfo, LiveInfo } from "./types";
 
-export type ChannelInfo = {
-  id: string;
-  name: string;
-  thumbnail: string;
-  uploads: string;
+export const getChannels = async (apiKey: string, channelIds: string[]) => {
+  const res = await google.youtube("v3").channels.list({
+    key: apiKey,
+    part: ["snippet", "contentDetails"],
+    id: channelIds,
+  });
+
+  if (res.status < 200 && 299 < res.status) {
+    logger.error(
+      "[Youtube] The Channels:list API returned an error: status=" + res.status
+    );
+    return [];
+  }
+
+  if (res.data.items === undefined || res.data.items.length == 0) {
+    logger.error("[Youtube] No channel found.");
+    return [];
+  }
+
+  return res.data.items.map((item) => {
+    return {
+      id: item.id,
+      name: item.snippet?.title,
+      thumbnail: item.snippet?.thumbnails?.default?.url,
+      uploads: item.contentDetails?.relatedPlaylists?.uploads,
+    } as ChannelInfo;
+  });
 };
-
-type VideoInfo = {
-  channelId: string;
-  id: string;
-  title: string;
-  thumbnail: string;
-  url: string;
-};
-
-type LiveInfo = {
-  id: string;
-  scheduledStartTime: string;
-};
-
-export type StreamInfo = VideoInfo & LiveInfo;
 
 //ChannelIdの2文字目を'U'にするとそのチャンネルのuploadedPlaylistIdになる
 const getPlaylistIds = (channelIds: string[]) => {
@@ -80,7 +88,7 @@ export const getStreams = async (apiKey: string, channelIds: string[]) => {
     return vi.liveStreamingDetails?.scheduledStartTime
       ? ({
           id: vi.id,
-          scheduledStartTime: vi.liveStreamingDetails?.scheduledStartTime,
+          startAt: vi.liveStreamingDetails?.scheduledStartTime,
         } as LiveInfo)
       : ({} as LiveInfo);
   };
@@ -97,34 +105,5 @@ export const getStreams = async (apiKey: string, channelIds: string[]) => {
 
   return streamingVideos.map((li) => {
     return { ...li, ...uploads.find((vi) => vi.id === li.id) } as StreamInfo;
-  });
-};
-
-export const getChannels = async (apiKey: string, channelIds: string[]) => {
-  const res = await google.youtube("v3").channels.list({
-    key: apiKey,
-    part: ["snippet", "contentDetails"],
-    id: channelIds,
-  });
-
-  if (res.status < 200 && 299 < res.status) {
-    logger.error(
-      "[Youtube] The Channels:list API returned an error: status=" + res.status
-    );
-    return [];
-  }
-
-  if (res.data.items === undefined || res.data.items.length == 0) {
-    logger.error("[Youtube] No channel found.");
-    return [];
-  }
-
-  return res.data.items.map((item) => {
-    return {
-      id: item.id,
-      name: item.snippet?.title,
-      thumbnail: item.snippet?.thumbnails?.default?.url,
-      uploads: item.contentDetails?.relatedPlaylists?.uploads,
-    } as ChannelInfo;
   });
 };

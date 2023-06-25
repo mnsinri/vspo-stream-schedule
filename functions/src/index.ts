@@ -4,6 +4,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as youtube from "./youtube";
 import * as twitch from "./twitch";
 import * as logger from "firebase-functions/logger";
+import { functionCache } from "./types";
 
 admin.initializeApp();
 
@@ -17,10 +18,6 @@ const YOUTUBE_STREAMS_DATA_PATH = process.env.YOUTUBE_STREAMS_DATA_PATH;
 const TWITCH_CHANNELS_DATA_PATH = process.env.TWITCH_CHANNELS_DATA_PATH;
 const TWITCH_STREAMS_DATA_PATH = process.env.TWITCH_STREAMS_DATA_PATH;
 
-type functionCache = {
-  youtubeChannelIds: string[];
-  twitchChennelIds: string[];
-};
 const cache: functionCache = {
   youtubeChannelIds: [],
   twitchChennelIds: [],
