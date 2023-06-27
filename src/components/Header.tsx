@@ -66,7 +66,7 @@ export const Header: React.FC = () => {
   return (
     <Container>
       <Title>
-        <Icon src={logo} />
+        <Icon src={logo} alt="logo" />
         {!isMobile ? (
           <TitleText style={{ color: springColors.text.primary }}>
             Vspo stream schedule
