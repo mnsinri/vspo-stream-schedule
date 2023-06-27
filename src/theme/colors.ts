@@ -18,6 +18,6 @@ export const colors: BaseColors = {
       blue: "#7266CF",
     },
     youtube: "#ff0000",
-    twitch: "#6441a5",
+    twitch: "#9146FF",
   },
 };
