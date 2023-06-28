@@ -32,7 +32,7 @@ const Container = styled(animated.div)`
   `}
 
   ${theme.breakpoints.mediaQueries.lg`
-    width: ${theme.breakpoints.values.lg}px;
+    width: calc(${theme.breakpoints.values.lg}px - env(safe-area-inset-right) - env(safe-area-inset-left));
   `}
 
   ${theme.breakpoints.mediaQueries.xl`

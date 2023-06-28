@@ -39,10 +39,9 @@ const Icon = styled(animated.div)`
   align-self: center;
 `;
 
-const StateText = styled(animated.span)`
+const StateText = styled(animated.div)`
   font-weight: bold;
   font-size: 10px;
-  vertical-align: middle;
 
   ${theme.breakpoints.mediaQueries.md`
     font-size: 16px;
