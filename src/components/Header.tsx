@@ -7,7 +7,6 @@ import { useTheme, useWindowSize } from "../hooks";
 import { animated } from "@react-spring/web";
 
 const Container = styled.div`
-  margin-top: env(safe-area-inset-top, 0px);
   width: 100%;
   height: 80px;
   // position: sticky;

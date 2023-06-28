@@ -24,15 +24,15 @@ const Container = styled(animated.div)`
   }
 
   ${theme.breakpoints.mediaQueries.sm`
-    width: calc(${theme.breakpoints.values.sm}px - env(safe-area-inset-right) - env(safe-area-inset-left));
+    width: ${theme.breakpoints.values.sm}px;
   `}
 
   ${theme.breakpoints.mediaQueries.md`
-    width: calc(${theme.breakpoints.values.md}px - env(safe-area-inset-right) - env(safe-area-inset-left));
+    width: ${theme.breakpoints.values.md}px;
   `}
 
   ${theme.breakpoints.mediaQueries.lg`
-    width: calc(${theme.breakpoints.values.lg}px - env(safe-area-inset-right) - env(safe-area-inset-left));
+    width: ${theme.breakpoints.values.lg}px;
   `}
 
   ${theme.breakpoints.mediaQueries.xl`
