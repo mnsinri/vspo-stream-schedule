@@ -12,7 +12,7 @@ const Container = styled(animated.div)`
   height: 120px;
   margin: auto;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     width: 320px;
     height: 240px;
   `}
@@ -21,7 +21,7 @@ const Container = styled(animated.div)`
 const Card = styled(animated.div)`
   position: relative;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 180px;
   `}
 `;

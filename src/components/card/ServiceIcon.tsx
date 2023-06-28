@@ -14,7 +14,7 @@ const Panel = styled(animated.div)`
   border-radius: 8px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 28px;
     border-radius: 15px;
     box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
@@ -23,13 +23,13 @@ const Panel = styled(animated.div)`
 
 const InnerContainer = styled(animated.div)`
   display: flex;
-  gap: 2px;
   height: 14px;
   margin: auto;
+  gap: 2px;
 
-  ${theme.breakpoint.md`
-    gap: 5px;
+  ${theme.breakpoints.mediaQueries.md`
     height: 24px;
+    gap: 5px;
   `}
 `;
 
@@ -44,7 +44,7 @@ const StateText = styled(animated.span)`
   font-size: 10px;
   vertical-align: middle;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     font-size: 16px;
   `}
 `;
@@ -60,7 +60,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   isExpand,
   ...props
 }) => {
-  const { colors } = useTheme();
+  const { colors, springColors } = useTheme();
   const startTime = useRef(new Date(startAt));
   const { isMobile } = useWindowSize();
   const serviceColor = useRef<string>();
@@ -121,22 +121,18 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
     },
   });
 
-  const { backgroundColor, textColor } = useSpring({
-    backgroundColor: colors.base.secondary,
-    textColor: colors.text.primary,
-    config: colors.config,
-  });
-
   return (
     <div {...props}>
-      <Panel style={{ width, backgroundColor }}>
+      <Panel style={{ width, backgroundColor: springColors.base.secondary }}>
         <InnerContainer>
           <Icon style={{ color }}>
             <IconContext.Provider value={{ size: "100%" }}>
               <ServiceFaIcon />
             </IconContext.Provider>
           </Icon>
-          <StateText style={{ display, opacity, color: textColor }}>
+          <StateText
+            style={{ display, opacity, color: springColors.text.primary }}
+          >
             {isLive ? "LIVE" : getStartTime(startAt)}
           </StateText>
         </InnerContainer>

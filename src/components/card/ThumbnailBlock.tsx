@@ -12,7 +12,7 @@ const Panel = styled(animated.div)`
   border-radius: 10px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     width: 320px;
     height: 180px;
   `}
@@ -22,7 +22,7 @@ const Thumbnail = styled(animated.img)`
   width: 160px;
   height: 90px;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     width: 320px;
     height: 180px;
   `}
@@ -35,7 +35,7 @@ const Header = styled(animated.div)`
   position: absolute;
   bottom: 0;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 60px
   `}
 `;
@@ -48,7 +48,7 @@ const Icon = styled(animated.img)`
   border-radius: 50%;
   object-fit: cover;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 50px;
     margin-left: 6px;
   `}
@@ -62,7 +62,7 @@ const Contents = styled(animated.div)`
   flex-direction: column;
   justify-content: center;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     margin-left: 6px;
     width: 250px;
   `}
@@ -77,7 +77,7 @@ const Title = styled(animated.div)`
   text-overflow: ellipsis;
   margin-top: 2px;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     font-size: 20px;
     margin-top: 0;
   `}
@@ -93,7 +93,7 @@ const Name = styled(animated.div)`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     font-size: 15px;
     transform: scale(1);
   `}

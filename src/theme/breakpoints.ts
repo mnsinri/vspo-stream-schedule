@@ -4,19 +4,33 @@ import {
   SimpleInterpolation,
   css,
 } from "styled-components";
+import {
+  BreakpointMediaQueries,
+  BreakpointValues,
+  Breakpoints,
+} from "../types";
 
-export const breakpoint = {
-  base: (
-    base: CSSObject | TemplateStringsArray,
+const values: BreakpointValues = {
+  xs: 0,
+  sm: 576,
+  md: 768,
+  lg: 992,
+  xl: 1200,
+  xxl: 1600,
+};
+
+const mediaQueries: BreakpointMediaQueries = {
+  xs: (
+    xs: CSSObject | TemplateStringsArray,
     ...interpolations: SimpleInterpolation[]
   ): FlattenSimpleInterpolation => css`
-    ${css(base, ...interpolations)}
+    ${css(xs, ...interpolations)}
   `,
   sm: (
     sm: CSSObject | TemplateStringsArray,
     ...interpolations: SimpleInterpolation[]
   ): FlattenSimpleInterpolation => css`
-    @media (min-width: 640px) {
+    @media (min-width: ${values.sm}px) {
       ${css(sm, ...interpolations)}
     }
   `,
@@ -24,7 +38,7 @@ export const breakpoint = {
     md: CSSObject | TemplateStringsArray,
     ...interpolations: SimpleInterpolation[]
   ): FlattenSimpleInterpolation => css`
-    @media (min-width: 768px) {
+    @media (min-width: ${values.md}px) {
       ${css(md, ...interpolations)}
     }
   `,
@@ -32,7 +46,7 @@ export const breakpoint = {
     lg: CSSObject | TemplateStringsArray,
     ...interpolations: SimpleInterpolation[]
   ): FlattenSimpleInterpolation => css`
-    @media (min-width: 1024px) {
+    @media (min-width: ${values.lg}px) {
       ${css(lg, ...interpolations)}
     }
   `,
@@ -40,16 +54,21 @@ export const breakpoint = {
     xl: CSSObject | TemplateStringsArray,
     ...interpolations: SimpleInterpolation[]
   ): FlattenSimpleInterpolation => css`
-    @media (min-width: 1280px) {
+    @media (min-width: ${values.xl}px) {
       ${css(xl, ...interpolations)}
     }
   `,
-  xll: (
-    xl: CSSObject | TemplateStringsArray,
+  xxl: (
+    xxl: CSSObject | TemplateStringsArray,
     ...interpolations: SimpleInterpolation[]
   ): FlattenSimpleInterpolation => css`
-    @media (min-width: 1680px) {
-      ${css(xl, ...interpolations)}
+    @media (min-width: ${values.xxl}px) {
+      ${css(xxl, ...interpolations)}
     }
   `,
+};
+
+export const breakpoints: Breakpoints = {
+  values,
+  mediaQueries,
 };

@@ -23,24 +23,24 @@ const Container = styled(animated.div)`
     display: none;
   }
 
-  ${theme.breakpoint.sm`
-    width: 640px;
+  ${theme.breakpoints.mediaQueries.sm`
+    width: calc(${theme.breakpoints.values.sm}px - env(safe-area-inset-right) - env(safe-area-inset-left));
   `}
 
-  ${theme.breakpoint.md`
-    width: 768px;
+  ${theme.breakpoints.mediaQueries.md`
+    width: calc(${theme.breakpoints.values.md}px - env(safe-area-inset-right) - env(safe-area-inset-left));
   `}
 
-  ${theme.breakpoint.lg`
-    width: 1024px;
+  ${theme.breakpoints.mediaQueries.lg`
+    width: ${theme.breakpoints.values.lg}px;
   `}
 
-  ${theme.breakpoint.xl`
-    width: 1280px;
+  ${theme.breakpoints.mediaQueries.xl`
+    width: ${theme.breakpoints.values.xl}px;
   `}
 
-  ${theme.breakpoint.xll`
-    width: 1680px;
+  ${theme.breakpoints.mediaQueries.xxl`
+    width: ${theme.breakpoints.values.xxl}px;
   `}
 `;
 
@@ -48,11 +48,11 @@ const InnerContainer = styled(animated.div)`
   margin: 0 auto;
   width: 87%;
 
-  ${theme.breakpoint.lg`
+  ${theme.breakpoints.mediaQueries.lg`
     width: 75%;
   `}
 
-  ${theme.breakpoint.xl`
+  ${theme.breakpoints.mediaQueries.xl`
     width: 87%;
   `}
 `;

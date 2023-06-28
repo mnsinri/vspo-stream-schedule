@@ -47,23 +47,37 @@ export type ThemeColors = {
   config: SpringConfig;
 };
 
-export type Theme = {
-  breakpoint: Breakpoints;
-  colors: BaseColors;
+export type BreakpointValues = {
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+  xxl: number;
 };
 
-export type Breakpoint = (
+export type BreakpointMediaQuery = (
   base: CSSObject | TemplateStringsArray,
   ...interpolations: SimpleInterpolation[]
 ) => FlattenSimpleInterpolation;
 
+export type BreakpointMediaQueries = {
+  xs: BreakpointMediaQuery;
+  sm: BreakpointMediaQuery;
+  md: BreakpointMediaQuery;
+  lg: BreakpointMediaQuery;
+  xl: BreakpointMediaQuery;
+  xxl: BreakpointMediaQuery;
+};
+
 export type Breakpoints = {
-  base: Breakpoint;
-  sm: Breakpoint;
-  md: Breakpoint;
-  lg: Breakpoint;
-  xl: Breakpoint;
-  xll: Breakpoint;
+  values: BreakpointValues;
+  mediaQueries: BreakpointMediaQueries;
+};
+
+export type Theme = {
+  breakpoints: Breakpoints;
+  colors: BaseColors;
 };
 
 export type ThemeContextType = {

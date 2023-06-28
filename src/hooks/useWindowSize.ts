@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { theme } from "../theme";
 
 export const useWindowSize = () => {
   const [size, setSize] = useState([0, 0]);
@@ -16,8 +17,8 @@ export const useWindowSize = () => {
     () => ({
       x: size[0],
       y: size[1],
-      isMobile: size[0] < 768,
-      isDesktop: 1024 <= size[0],
+      isMobile: size[0] < theme.breakpoints.values.md,
+      isDesktop: theme.breakpoints.values.lg <= size[0],
     }),
     [size]
   );
