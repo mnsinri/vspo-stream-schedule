@@ -23,6 +23,7 @@ const Panel = styled(animated.div)`
 
 const InnerContainer = styled(animated.div)`
   display: flex;
+  align-items: center;
   height: 14px;
   margin: auto;
   gap: 2px;
@@ -34,15 +35,18 @@ const InnerContainer = styled(animated.div)`
 `;
 
 const Icon = styled(animated.div)`
-  height: 75%;
+  height: 100%;
+  width: 12px;
   display: flex;
-  align-self: center;
+
+  ${theme.breakpoints.mediaQueries.md`
+    width: 20px;
+  `}
 `;
 
-const StateText = styled(animated.span)`
+const StateText = styled(animated.div)`
   font-weight: bold;
   font-size: 10px;
-  vertical-align: middle;
 
   ${theme.breakpoints.mediaQueries.md`
     font-size: 16px;
