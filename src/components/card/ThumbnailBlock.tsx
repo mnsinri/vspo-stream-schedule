@@ -11,6 +11,7 @@ const Panel = styled(animated.div)`
   background-color: white;
   border-radius: 10px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  position: relative;
 
   ${theme.breakpoints.mediaQueries.md`
     width: 320px;
@@ -30,13 +31,14 @@ const Thumbnail = styled(animated.img)`
 
 const Header = styled(animated.div)`
   width: 100%;
-  height: 30px;
   display: flex;
   position: absolute;
+  left: 0;
   bottom: 0;
+  height: 30px;
 
   ${theme.breakpoints.mediaQueries.md`
-    height: 60px
+    height: 60px;
   `}
 `;
 
