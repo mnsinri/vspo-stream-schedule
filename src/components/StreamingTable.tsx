@@ -11,7 +11,7 @@ const Container = styled(animated.div)`
   grid-gap: 20px 0px;
   justify-content: space-between;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     grid-template-columns: repeat(auto-fill, 320px);
   `}
 `;

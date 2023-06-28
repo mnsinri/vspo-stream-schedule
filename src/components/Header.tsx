@@ -7,6 +7,7 @@ import { useTheme, useWindowSize } from "../hooks";
 import { animated } from "@react-spring/web";
 
 const Container = styled.div`
+  margin-top: env(safe-area-inset-top, 0px);
   width: 100%;
   height: 80px;
   // position: sticky;
@@ -15,7 +16,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 100px;
   `}
 `;
@@ -26,7 +27,7 @@ const Title = styled.div`
   display: flex;
   justify-content: center;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     justify-content: start;
   `}
 `;
@@ -35,7 +36,7 @@ const Icon = styled.img`
   width: 60px;
   height: 60px;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     width: 50px;
     height: 50px;
   `}
@@ -54,7 +55,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     width: 120px;
     justify-content: flex-end;
   `}

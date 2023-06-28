@@ -14,7 +14,7 @@ const Panel = styled(animated.div)`
   border-radius: 8px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 28px;
     border-radius: 15px;
     box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
@@ -25,9 +25,11 @@ const InnerContainer = styled(animated.div)`
   display: flex;
   height: 14px;
   margin: auto;
+  gap: 2px;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     height: 24px;
+    gap: 5px;
   `}
 `;
 
@@ -35,18 +37,15 @@ const Icon = styled(animated.div)`
   height: 75%;
   display: flex;
   align-self: center;
-  margin-top: 1px;
 `;
 
 const StateText = styled(animated.span)`
   font-weight: bold;
   font-size: 10px;
   vertical-align: middle;
-  margin-left: 2px;
 
-  ${theme.breakpoint.md`
+  ${theme.breakpoints.mediaQueries.md`
     font-size: 16px;
-    margin-left: 5px;
   `}
 `;
 
