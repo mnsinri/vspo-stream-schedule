@@ -9,12 +9,9 @@ import { theme } from "../../theme";
 
 const Container = styled(animated.div)`
   width: 160px;
-  height: 120px;
-  margin: auto;
 
   ${theme.breakpoints.mediaQueries.md`
     width: 320px;
-    height: 240px;
   `}
 `;
 
@@ -22,7 +19,7 @@ const Card = styled(animated.div)`
   position: relative;
 
   ${theme.breakpoints.mediaQueries.md`
-    height: 180px;
+    min-height: 180px;
   `}
 `;
 

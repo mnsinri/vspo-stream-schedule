@@ -1,5 +1,12 @@
 import { StreamInfo, Services } from "./frontLogic";
 
+export type WindowSize = {
+  x: number;
+  y: number;
+  isMobile: boolean;
+  isDesktop: boolean;
+};
+
 export type ThumbnailBlockProps = {
   title: string;
   thumbnail: string;

@@ -1,6 +1,7 @@
 import React from "react";
 import {
   VspoStreamingProvider,
+  WindowSizeProvider,
   ThemeProvider,
   MainContainer,
   Background,
@@ -8,12 +9,14 @@ import {
 
 export const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <Background>
-        <VspoStreamingProvider>
-          <MainContainer />
-        </VspoStreamingProvider>
-      </Background>
-    </ThemeProvider>
+    <WindowSizeProvider>
+      <ThemeProvider>
+        <Background>
+          <VspoStreamingProvider>
+            <MainContainer />
+          </VspoStreamingProvider>
+        </Background>
+      </ThemeProvider>
+    </WindowSizeProvider>
   );
 };

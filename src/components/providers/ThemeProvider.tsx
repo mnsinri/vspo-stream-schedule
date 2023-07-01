@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   ChildrenNode,
   SpringColors,
@@ -8,6 +14,9 @@ import {
 import { theme } from "../../theme";
 import { easings, useSpring } from "@react-spring/web";
 import { useWindowSize } from "../../hooks";
+
+const cacheVersion = "vspo";
+const cacheKey = "theme";
 
 export const ThemeContext = createContext<ThemeContextType>({
   colors: {} as ThemeColors,
@@ -56,6 +65,23 @@ export const ThemeProvider: React.FC<ChildrenNode> = ({ children }) => {
   };
 
   const toggleTheme = useCallback(() => setDark((isDark) => !isDark), []);
+
+  useEffect(() => {
+    (async () => {
+      const cachedTheme = await caches
+        .match(cacheKey)
+        .then((r) => r?.text())
+        .then((r) => JSON.parse(r ?? "null"));
+
+      setDark(cachedTheme);
+    })();
+  }, []);
+
+  useEffect(() => {
+    caches.open(cacheVersion).then((cache) => {
+      cache.put(cacheKey, new Response(JSON.stringify(isDark)));
+    });
+  }, [isDark]);
 
   const context = useMemo<ThemeContextType>(
     () => ({
