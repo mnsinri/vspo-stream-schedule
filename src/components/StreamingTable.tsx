@@ -61,18 +61,22 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({ streams }) => {
     <Container ref={container} height={height}>
       {streamsMatrix.map((st, i) => (
         <FlexBox key={i}>
-          {st.map((s) => (
-            <StreamingCard
-              key={s.id}
-              title={s.title}
-              thumbnail={s.thumbnail}
-              name={s.name}
-              icon={s.icon}
-              service={s.service}
-              url={s.url}
-              startAt={s.startAt}
-            />
-          ))}
+          {st.length ? (
+            st.map((s) => (
+              <StreamingCard
+                key={s.id}
+                title={s.title}
+                thumbnail={s.thumbnail}
+                name={s.name}
+                icon={s.icon}
+                service={s.service}
+                url={s.url}
+                startAt={s.startAt}
+              />
+            ))
+          ) : (
+            <div style={{ width: isMobile ? 160 : 320 }} />
+          )}
         </FlexBox>
       ))}
     </Container>
