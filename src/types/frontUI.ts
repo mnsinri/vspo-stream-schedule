@@ -1,8 +1,11 @@
 import { StreamInfo, Services } from "./frontLogic";
 
 export type WindowSize = {
-  x: number;
-  y: number;
+  width: number;
+  height: number;
+};
+
+export type WindowType = {
   isMobile: boolean;
   isDesktop: boolean;
 };

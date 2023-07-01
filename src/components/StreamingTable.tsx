@@ -24,22 +24,20 @@ const FlexBox = styled.div`
 
 export const StreamingTable: React.FC<StreamingTableProps> = ({ streams }) => {
   const container = useRef<HTMLDivElement>(null!);
-  const { x, isMobile } = useWindowSize();
+  const { width, isMobile } = useWindowSize();
   const [rowNum, setRowNum] = useState<number>(0);
 
-  const sortedStreams = useMemo(
-    () =>
-      streams.sort((a, b) =>
-        a.startAt + a.name > b.startAt + b.name ? 1 : -1
-      ),
-    [streams]
-  );
+  const sortedStreams = useMemo(() => {
+    return streams.sort((a, b) =>
+      a.startAt + a.name > b.startAt + b.name ? 1 : -1
+    );
+  }, [streams]);
 
   useLayoutEffect(() => {
     setRowNum(
       Math.floor((container.current.offsetWidth ?? 0) / (isMobile ? 160 : 320))
     );
-  }, [x]);
+  }, [width]);
 
   const height = useMemo(() => {
     const columnNum = Math.ceil(streams.length / rowNum);
@@ -56,14 +54,14 @@ export const StreamingTable: React.FC<StreamingTableProps> = ({ streams }) => {
       [...Array(rowNum)].map((_, i) =>
         sortedStreams.filter((_, j) => j % rowNum === i)
       ),
-    [rowNum]
+    [rowNum, sortedStreams]
   );
 
   return (
     <Container ref={container} height={height}>
-      {streamsMatrix.map((sts, i) => (
+      {streamsMatrix.map((st, i) => (
         <FlexBox key={i}>
-          {sts.map((s) => (
+          {st.map((s) => (
             <StreamingCard
               key={s.id}
               title={s.title}
