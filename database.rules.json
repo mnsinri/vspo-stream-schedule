@@ -8,6 +8,10 @@
     "data": {
       ".read": true,
       ".write": false
+    },
+    "testData": {
+      ".read": true,
+      ".write": false
     }
   }
 }
