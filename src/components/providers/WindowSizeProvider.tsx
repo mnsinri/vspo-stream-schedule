@@ -1,16 +1,17 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import { ChildrenNode, WindowSize } from "../../types";
+import { ChildrenNode, WindowSize, WindowType } from "../../types";
 import { theme } from "../../theme";
 
-export const WindowSizeContext = createContext<WindowSize>(null!);
+export const WindowSizeContext = createContext<WindowSize & WindowType>(null!);
 
 export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
+  const [size, setSize] = useState<WindowSize>({ width: 0, height: 0 });
 
   const handleWindowSizeChange = () => {
-    setX(window.innerWidth);
-    setY(window.innerHeight);
+    setSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
   };
   useEffect(() => {
     handleWindowSizeChange();
@@ -18,17 +19,16 @@ export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
     return () => window.removeEventListener("resize", handleWindowSizeChange);
   }, []);
 
-  const winSize = useMemo<WindowSize>(
+  const windowType = useMemo<WindowType>(
     () => ({
-      x,
-      y,
-      isMobile: x < theme.breakpoints.values.md,
-      isDesktop: theme.breakpoints.values.lg <= x,
+      isMobile: size.width < theme.breakpoints.values.md,
+      isDesktop: theme.breakpoints.values.lg <= size.width,
     }),
-    [x, y]
+    [size]
   );
+
   return (
-    <WindowSizeContext.Provider value={winSize}>
+    <WindowSizeContext.Provider value={{ ...size, ...windowType }}>
       {children}
     </WindowSizeContext.Provider>
   );
