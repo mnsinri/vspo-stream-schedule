@@ -49,3 +49,8 @@ export type BaseButtonProps = {
 export type LinkButtonProps = {
   url: string;
 } & Omit<BaseButtonProps, "onClickHandler">;
+
+export type StreamList = {
+  date: string;
+  streams: StreamInfo[];
+};

@@ -1,6 +1,7 @@
 import React, { createContext, useMemo } from "react";
 import { ChildrenNode, ChannelDTO, StreamDTO, StreamInfo } from "../../types";
 import { useDB } from "../../hooks";
+import { getFormattedDate, parseToJST } from "../../utils";
 
 const DB_DATA_PATH = process.env.REACT_APP_DB_DATA_PATH;
 
@@ -40,6 +41,7 @@ export const VspoStreamingProvider: React.FC<ChildrenNode> = ({ children }) => {
           thumbnail: s.thumbnail,
           url: s.url,
           startAt: s.startAt,
+          scheduledDate: getFormattedDate(parseToJST(Date.parse(s.startAt))),
           service: "youtube",
           channelId: ch.id,
           name: ch.name,
@@ -62,6 +64,7 @@ export const VspoStreamingProvider: React.FC<ChildrenNode> = ({ children }) => {
           thumbnail: s.thumbnail,
           url: s.url,
           startAt: s.startAt,
+          scheduledDate: getFormattedDate(parseToJST(Date.parse(s.startAt))),
           service: "twitch",
           channelId: ch.id,
           name: ch.name,
