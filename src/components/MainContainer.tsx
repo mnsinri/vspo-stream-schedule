@@ -45,14 +45,18 @@ const Container = styled(animated.div)`
 
 const InnerContainer = styled(animated.div)`
   margin: 0 auto;
-  width: 87%;
+  width: 90%;
+
+  ${theme.breakpoints.mediaQueries.sm`
+    width: 88%;
+  `}
 
   ${theme.breakpoints.mediaQueries.lg`
-    width: 75%;
+    width: 73%;
   `}
 
   ${theme.breakpoints.mediaQueries.xl`
-    width: 87%;
+    width: 88%;
   `}
 `;
 

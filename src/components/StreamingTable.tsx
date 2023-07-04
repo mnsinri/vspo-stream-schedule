@@ -31,7 +31,7 @@ export const StreamingTable: React.FC<StreamingTableProps> = React.memo(
     useLayoutEffect(() => {
       setRowNum(
         Math.floor(
-          (container.current.offsetWidth ?? 0) / (isMobile ? 160 : 320)
+          (container.current.offsetWidth ?? 0) / (5 + (isMobile ? 160 : 320))
         )
       );
     }, [width]);
