@@ -1,12 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
 import { animated } from "@react-spring/web";
 import { theme } from "../theme";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
 import { useVspoStreams } from "../hooks";
-import { StreamInfo } from "../types";
-import { parseJST, getFormatedDate } from "../utils";
+import { StreamInfo, StreamList } from "../types";
 import { Header } from "./Header";
 
 const Container = styled(animated.div)`
@@ -14,7 +13,7 @@ const Container = styled(animated.div)`
   background: rgba(240, 240, 240, 0.08);
   box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
 
-  height: 100vh;
+  height: 100svh;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -46,14 +45,18 @@ const Container = styled(animated.div)`
 
 const InnerContainer = styled(animated.div)`
   margin: 0 auto;
-  width: 87%;
+  width: 90%;
+
+  ${theme.breakpoints.mediaQueries.sm`
+    width: 88%;
+  `}
 
   ${theme.breakpoints.mediaQueries.lg`
-    width: 75%;
+    width: 73%;
   `}
 
   ${theme.breakpoints.mediaQueries.xl`
-    width: 87%;
+    width: 88%;
   `}
 `;
 
@@ -67,40 +70,31 @@ const TableContainer = styled.div`
   padding-bottom: 40px;
 `;
 
-export const MainContainer: React.FC = () => {
+export const MainContainer = React.memo(() => {
   const streams = useVspoStreams();
 
-  const sortedStreams = useMemo(() => {
-    const stMap = streams.reduce(
-      (map: Map<string, StreamInfo[]>, cur: StreamInfo) => {
-        const fDate = getFormatedDate(parseJST(Date.parse(cur.startAt)));
+  const parseToStreamList = (streams: StreamInfo[]): StreamList[] => {
+    const dateSet = new Set(streams.map((s) => s.scheduledDate));
+    const streamList = [...dateSet].map((date) => ({
+      date,
+      streams: streams.filter((s) => s.scheduledDate === date),
+    }));
 
-        if (map.has(fDate)) {
-          map.get(fDate)?.push(cur);
-        } else {
-          map.set(fDate, [cur]);
-        }
-
-        return map;
-      },
-      new Map<string, StreamInfo[]>()
-    );
-
-    return Array.from(stMap).sort((a, b) => (a[0] > b[0] ? 1 : -1));
-  }, [streams]);
+    return streamList.sort((a, b) => (a.date > b.date ? 1 : -1));
+  };
 
   return (
     <Container>
       <InnerContainer>
         <Header />
-        {sortedStreams.map((m) => (
-          <TableContainer key={m[0]}>
-            <DateBorder dateString={m[0]} />
+        {parseToStreamList(streams).map((s) => (
+          <TableContainer key={s.date}>
+            <DateBorder dateString={s.date} />
             <Spacer />
-            <StreamingTable streams={m[1]} />
+            <StreamingTable streams={s.streams} />
           </TableContainer>
         ))}
       </InnerContainer>
     </Container>
   );
-};
+});

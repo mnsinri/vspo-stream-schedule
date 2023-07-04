@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { animated, useSpring } from "@react-spring/web";
 import { DateBorderProps } from "../types";
 import { useTheme } from "../hooks";
-import { getFormatedDate, parseJST } from "../utils";
+import { getFormattedDate, parseToJST } from "../utils";
 
 const Container = styled.div`
   display: flex;
@@ -34,9 +34,9 @@ export const DateBorder = React.memo<DateBorderProps>(
   ({ dateString, ...props }) => {
     const { springColors, colors } = useTheme();
 
-    const parseDateforView = (dateString: string) => {
-      const today = parseJST(Date.now());
-      if (getFormatedDate(today) === dateString) {
+    const parseToViewDate = (dateString: string) => {
+      const today = parseToJST(Date.now());
+      if (getFormattedDate(today) === dateString) {
         return "Today";
       }
 
@@ -45,7 +45,7 @@ export const DateBorder = React.memo<DateBorderProps>(
         today.getMonth(),
         today.getDate() + 1
       );
-      if (getFormatedDate(tomorrow) === dateString) {
+      if (getFormattedDate(tomorrow) === dateString) {
         return "Tomorrow";
       }
 
@@ -54,7 +54,7 @@ export const DateBorder = React.memo<DateBorderProps>(
         today.getMonth(),
         today.getDate() - 1
       );
-      if (getFormatedDate(yesterday) === dateString) {
+      if (getFormattedDate(yesterday) === dateString) {
         return "Yesterday";
       }
 
@@ -91,7 +91,7 @@ export const DateBorder = React.memo<DateBorderProps>(
           />
         </Icon>
         <DateLabel style={{ color: springColors.text.primary }}>
-          {parseDateforView(dateString)}
+          {parseToViewDate(dateString)}
         </DateLabel>
       </Container>
     );

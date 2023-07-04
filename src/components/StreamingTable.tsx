@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { StreamingTableProps } from "../types";
 import { StreamingCard } from "./card";
@@ -22,63 +22,60 @@ const FlexBox = styled.div`
   `}
 `;
 
-export const StreamingTable: React.FC<StreamingTableProps> = ({ streams }) => {
-  const container = useRef<HTMLDivElement>(null!);
-  const { width, isMobile } = useWindowSize();
-  const [rowNum, setRowNum] = useState<number>(0);
+export const StreamingTable: React.FC<StreamingTableProps> = React.memo(
+  ({ streams }) => {
+    const container = useRef<HTMLDivElement>(null!);
+    const { width, isMobile } = useWindowSize();
+    const [rowNum, setRowNum] = useState<number>(0);
 
-  const sortedStreams = useMemo(() => {
-    return streams.sort((a, b) =>
+    useLayoutEffect(() => {
+      setRowNum(
+        Math.floor(
+          (container.current.offsetWidth ?? 0) / (5 + (isMobile ? 160 : 320))
+        )
+      );
+    }, [width]);
+
+    const sortedStreams = streams.sort((a, b) =>
       a.startAt + a.name > b.startAt + b.name ? 1 : -1
     );
-  }, [streams]);
 
-  useLayoutEffect(() => {
-    setRowNum(
-      Math.floor((container.current.offsetWidth ?? 0) / (isMobile ? 160 : 320))
-    );
-  }, [width]);
-
-  const height = useMemo(() => {
     const columnNum = Math.ceil(streams.length / rowNum);
-
-    return (
+    const height =
       columnNum * (isMobile ? 90 : 180) +
       (columnNum - 1) * 40 +
-      (isMobile ? 30 : 60)
+      (isMobile ? 30 : 60);
+
+    const streamsMatrix = [...Array(rowNum)].map((_, i) =>
+      sortedStreams.filter((_, j) => j % rowNum === i)
     );
-  }, [rowNum]);
 
-  const streamsMatrix = useMemo(
-    () =>
-      [...Array(rowNum)].map((_, i) =>
-        sortedStreams.filter((_, j) => j % rowNum === i)
-      ),
-    [rowNum, sortedStreams]
-  );
-
-  return (
-    <Container ref={container} height={height}>
-      {streamsMatrix.map((st, i) => (
-        <FlexBox key={i}>
-          {st.length ? (
-            st.map((s) => (
-              <StreamingCard
-                key={s.id}
-                title={s.title}
-                thumbnail={s.thumbnail}
-                name={s.name}
-                icon={s.icon}
-                service={s.service}
-                url={s.url}
-                startAt={s.startAt}
-              />
-            ))
-          ) : (
-            <div style={{ width: isMobile ? 160 : 320 }} />
-          )}
-        </FlexBox>
-      ))}
-    </Container>
-  );
-};
+    return (
+      <Container ref={container} height={height}>
+        {streamsMatrix.map((st, i) => (
+          <FlexBox key={i}>
+            {st.length ? (
+              st.map((s) => (
+                <StreamingCard
+                  key={s.id}
+                  title={s.title}
+                  thumbnail={s.thumbnail}
+                  name={s.name}
+                  icon={s.icon}
+                  service={s.service}
+                  url={s.url}
+                  startAt={s.startAt}
+                />
+              ))
+            ) : (
+              <div style={{ width: isMobile ? 160 : 320 }} />
+            )}
+          </FlexBox>
+        ))}
+      </Container>
+    );
+  },
+  (prev, next) =>
+    prev.streams.map((s) => s.id).toString() ===
+    next.streams.map((s) => s.id).toString()
+);

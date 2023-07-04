@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import { FaYoutube, FaTwitch } from "react-icons/fa";
 import { useTheme, useWindowSize } from "../../hooks";
 import { theme } from "../../theme";
-import { parseJST } from "../../utils";
+import { parseToJST } from "../../utils";
 
 const Panel = styled(animated.div)`
   display: flex;
@@ -54,7 +54,7 @@ const StateText = styled(animated.div)`
 `;
 
 const getStartTime = (timeString: string) => {
-  const date = parseJST(Date.parse(timeString));
+  const date = parseToJST(Date.parse(timeString));
   return date.getHours() + ":" + date.getMinutes().toString().padStart(2, "0");
 };
 

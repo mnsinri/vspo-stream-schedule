@@ -39,6 +39,7 @@ export type StreamInfo = {
   thumbnail: string;
   url: string;
   startAt: string;
+  scheduledDate: string;
   channelId: string;
   name: string;
   icon: string;

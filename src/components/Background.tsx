@@ -9,11 +9,11 @@ const Container = styled(animated.div)`
   width: 100%;
 `;
 
-export const Background: React.FC<ChildrenNode> = ({ children, ...props }) => {
+export const Background = React.memo<ChildrenNode>(({ children, ...props }) => {
   const { springColors } = useTheme();
   return (
     <Container style={{ background: springColors.base.primary }} {...props}>
       {children}
     </Container>
   );
-};
+});
