@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StreamingCardProps } from "../../types";
 import { ServiceIcon } from "./ServiceIcon";
 import { ThumbnailBlock } from "./ThumbnailBlock";
@@ -26,19 +26,24 @@ const Card = styled(animated.div)`
 export const StreamingCard = React.memo<StreamingCardProps>(
   ({ title, thumbnail, name, icon, service, url, startAt }) => {
     const { hovered, hoverSpread } = useHover();
-    const { isDesktop } = useWindowSize();
+    const { isMobile, isDesktopSize } = useWindowSize();
+
+    const isHoverable = useMemo(
+      () => !isMobile && isDesktopSize,
+      [isMobile, isDesktopSize]
+    );
 
     return (
       <Container>
         <Card
           onClick={() => window.open(url)}
           aria-label={title}
-          {...(isDesktop ? hoverSpread : {})}
+          {...(isHoverable ? hoverSpread : {})}
         >
           <ServiceIcon
             service={service}
             startAt={startAt}
-            isExpand={hovered || !isDesktop}
+            isExpand={!isHoverable || hovered}
             style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}
           />
           <ThumbnailBlock
@@ -46,7 +51,7 @@ export const StreamingCard = React.memo<StreamingCardProps>(
             thumbnail={thumbnail}
             name={name}
             icon={icon}
-            isExpand={hovered || !isDesktop}
+            isExpand={!isHoverable || hovered}
           />
         </Card>
       </Container>

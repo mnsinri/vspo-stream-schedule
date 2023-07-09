@@ -61,19 +61,19 @@ const Wrapper = styled.div`
 `;
 
 export const Header: React.FC = () => {
-  const { isMobile } = useWindowSize();
+  const { isPhoneSize } = useWindowSize();
   const { springColors } = useTheme();
   return (
     <Container>
       <Title>
         <Icon src={logo} alt="logo" />
-        {!isMobile ? (
+        {!isPhoneSize ? (
           <TitleText style={{ color: springColors.text.primary }}>
             Vspo stream schedule
           </TitleText>
         ) : null}
       </Title>
-      <Wrapper style={{ order: isMobile ? -1 : 0 }}>
+      <Wrapper style={{ order: isPhoneSize ? -1 : 0 }}>
         <GithubLinkButton />
       </Wrapper>
       <Wrapper>

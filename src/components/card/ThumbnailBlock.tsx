@@ -111,7 +111,7 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
   ...props
 }) => {
   const { colors } = useTheme();
-  const { isMobile } = useWindowSize();
+  const { isPhoneSize } = useWindowSize();
   const baseSpringConfig = {
     height: isExpand ? "240px" : "180px",
     borderRadius: isExpand ? "10px 10px 0px 0px" : "10px 10px 10px 10px",
@@ -135,7 +135,7 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
 
   const { height, borderRadius, display, shadow } = useSpring({
     ...baseSpringConfig,
-    ...(isMobile ? mobileSpringConfig : {}),
+    ...(isPhoneSize ? mobileSpringConfig : {}),
   });
 
   const { opacity } = useSpring({

@@ -14,7 +14,7 @@ export const WindowSizeContext = createContext<WindowSize & ClientType>(null!);
 
 export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
   const [size, setSize] = useState<WindowSize>({ width: 0, height: 0 });
-  const isMoble = useRef<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const handleWindowSizeChange = () => {
     setSize({
@@ -35,7 +35,8 @@ export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    isMoble.current = checkMoble();
+    // setIsMoble(checkMoble());
+    setIsMobile(true);
 
     handleWindowSizeChange();
     window.addEventListener("resize", handleWindowSizeChange);
@@ -44,12 +45,12 @@ export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
 
   const clientType = useMemo<ClientType>(
     () => ({
-      isMobile: isMoble.current || size.width < theme.breakpoints.values.md,
-      isDesktop: isMoble.current
-        ? false
-        : theme.breakpoints.values.lg <= size.width,
+      isMobile,
+      isPhoneSize: size.width < theme.breakpoints.values.md,
+      isTabletSize: theme.breakpoints.values.md <= size.width,
+      isDesktopSize: theme.breakpoints.values.lg <= size.width,
     }),
-    [size]
+    [size, isMobile]
   );
 
   return (

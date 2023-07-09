@@ -7,7 +7,9 @@ export type WindowSize = {
 
 export type ClientType = {
   isMobile: boolean;
-  isDesktop: boolean;
+  isPhoneSize: boolean;
+  isTabletSize: boolean;
+  isDesktopSize: boolean;
 };
 
 export type ThumbnailBlockProps = {
