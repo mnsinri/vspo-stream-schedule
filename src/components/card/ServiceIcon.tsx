@@ -66,7 +66,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
 }) => {
   const { colors, springColors } = useTheme();
   const startTime = useRef(new Date(startAt));
-  const { isMobile } = useWindowSize();
+  const { isPhoneSize } = useWindowSize();
   const serviceColor = useRef<string>();
 
   const checkLive = () => startTime.current.getTime() < Date.now();
@@ -110,12 +110,12 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   };
 
   const mobileSpringConfig = {
-    width: isExpand ? "50px" : "22px",
+    width: isExpand ? "48px" : "18px",
   };
 
   const { width, display, color } = useSpring({
     ...baseSpringConfig,
-    ...(isMobile ? mobileSpringConfig : {}),
+    ...(isPhoneSize ? mobileSpringConfig : {}),
   });
   const { opacity } = useSpring({
     opacity: isExpand ? 1 : 0,

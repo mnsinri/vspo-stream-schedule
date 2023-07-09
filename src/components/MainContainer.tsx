@@ -13,7 +13,7 @@ const Container = styled(animated.div)`
   background: rgba(240, 240, 240, 0.08);
   box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
 
-  height: 100svh;
+  height: 100%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;

@@ -20,7 +20,7 @@
     "jsx": "react"
   },
   "include": [
-    "src"
-  ],
-  "files": ["./env.d.ts"],
+    "src",
+    "@types"
+  ]
 }

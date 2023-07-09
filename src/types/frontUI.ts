@@ -5,9 +5,11 @@ export type WindowSize = {
   height: number;
 };
 
-export type WindowType = {
+export type ClientType = {
   isMobile: boolean;
-  isDesktop: boolean;
+  isPhoneSize: boolean;
+  isTabletSize: boolean;
+  isDesktopSize: boolean;
 };
 
 export type ThumbnailBlockProps = {

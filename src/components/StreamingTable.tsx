@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useMemo, useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { StreamingTableProps } from "../types";
 import { StreamingCard } from "./card";
@@ -25,14 +25,21 @@ const FlexBox = styled.div`
 export const StreamingTable: React.FC<StreamingTableProps> = React.memo(
   ({ streams }) => {
     const container = useRef<HTMLDivElement>(null!);
-    const { width, isMobile } = useWindowSize();
+    const { width, isPhoneSize } = useWindowSize();
     const [rowNum, setRowNum] = useState<number>(0);
+
+    const cardSize = useMemo(
+      () => ({
+        width: isPhoneSize ? 160 : 320,
+        height: isPhoneSize ? 90 : 180,
+        headerHeight: isPhoneSize ? 30 : 60,
+      }),
+      [isPhoneSize]
+    );
 
     useLayoutEffect(() => {
       setRowNum(
-        Math.floor(
-          (container.current.offsetWidth ?? 0) / (5 + (isMobile ? 160 : 320))
-        )
+        Math.floor((container.current.offsetWidth ?? 0) / (5 + cardSize.width))
       );
     }, [width]);
 
@@ -42,9 +49,9 @@ export const StreamingTable: React.FC<StreamingTableProps> = React.memo(
 
     const columnNum = Math.ceil(streams.length / rowNum);
     const height =
-      columnNum * (isMobile ? 90 : 180) +
+      columnNum * cardSize.height +
       (columnNum - 1) * 40 +
-      (isMobile ? 30 : 60);
+      cardSize.headerHeight;
 
     const streamsMatrix = [...Array(rowNum)].map((_, i) =>
       sortedStreams.filter((_, j) => j % rowNum === i)
@@ -68,7 +75,7 @@ export const StreamingTable: React.FC<StreamingTableProps> = React.memo(
                 />
               ))
             ) : (
-              <div style={{ width: isMobile ? 160 : 320 }} />
+              <div style={{ width: cardSize.width }} />
             )}
           </FlexBox>
         ))}

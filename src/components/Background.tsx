@@ -5,8 +5,8 @@ import { ChildrenNode } from "../types";
 import { useTheme } from "../hooks";
 
 const Container = styled(animated.div)`
-  height: 100%;
-  width: 100%;
+  height: 100svh;
+  width: 100svw;
 `;
 
 export const Background = React.memo<ChildrenNode>(({ children, ...props }) => {
