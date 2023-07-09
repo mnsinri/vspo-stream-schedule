@@ -5,7 +5,7 @@ export type WindowSize = {
   height: number;
 };
 
-export type WindowType = {
+export type ClientType = {
   isMobile: boolean;
   isDesktop: boolean;
 };

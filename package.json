@@ -41,6 +41,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/styled-components": "^5.1.26",
-    "styled-components": "^5.3.10"
+    "styled-components": "^5.3.10",
+    "user-agent-data-types": "^0.3.1"
   }
 }
