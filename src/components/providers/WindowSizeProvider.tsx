@@ -35,8 +35,7 @@ export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // setIsMoble(checkMoble());
-    setIsMobile(true);
+    setIsMobile(checkMoble());
 
     handleWindowSizeChange();
     window.addEventListener("resize", handleWindowSizeChange);
