@@ -110,7 +110,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   };
 
   const mobileSpringConfig = {
-    width: isExpand ? "50px" : "22px",
+    width: isExpand ? "48px" : "18px",
   };
 
   const { width, display, color } = useSpring({

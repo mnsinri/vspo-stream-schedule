@@ -26,7 +26,11 @@ export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
     if (navigator.userAgentData) {
       return navigator.userAgentData.mobile;
     } else {
-      return /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent);
+      return (
+        /android|ipod|ipad|iphone|macintosh/.test(
+          navigator.userAgent.toLowerCase()
+        ) && "ontouchend" in document
+      );
     }
   }, []);
 
