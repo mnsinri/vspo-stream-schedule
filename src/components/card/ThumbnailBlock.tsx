@@ -9,13 +9,14 @@ const Panel = styled(animated.div)`
   width: 160px;
   height: 90px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 5px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   position: relative;
 
   ${theme.breakpoints.mediaQueries.md`
     width: 320px;
     height: 180px;
+    border-radius: 10px;
   `}
 `;
 
