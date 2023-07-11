@@ -4,7 +4,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as youtube from "./youtube";
 import * as twitch from "./twitch";
 import * as logger from "firebase-functions/logger";
-import { functionCache } from "./types";
+// import { functionCache } from "./types";
 
 admin.initializeApp();
 
@@ -18,42 +18,42 @@ const YOUTUBE_STREAMS_DATA_PATH = process.env.YOUTUBE_STREAMS_DATA_PATH;
 const TWITCH_CHANNELS_DATA_PATH = process.env.TWITCH_CHANNELS_DATA_PATH;
 const TWITCH_STREAMS_DATA_PATH = process.env.TWITCH_STREAMS_DATA_PATH;
 
-const cache: functionCache = {
-  youtubeChannelIds: [],
-  twitchChennelIds: [],
-};
+// const cache: functionCache = {
+//   youtubeChannelIds: [],
+//   twitchChennelIds: [],
+// };
 
 const db = getDatabase();
 
-db.ref(VSPO_YOUTUBE_CHANNELS_PATH).on("value", (snap) => {
-  if (snap.exists()) {
-    cache.youtubeChannelIds = snap.val();
-    logger.log("[VspoStreamSchedule] on youtube channels updated", {
-      length: cache.youtubeChannelIds.length,
-    });
-  }
-});
+// db.ref(VSPO_YOUTUBE_CHANNELS_PATH).on("value", (snap) => {
+//   if (snap.exists()) {
+//     cache.youtubeChannelIds = snap.val();
+//     logger.log("[VspoStreamSchedule] on youtube channels updated", {
+//       length: cache.youtubeChannelIds.length,
+//     });
+//   }
+// });
 
-db.ref(VSPO_TWITCH_CHANNELS_PATH).on("value", (snap) => {
-  if (snap.exists()) {
-    cache.twitchChennelIds = snap.val();
-    logger.log("[VspoStreamSchedule] on twitch channels updated", {
-      length: cache.twitchChennelIds.length,
-    });
-  }
-});
+// db.ref(VSPO_TWITCH_CHANNELS_PATH).on("value", (snap) => {
+//   if (snap.exists()) {
+//     cache.twitchChennelIds = snap.val();
+//     logger.log("[VspoStreamSchedule] on twitch channels updated", {
+//       length: cache.twitchChennelIds.length,
+//     });
+//   }
+// });
 
-const checkCahce = async () => {
-  if (!cache.youtubeChannelIds.length) {
-    const snap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
-    cache.youtubeChannelIds = snap.val() ?? [];
-  }
+// const checkCahce = async () => {
+//   if (!cache.youtubeChannelIds.length) {
+//     const snap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+//     cache.youtubeChannelIds = snap.val() ?? [];
+//   }
 
-  if (!cache.twitchChennelIds.length) {
-    const snap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
-    cache.twitchChennelIds = snap.val() ?? [];
-  }
-};
+//   if (!cache.twitchChennelIds.length) {
+//     const snap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
+//     cache.twitchChennelIds = snap.val() ?? [];
+//   }
+// };
 
 export const updateChannels = onSchedule(
   {
@@ -61,25 +61,32 @@ export const updateChannels = onSchedule(
     secrets: ["YOUTUBE_API", "TWITCH_TOKEN", "TWITCH_CLIENT_ID"],
   },
   async (_) => {
-    await checkCahce();
+    const ytChSnap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+    if (ytChSnap.exists()) {
+      const ytChannels = await youtube.getChannels(
+        YOUTUBE_API_KEY,
+        ytChSnap.val()
+      );
+      db.ref(YOUTUBE_CHANNELS_DATA_PATH).set(ytChannels);
+    } else {
+      logger.error(
+        "[vspo-stream-schedule:updateChannels] youtube channels dont exist in rtdb"
+      );
+    }
 
-    const tasks = [
-      youtube.getChannels(YOUTUBE_API_KEY, cache.youtubeChannelIds),
-      twitch.getChannels(
+    const twChSnap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
+    if (twChSnap.exists()) {
+      const twChannels = await twitch.getChannels(
         TWITCH_TOKEN,
         TWITCH_CLIENT_ID,
-        cache.twitchChennelIds
-      ),
-    ];
-
-    const [ytChannels, twChannels] = await Promise.all(tasks);
-
-    db.ref(YOUTUBE_CHANNELS_DATA_PATH).set(ytChannels);
-    db.ref(TWITCH_CHANNELS_DATA_PATH).set(twChannels);
-    logger.log("[VspoStreamSchedule] updateChannels", {
-      youtubeChannels: ytChannels,
-      twitchChannels: twChannels,
-    });
+        twChSnap.val()
+      );
+      db.ref(TWITCH_CHANNELS_DATA_PATH).set(twChannels);
+    } else {
+      logger.error(
+        "[vspo-stream-schedule:updateChannels] twitch channels dont exist in rtdb"
+      );
+    }
   }
 );
 
@@ -89,20 +96,31 @@ export const updateStreams = onSchedule(
     secrets: ["YOUTUBE_API", "TWITCH_TOKEN", "TWITCH_CLIENT_ID"],
   },
   async (_) => {
-    await checkCahce();
+    const ytChSnap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+    if (ytChSnap.exists()) {
+      const ytStreams = await youtube.getStreams(
+        YOUTUBE_API_KEY,
+        ytChSnap.val()
+      );
+      db.ref(YOUTUBE_STREAMS_DATA_PATH).set(ytStreams);
+    } else {
+      logger.error(
+        "[vspo-stream-schedule:updateStreams] youtube channels dont exist in rtdb"
+      );
+    }
 
-    const tasks = [
-      youtube.getStreams(YOUTUBE_API_KEY, cache.youtubeChannelIds),
-      twitch.getStreams(TWITCH_TOKEN, TWITCH_CLIENT_ID, cache.twitchChennelIds),
-    ];
-
-    const [ytStreams, twStreams] = await Promise.all(tasks);
-
-    db.ref(YOUTUBE_STREAMS_DATA_PATH).set(ytStreams);
-    db.ref(TWITCH_STREAMS_DATA_PATH).set(twStreams);
-    logger.log("[VspoStreamSchedule] updateStreams", {
-      youtubeStreams: ytStreams,
-      twitchStremas: twStreams,
-    });
+    const twChSnap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
+    if (twChSnap.exists()) {
+      const twStreams = await twitch.getStreams(
+        TWITCH_TOKEN,
+        TWITCH_CLIENT_ID,
+        twChSnap.val()
+      );
+      db.ref(TWITCH_STREAMS_DATA_PATH).set(twStreams);
+    } else {
+      logger.error(
+        "[vspo-stream-schedule:updateStreams] twitch channels dont exist in rtdb"
+      );
+    }
   }
 );
