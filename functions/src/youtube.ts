@@ -1,4 +1,3 @@
-import * as logger from "firebase-functions/logger";
 import { google, youtube_v3 } from "googleapis";
 import { ChannelInfo, StreamInfo, VideoInfo, LiveInfo } from "./types";
 
@@ -9,26 +8,20 @@ export const getChannels = async (apiKey: string, channelIds: string[]) => {
     id: channelIds,
   });
 
-  if (res.status < 200 && 299 < res.status) {
-    logger.error(
-      "[Youtube] The Channels:list API returned an error: status=" + res.status
-    );
+  if (res.status < 200 && 300 <= res.status) {
     return [];
   }
 
-  if (res.data.items === undefined || res.data.items.length == 0) {
-    logger.error("[Youtube] No channel found.");
-    return [];
-  }
-
-  return res.data.items.map((item) => {
-    return {
-      id: item.id,
-      name: item.snippet?.title,
-      thumbnail: item.snippet?.thumbnails?.default?.url,
-      uploads: item.contentDetails?.relatedPlaylists?.uploads,
-    } as ChannelInfo;
-  });
+  return (
+    res.data.items?.map(
+      (item): ChannelInfo => ({
+        id: item.id ?? "",
+        name: item.snippet?.title ?? "",
+        thumbnail: item.snippet?.thumbnails?.default?.url ?? "",
+        uploads: item.contentDetails?.relatedPlaylists?.uploads,
+      })
+    ) ?? []
+  );
 };
 
 //ChannelIdの2文字目を'U'にするとそのチャンネルのuploadedPlaylistIdになる
@@ -36,74 +29,75 @@ const getPlaylistIds = (channelIds: string[]) => {
   return channelIds.map((id) => id.replace(/(?<=^.{1})./, "U"));
 };
 
-export const getStreams = async (apiKey: string, channelIds: string[]) => {
+export const getStreams = async (
+  apiKey: string,
+  channelIds: string[],
+  searchVideoNum: number = 10
+) => {
   const playlistIds = getPlaylistIds(channelIds);
-  const maxResult = 10;
 
   //get uploaded video info
-  const plRequests = [];
-  for (const id of playlistIds) {
-    plRequests.push(
-      google.youtube("v3").playlistItems.list({
-        key: apiKey,
-        part: ["snippet"],
-        playlistId: id,
-        maxResults: maxResult,
-      })
-    );
-  }
-
+  const plRequests = playlistIds.map((id) =>
+    google.youtube("v3").playlistItems.list({
+      key: apiKey,
+      part: ["snippet"],
+      playlistId: id,
+      maxResults: searchVideoNum,
+    })
+  );
   const plResponses = await Promise.all(plRequests);
+
   const uploads = plResponses
     .filter((res) => 200 <= res.status && res.status < 300)
     .map(
       (res) =>
-        res.data.items?.map((item) => {
-          return {
-            channelId: item.snippet?.channelId,
-            id: item.snippet?.resourceId?.videoId,
-            title: item.snippet?.title,
-            thumbnail: item.snippet?.thumbnails?.medium?.url,
+        res.data.items?.map(
+          (item): VideoInfo => ({
+            channelId: item.snippet?.channelId ?? "",
+            id: item.snippet?.resourceId?.videoId ?? "",
+            title: item.snippet?.title ?? "",
+            thumbnail: item.snippet?.thumbnails?.medium?.url ?? "",
             url: `https://www.youtube.com/watch?v=${item.snippet?.resourceId?.videoId}`,
-          } as VideoInfo;
-        }) ?? []
+          })
+        ) ?? []
     )
     .flat();
 
   //get streaming info
-  const vRequests = [];
-  for (var i = 0; i < playlistIds.length * maxResult; i += 50) {
-    vRequests.push(
+  const maxResults = 50;
+  const vRequests = Array.from(
+    { length: Math.ceil(uploads.length / maxResults) },
+    (_, i) =>
       google.youtube("v3").videos.list({
         key: apiKey,
         part: ["liveStreamingDetails"],
-        id: uploads.slice(i, i + 50).map((v) => v.id),
-        maxResults: 50,
+        id: uploads
+          .slice(i * maxResults, (i + 1) * maxResults)
+          .map((v) => v.id),
+        maxResults,
       })
-    );
-  }
-
+  );
   const vResponses = await Promise.all(vRequests);
-  const toStreamInfo = (vi: youtube_v3.Schema$Video) => {
-    return vi.liveStreamingDetails?.scheduledStartTime
-      ? ({
-          id: vi.id,
-          startAt: vi.liveStreamingDetails?.scheduledStartTime,
-        } as LiveInfo)
-      : ({} as LiveInfo);
-  };
+
+  const predicate = (vi: youtube_v3.Schema$Video) =>
+    vi.liveStreamingDetails?.activeLiveChatId != null &&
+    vi.liveStreamingDetails?.scheduledStartTime != null;
+  const convertLiveInfo = (vi: youtube_v3.Schema$Video): LiveInfo => ({
+    id: vi.id ?? "",
+    startAt: vi.liveStreamingDetails?.scheduledStartTime ?? "",
+  });
   const streamingVideos = vResponses
     .filter((res) => 200 <= res.status && res.status < 300)
-    .map((res) => {
-      return (
-        res.data.items
-          ?.filter((vi) => vi.liveStreamingDetails?.activeLiveChatId != null)
-          .map(toStreamInfo) ?? []
-      );
-    })
+    .map((res) => res.data.items?.filter(predicate).map(convertLiveInfo) ?? [])
     .flat();
 
-  return streamingVideos.map((li) => {
-    return { ...li, ...uploads.find((vi) => vi.id === li.id) } as StreamInfo;
-  });
+  return streamingVideos
+    .map((liveInfo): StreamInfo | null => {
+      const videoInfo = uploads.find((vi) => vi.id === liveInfo.id);
+
+      if (videoInfo === undefined) return null;
+
+      return { ...videoInfo, ...liveInfo };
+    })
+    .filter((st) => st);
 };
