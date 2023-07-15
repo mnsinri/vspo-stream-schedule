@@ -3,123 +3,142 @@ import { getDatabase } from "firebase-admin/database";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as youtube from "./youtube";
 import * as twitch from "./twitch";
+import * as twitCasting from "./twitCasting";
 import * as logger from "firebase-functions/logger";
-// import { functionCache } from "./types";
 
 admin.initializeApp();
 
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API;
-const TWITCH_TOKEN = process.env.TWITCH_TOKEN;
-const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
-const VSPO_YOUTUBE_CHANNELS_PATH = process.env.VSPO_YOUTUBE_CHANNELS_PATH;
-const VSPO_TWITCH_CHANNELS_PATH = process.env.VSPO_TWITCH_CHANNELS_PATH;
-const YOUTUBE_CHANNELS_DATA_PATH = process.env.YOUTUBE_CHANNELS_DATA_PATH;
-const YOUTUBE_STREAMS_DATA_PATH = process.env.YOUTUBE_STREAMS_DATA_PATH;
-const TWITCH_CHANNELS_DATA_PATH = process.env.TWITCH_CHANNELS_DATA_PATH;
-const TWITCH_STREAMS_DATA_PATH = process.env.TWITCH_STREAMS_DATA_PATH;
-
-// const cache: functionCache = {
-//   youtubeChannelIds: [],
-//   twitchChennelIds: [],
-// };
+// export * from "./demo";
 
 const db = getDatabase();
-
-// db.ref(VSPO_YOUTUBE_CHANNELS_PATH).on("value", (snap) => {
-//   if (snap.exists()) {
-//     cache.youtubeChannelIds = snap.val();
-//     logger.log("[VspoStreamSchedule] on youtube channels updated", {
-//       length: cache.youtubeChannelIds.length,
-//     });
-//   }
-// });
-
-// db.ref(VSPO_TWITCH_CHANNELS_PATH).on("value", (snap) => {
-//   if (snap.exists()) {
-//     cache.twitchChennelIds = snap.val();
-//     logger.log("[VspoStreamSchedule] on twitch channels updated", {
-//       length: cache.twitchChennelIds.length,
-//     });
-//   }
-// });
-
-// const checkCahce = async () => {
-//   if (!cache.youtubeChannelIds.length) {
-//     const snap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
-//     cache.youtubeChannelIds = snap.val() ?? [];
-//   }
-
-//   if (!cache.twitchChennelIds.length) {
-//     const snap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
-//     cache.twitchChennelIds = snap.val() ?? [];
-//   }
-// };
 
 export const updateChannels = onSchedule(
   {
     schedule: "0 15 * * *",
-    secrets: ["YOUTUBE_API", "TWITCH_TOKEN", "TWITCH_CLIENT_ID"],
+    secrets: [
+      "YOUTUBE_API",
+      "TWITCH_TOKEN",
+      "TWITCH_CLIENT_ID",
+      "TWIT_CASTING_TOKEN",
+    ],
   },
   async (_) => {
-    const ytChSnap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+    const DATA_URI = process.env.DATA_URI;
+
+    //youtube
+    const YT_CHANNELIDS_PATH = process.env.YOUTUBE_CHANNELIDS_PATH;
+    const YT_API_KEY = process.env.YOUTUBE_API;
+
+    const ytChSnap = await db.ref(YT_CHANNELIDS_PATH).get();
     if (ytChSnap.exists()) {
-      const ytChannels = await youtube.getChannels(
-        YOUTUBE_API_KEY,
-        ytChSnap.val()
-      );
-      db.ref(YOUTUBE_CHANNELS_DATA_PATH).set(ytChannels);
+      const ytChannels = await youtube.getChannels(YT_API_KEY, ytChSnap.val());
+      db.ref(`${DATA_URI}/youtube/channels`).set(ytChannels);
     } else {
       logger.error(
         "[vspo-stream-schedule:updateChannels] youtube channels dont exist in rtdb"
       );
     }
 
-    const twChSnap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
+    //twitch
+    const TW_TOKEN = process.env.TWITCH_TOKEN;
+    const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+    const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
+
+    const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
     if (twChSnap.exists()) {
       const twChannels = await twitch.getChannels(
-        TWITCH_TOKEN,
-        TWITCH_CLIENT_ID,
+        TW_TOKEN,
+        TW_CLIENT_ID,
         twChSnap.val()
       );
-      db.ref(TWITCH_CHANNELS_DATA_PATH).set(twChannels);
+      db.ref(`${DATA_URI}/twitch/channels`).set(twChannels);
     } else {
       logger.error(
         "[vspo-stream-schedule:updateChannels] twitch channels dont exist in rtdb"
       );
     }
+
+    //twit casting
+    const TWC_TOKEN = process.env.TWIT_CASTING_TOKEN;
+    const TWC_USERIDS_PATH = process.env.TWIT_CASTING_USERIDS_PATH;
+
+    const twcUserIdsSnap = await db.ref(TWC_USERIDS_PATH).get();
+    if (twcUserIdsSnap.exists()) {
+      const twcChannels = await twitCasting.getChannels(
+        TWC_TOKEN,
+        twcUserIdsSnap.val()
+      );
+      db.ref(`${DATA_URI}/twitCasting/channels`).set(twcChannels);
+    } else {
+      logger.error(
+        "[vspo-stream-schedule:updateStreams] twit casting userIds dont exist in rtdb"
+      );
+    }
   }
 );
 
-export const updateStreams = onSchedule(
+export const updateYoutubeStreams = onSchedule(
   {
     schedule: "0,10,20,30,40,50 * * * *",
-    secrets: ["YOUTUBE_API", "TWITCH_TOKEN", "TWITCH_CLIENT_ID"],
+    secrets: ["YOUTUBE_API"],
   },
   async (_) => {
-    const ytChSnap = await db.ref(VSPO_YOUTUBE_CHANNELS_PATH).get();
+    const DATA_URI = process.env.DATA_URI;
+
+    const YT_CHANNELIDS_PATH = process.env.YOUTUBE_CHANNELIDS_PATH;
+    const YT_API_KEY = process.env.YOUTUBE_API;
+
+    const ytChSnap = await db.ref(YT_CHANNELIDS_PATH).get();
     if (ytChSnap.exists()) {
-      const ytStreams = await youtube.getStreams(
-        YOUTUBE_API_KEY,
-        ytChSnap.val()
-      );
-      db.ref(YOUTUBE_STREAMS_DATA_PATH).set(ytStreams);
+      const ytStreams = await youtube.getStreams(YT_API_KEY, ytChSnap.val());
+      db.ref(`${DATA_URI}/youtube/streams`).set(ytStreams);
     } else {
       logger.error(
         "[vspo-stream-schedule:updateStreams] youtube channels dont exist in rtdb"
       );
     }
+  }
+);
 
-    const twChSnap = await db.ref(VSPO_TWITCH_CHANNELS_PATH).get();
+export const updateTwitchAndTwitCastingStreams = onSchedule(
+  {
+    schedule: "1,11,21,31,41,51 * * * *",
+    secrets: ["TWITCH_TOKEN", "TWITCH_CLIENT_ID", "TWIT_CASTING_TOKEN"],
+  },
+  async (_) => {
+    const DATA_URI = process.env.DATA_URI;
+
+    const TW_TOKEN = process.env.TWITCH_TOKEN;
+    const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+    const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
+
+    const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
     if (twChSnap.exists()) {
       const twStreams = await twitch.getStreams(
-        TWITCH_TOKEN,
-        TWITCH_CLIENT_ID,
+        TW_TOKEN,
+        TW_CLIENT_ID,
         twChSnap.val()
       );
-      db.ref(TWITCH_STREAMS_DATA_PATH).set(twStreams);
+      db.ref(`${DATA_URI}/twitch/streams`).set(twStreams);
     } else {
       logger.error(
         "[vspo-stream-schedule:updateStreams] twitch channels dont exist in rtdb"
+      );
+    }
+
+    const TWC_TOKEN = process.env.TWIT_CASTING_TOKEN;
+    const TWC_USERIDS_PATH = process.env.TWIT_CASTING_USERIDS_PATH;
+
+    const twcUserIdsSnap = await db.ref(TWC_USERIDS_PATH).get();
+    if (twcUserIdsSnap.exists()) {
+      const twcStreams = await twitCasting.getStreams(
+        TWC_TOKEN,
+        twcUserIdsSnap.val()
+      );
+      db.ref(`${DATA_URI}/twitCasting/streams`).set(twcStreams);
+    } else {
+      logger.error(
+        "[vspo-stream-schedule:updateStreams] twit casting userIds dont exist in rtdb"
       );
     }
   }

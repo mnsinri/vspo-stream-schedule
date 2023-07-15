@@ -10,6 +10,8 @@
       "tsconfig.json",
       "env.d.ts",
       "*.log",
+      ".secret.local",
+      "*.http",
       "test.mjs"
     ]
   },
