@@ -1,32 +1,26 @@
-import * as logger from "firebase-functions/logger";
 import axios from "axios";
 import { ChannelInfo, StreamInfo } from "./types";
 
-const usersURL = "https://api.twitch.tv/helix/users";
-const streamsURL = "https://api.twitch.tv/helix/streams";
+const baseURL = "https://api.twitch.tv/helix";
 
-const requestGetTwitchApi = async <T>(
+const doGetRequestTwitch = async (
   url: string,
   token: string,
-  clientId: string,
-  parser: (v: any) => T
+  clientId: string
 ) => {
-  const res = await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Client-Id": clientId,
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const res = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Client-Id": clientId,
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (res.status < 200 || 300 <= res.status) {
-    logger.error("[Twitch] request error in getChannels: status=" + res.status);
-    return [];
+    return res.data;
+  } catch (e) {
+    return { data: [] };
   }
-
-  const resData = JSON.parse(JSON.stringify(res.data)) as { data: any[] };
-
-  return resData.data.map(parser);
 };
 
 export const getChannels = async (
@@ -34,13 +28,23 @@ export const getChannels = async (
   clientId: string,
   channelIds: string[]
 ) => {
-  const url = `${usersURL}?${channelIds.map((ch) => `login=${ch}`).join("&")}`;
+  const url = `${baseURL}/users?${channelIds
+    .map((ch) => `login=${ch}`)
+    .join("&")}`;
 
-  return await requestGetTwitchApi<ChannelInfo>(url, token, clientId, (v) => ({
-    id: v.id,
-    name: v.display_name,
-    thumbnail: v.profile_image_url,
-  }));
+  const contents: { data: any[] } = await doGetRequestTwitch(
+    url,
+    token,
+    clientId
+  );
+
+  return contents.data.map(
+    (v): ChannelInfo => ({
+      id: v.id,
+      name: v.display_name,
+      thumbnail: v.profile_image_url,
+    })
+  );
 };
 
 export const getStreams = async (
@@ -48,19 +52,27 @@ export const getStreams = async (
   clientId: string,
   channelIds: string[]
 ) => {
-  const url = `${streamsURL}?first=50&${channelIds
+  const url = `${baseURL}/streams?first=50&${channelIds
     .map((ch) => `user_login=${ch}`)
     .join("&")}`;
 
-  return await requestGetTwitchApi<StreamInfo>(url, token, clientId, (v) => ({
-    id: v.id,
-    channelId: v.user_id,
-    title: v.title,
-    thumbnail: v.thumbnail_url
-      .replace("{width}", "320")
-      .replace("{height}", "180"),
-    url: `https://www.twitch.tv/${v.user_login}`,
-    startAt: v.started_at,
-    gameName: v.game_name,
-  }));
+  const contents: { data: any[] } = await doGetRequestTwitch(
+    url,
+    token,
+    clientId
+  );
+
+  return contents.data.map(
+    (v): StreamInfo => ({
+      id: v.id,
+      channelId: v.user_id,
+      title: v.title,
+      thumbnail: v.thumbnail_url
+        .replace("{width}", "320")
+        .replace("{height}", "180"),
+      url: `https://www.twitch.tv/${v.user_login}`,
+      startAt: v.started_at,
+      gameName: v.game_name,
+    })
+  );
 };

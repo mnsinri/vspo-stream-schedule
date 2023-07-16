@@ -9,4 +9,6 @@ typings/
 node_modules/
 
 .env
+.secret.local
+*.http
 test.mjs

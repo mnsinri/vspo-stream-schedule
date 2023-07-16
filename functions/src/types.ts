@@ -20,8 +20,3 @@ export type LiveInfo = {
 };
 
 export type StreamInfo = VideoInfo & LiveInfo;
-
-export type functionCache = {
-  youtubeChannelIds: string[];
-  twitchChennelIds: string[];
-};

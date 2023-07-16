@@ -21,6 +21,7 @@ export type BaseColors = {
     };
     youtube: string;
     twitch: string;
+    twitCasting: string;
   };
 };
 

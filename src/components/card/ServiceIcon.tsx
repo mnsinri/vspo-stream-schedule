@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { IconContext } from "react-icons";
 import { FaYoutube, FaTwitch } from "react-icons/fa";
+import { TbBroadcast } from "react-icons/tb";
 import { useTheme, useWindowSize } from "../../hooks";
 import { theme } from "../../theme";
 import { parseToJST } from "../../utils";
@@ -72,7 +73,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   const checkLive = () => startTime.current.getTime() < Date.now();
   const [isLive, setLive] = useState(false);
 
-  const ServiceFaIcon = useCallback(() => {
+  const ServiceIcon = useCallback(() => {
     switch (service) {
       case "youtube":
         serviceColor.current = theme.colors.logoColors.youtube;
@@ -80,6 +81,9 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
       case "twitch":
         serviceColor.current = theme.colors.logoColors.twitch;
         return <FaTwitch />;
+      case "twitCasting":
+        serviceColor.current = theme.colors.logoColors.twitCasting;
+        return <TbBroadcast />;
     }
   }, [service]);
 
@@ -131,7 +135,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
         <InnerContainer>
           <Icon style={{ color }}>
             <IconContext.Provider value={{ size: "100%" }}>
-              <ServiceFaIcon />
+              <ServiceIcon />
             </IconContext.Provider>
           </Icon>
           <StateText

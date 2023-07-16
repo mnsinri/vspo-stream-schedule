@@ -1,4 +1,4 @@
-import { StreamInfo, Services } from "./frontLogic";
+import { StreamInfo, Service } from "./frontLogic";
 
 export type WindowSize = {
   width: number;
@@ -23,8 +23,8 @@ export type ThumbnailBlockProps = {
 export type ServiceIconProps = {
   startAt: string;
   isExpand: boolean;
-} & Services &
-  React.HTMLAttributes<HTMLDivElement>;
+  service: Service;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 export type StreamingHeaderProps = Omit<ThumbnailBlockProps, "thumbnail">;
 
