@@ -1,6 +1,4 @@
-export type Services = {
-  service: "youtube" | "twitch";
-};
+export type Service = "youtube" | "twitch" | "twitCasting";
 
 export type ChannelDTO = {
   id: string;
@@ -44,4 +42,5 @@ export type StreamInfo = {
   name: string;
   icon: string;
   gameName?: string;
-} & Services;
+  service: Service;
+};
