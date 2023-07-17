@@ -46,7 +46,7 @@ export const getStreams = async (token: string, userIds: string[]) => {
   );
 
   const contents: { movie: any }[] = (await Promise.all(requests)).filter(
-    (v) => v
+    (v) => v && !v.movie.is_protected
   );
 
   return contents.map<StreamInfo>((co) => ({
