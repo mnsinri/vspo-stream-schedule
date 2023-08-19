@@ -4,11 +4,10 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { ChildrenNode, WindowSize, ClientType } from "../../types";
-import { theme } from "../../theme";
+import { breakpoints } from "../../configs";
 
 export const WindowSizeContext = createContext<WindowSize & ClientType>(null!);
 
@@ -45,9 +44,9 @@ export const WindowSizeProvider: React.FC<ChildrenNode> = ({ children }) => {
   const clientType = useMemo<ClientType>(
     () => ({
       isMobile,
-      isPhoneSize: size.width < theme.breakpoints.values.md,
-      isTabletSize: theme.breakpoints.values.md <= size.width,
-      isDesktopSize: theme.breakpoints.values.lg <= size.width,
+      isPhoneSize: size.width < breakpoints.values.md,
+      isTabletSize: breakpoints.values.md <= size.width,
+      isDesktopSize: breakpoints.values.lg <= size.width,
     }),
     [size, isMobile]
   );

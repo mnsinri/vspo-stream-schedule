@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { animated, useSpring } from "@react-spring/web";
-import { DateBorderProps } from "../types";
-import { useTheme } from "../hooks";
+import { animated, useSpring, useSpringRef } from "@react-spring/web";
+import { DateBorderProps, ColorLevel } from "../types";
 import { getFormattedDate, parseToJST } from "../utils";
+import { springConfig } from "../configs";
 
 const Container = styled.div`
   display: flex;
@@ -18,12 +18,14 @@ const Icon = styled.div`
   aspect-ratio: 1;
 `;
 
-const Bar = styled(animated.div)`
+const Bar = styled(animated.div)<{ type: keyof ColorLevel }>`
   margin-top: auto;
   width: 5px;
+  background-color: ${(p) => p.theme.vspo[p.type]};
+  transition: background-color 0.3s ease;
 `;
 
-const DateLabel = styled(animated.div)`
+const DateLabel = styled.div`
   font-size: 48px;
   font-family: "Itim", cursive;
   letter-spacing: -0.03em;
@@ -32,8 +34,6 @@ const DateLabel = styled(animated.div)`
 
 export const DateBorder = React.memo<DateBorderProps>(
   ({ dateString, ...props }) => {
-    const { springColors, colors } = useTheme();
-
     const parseToViewDate = (dateString: string) => {
       const today = parseToJST(Date.now());
       if (getFormattedDate(today) === dateString) {
@@ -63,7 +63,9 @@ export const DateBorder = React.memo<DateBorderProps>(
 
     const calcHeight = (max: number) => max - 7 * Math.random();
 
+    const animApi = useSpringRef();
     const { lh, mh, rh } = useSpring({
+      ref: animApi,
       from: {
         lh: 0,
         mh: 0,
@@ -74,25 +76,22 @@ export const DateBorder = React.memo<DateBorderProps>(
         mh: calcHeight(20),
         rh: calcHeight(16),
       },
-      config: colors.config,
+      delay: 200,
+      config: springConfig,
     });
+
+    useEffect(() => {
+      animApi.start();
+    }, []);
 
     return (
       <Container {...props}>
         <Icon>
-          <Bar
-            style={{ height: lh, backgroundColor: springColors.main.primary }}
-          />
-          <Bar
-            style={{ height: mh, backgroundColor: springColors.main.secondary }}
-          />
-          <Bar
-            style={{ height: rh, backgroundColor: springColors.main.primary }}
-          />
+          <Bar style={{ height: lh }} type="primary" />
+          <Bar style={{ height: mh }} type="secondary" />
+          <Bar style={{ height: rh }} type="primary" />
         </Icon>
-        <DateLabel style={{ color: springColors.text.primary }}>
-          {parseToViewDate(dateString)}
-        </DateLabel>
+        <DateLabel>{parseToViewDate(dateString)}</DateLabel>
       </Container>
     );
   }

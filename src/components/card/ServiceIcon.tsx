@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ServiceIconProps } from "../../types";
 import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
@@ -6,16 +6,18 @@ import { IconContext } from "react-icons";
 import { FaYoutube, FaTwitch } from "react-icons/fa";
 import { TbBroadcast } from "react-icons/tb";
 import { useTheme, useWindowSize } from "../../hooks";
-import { theme } from "../../theme";
+import { breakpoints, baseColors } from "../../configs";
 import { parseToJST } from "../../utils";
 
 const Panel = styled(animated.div)`
   display: flex;
+  background-color: ${(p) => p.theme.bg.secondary};
+  transition: background-color 0.3s ease;
   height: 18px;
   border-radius: 8px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     height: 28px;
     border-radius: 15px;
     box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
@@ -29,7 +31,7 @@ const InnerContainer = styled(animated.div)`
   margin: auto;
   gap: 2px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     height: 24px;
     gap: 5px;
   `}
@@ -40,7 +42,7 @@ const Icon = styled(animated.div)`
   width: 12px;
   display: flex;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     width: 20px;
   `}
 `;
@@ -49,7 +51,7 @@ const StateText = styled(animated.div)`
   font-weight: bold;
   font-size: 10px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     font-size: 16px;
   `}
 `;
@@ -65,24 +67,30 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   isExpand,
   ...props
 }) => {
-  const { colors, springColors } = useTheme();
-  const startTime = useRef(new Date(startAt));
   const { isPhoneSize } = useWindowSize();
-  const serviceColor = useRef<string>();
+  const serviceColor = useMemo(() => {
+    switch (service) {
+      case "youtube":
+        return baseColors.logo.youtube;
+      case "twitch":
+        return baseColors.logo.twitch;
+      case "twitCasting":
+        return baseColors.logo.twitCasting;
+    }
+  }, [service]);
+  const startDate = useMemo(() => new Date(startAt), [startAt]);
+  const [isLive, setLive] = useState<boolean>(false);
+  const { theme } = useTheme();
 
-  const checkLive = () => startTime.current.getTime() < Date.now();
-  const [isLive, setLive] = useState(false);
+  const checkLive = () => startDate.getTime() < Date.now();
 
   const ServiceIcon = useCallback(() => {
     switch (service) {
       case "youtube":
-        serviceColor.current = theme.colors.logoColors.youtube;
         return <FaYoutube />;
       case "twitch":
-        serviceColor.current = theme.colors.logoColors.twitch;
         return <FaTwitch />;
       case "twitCasting":
-        serviceColor.current = theme.colors.logoColors.twitCasting;
         return <TbBroadcast />;
     }
   }, [service]);
@@ -106,7 +114,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   const baseSpringConfig = {
     display: isExpand ? "block" : "none",
     width: isExpand ? "85px" : "30px",
-    color: isLive ? serviceColor.current : colors.text.primary,
+    color: isLive ? serviceColor : theme.text.primary,
     config: {
       duration: 150,
       easing: easings.easeInOutSine,
@@ -131,16 +139,14 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
 
   return (
     <div {...props}>
-      <Panel style={{ width, backgroundColor: springColors.base.secondary }}>
+      <Panel style={{ width }}>
         <InnerContainer>
           <Icon style={{ color }}>
             <IconContext.Provider value={{ size: "100%" }}>
               <ServiceIcon />
             </IconContext.Provider>
           </Icon>
-          <StateText
-            style={{ display, opacity, color: springColors.text.primary }}
-          >
+          <StateText style={{ display, opacity }}>
             {isLive ? "LIVE" : getStartTime(startAt)}
           </StateText>
         </InnerContainer>

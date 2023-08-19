@@ -5,12 +5,12 @@ import { ThumbnailBlock } from "./ThumbnailBlock";
 import styled from "styled-components";
 import { useHover, useWindowSize } from "../../hooks";
 import { animated } from "@react-spring/web";
-import { theme } from "../../theme";
+import { breakpoints } from "../../configs";
 
 const Container = styled(animated.div)`
   width: 160px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     width: 320px;
   `}
 `;
@@ -18,7 +18,7 @@ const Container = styled(animated.div)`
 const Card = styled(animated.div)`
   position: relative;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     min-height: 180px;
   `}
 `;

@@ -1,9 +1,9 @@
 import React from "react";
+import styled from "styled-components";
 import { animated, useSpring } from "@react-spring/web";
 import { IconContext } from "react-icons";
-import { useHover, useTheme, useWindowSize } from "../../hooks";
+import { useHover, useWindowSize } from "../../hooks";
 import { BaseButtonProps } from "../../types";
-import styled from "styled-components";
 
 const Container = styled.div`
   width: 27px;
@@ -15,7 +15,6 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
   children,
   ...props
 }) => {
-  const { springColors } = useTheme();
   const { hovered, hoverSpread } = useHover();
   const { isMobile } = useWindowSize();
 
@@ -32,7 +31,6 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
         <animated.div
           style={{
             transform,
-            color: springColors.text.primary,
             height: "100%",
           }}
         >

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { StreamingTableProps } from "../types";
 import { StreamingCard } from "./card";
 import { useWindowSize } from "../hooks";
-import { theme } from "../theme";
+import { breakpoints } from "../configs";
 
 const Container = styled.div<{ height: number }>`
   min-height: ${(p) => p.height}px;
@@ -17,7 +17,7 @@ const FlexBox = styled.div`
   flex-direction: column;
   gap: 20px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     gap: 40px;
   `}
 `;

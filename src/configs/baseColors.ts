@@ -1,6 +1,6 @@
 import { BaseColors } from "../types";
 
-export const colors: BaseColors = {
+export const baseColors: BaseColors = {
   white: {
     50: "#fefefe",
     100: "#fafafa",
@@ -11,8 +11,7 @@ export const colors: BaseColors = {
     100: "#424242",
     200: "#616161",
   },
-
-  logoColors: {
+  logo: {
     vspo: {
       pink: "#FF6FA3",
       blue: "#7266CF",

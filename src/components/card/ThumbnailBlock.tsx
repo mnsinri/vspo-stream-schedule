@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { ThumbnailBlockProps } from "../../types";
 import { animated, easings, useSpring } from "@react-spring/web";
-import { theme } from "../../theme";
-import { useTheme, useWindowSize } from "../../hooks";
+import { breakpoints } from "../../configs";
+import { useWindowSize } from "../../hooks";
 
 const Panel = styled(animated.div)`
   width: 160px;
@@ -12,8 +12,10 @@ const Panel = styled(animated.div)`
   border-radius: 5px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   position: relative;
+  background-color: ${(p) => p.theme.bg.secondary};
+  transition: background-color 0.3s ease;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     width: 320px;
     height: 180px;
     border-radius: 10px;
@@ -24,13 +26,13 @@ const Thumbnail = styled(animated.img)`
   width: 160px;
   height: 90px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     width: 320px;
     height: 180px;
   `}
 `;
 
-const Header = styled(animated.div)`
+const Header = styled.div`
   width: 100%;
   display: flex;
   position: absolute;
@@ -38,7 +40,7 @@ const Header = styled(animated.div)`
   bottom: 0;
   height: 30px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     height: 60px;
   `}
 `;
@@ -51,7 +53,7 @@ const Icon = styled(animated.img)`
   border-radius: 50%;
   object-fit: cover;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     height: 50px;
     margin-left: 6px;
   `}
@@ -65,13 +67,13 @@ const Contents = styled(animated.div)`
   flex-direction: column;
   justify-content: center;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     margin-left: 6px;
     width: 250px;
   `}
 `;
 
-const Title = styled(animated.div)`
+const Title = styled.div`
   font-family: "Zen Kaku Gothic New", sans-serif;
   font-size: 10px;
   width: 100%;
@@ -80,13 +82,13 @@ const Title = styled(animated.div)`
   text-overflow: ellipsis;
   margin-top: 2px;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     font-size: 20px;
     margin-top: 0;
   `}
 `;
 
-const Name = styled(animated.div)`
+const Name = styled.div`
   font-family: "Zen Kaku Gothic New", sans-serif;
   font-size: 10px;
   transform: scale(0.8);
@@ -96,7 +98,7 @@ const Name = styled(animated.div)`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  ${theme.breakpoints.mediaQueries.md`
+  ${breakpoints.mediaQueries.md`
     font-size: 15px;
     transform: scale(1);
   `}
@@ -110,12 +112,10 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
   isExpand,
   ...props
 }) => {
-  const { colors } = useTheme();
   const { isPhoneSize } = useWindowSize();
   const baseSpringConfig = {
     height: isExpand ? "240px" : "180px",
     borderRadius: isExpand ? "10px 10px 0px 0px" : "10px 10px 10px 10px",
-    display: isExpand ? "block" : "none",
     shadow: isExpand
       ? "drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.25))"
       : "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
@@ -133,7 +133,7 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
       : "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25))",
   };
 
-  const { height, borderRadius, display, shadow } = useSpring({
+  const { height, borderRadius, shadow } = useSpring({
     ...baseSpringConfig,
     ...(isPhoneSize ? mobileSpringConfig : {}),
   });
@@ -142,18 +142,12 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
     opacity: isExpand ? 1 : 0,
     config: {
       duration: 250,
-      easing: easings.easeInQuart,
+      easing: easings.easeOutExpo,
     },
   });
 
-  const { backgroundColor, color } = useSpring({
-    backgroundColor: colors.base.secondary,
-    color: colors.text.primary,
-    config: colors.config,
-  });
-
   return (
-    <Panel style={{ height, backgroundColor }} {...props}>
+    <Panel style={{ height }} {...props}>
       <Thumbnail
         style={{ borderRadius }}
         src={thumbnail}
@@ -162,9 +156,9 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
       />
       <Header>
         <Icon src={icon} alt={name} style={{ filter: shadow }} loading="lazy" />
-        <Contents style={{ opacity, color }}>
-          <Title style={{ display }}>{title}</Title>
-          <Name style={{ display }}>{name}</Name>
+        <Contents style={{ opacity }}>
+          <Title>{title}</Title>
+          <Name>{name}</Name>
         </Contents>
       </Header>
     </Panel>
