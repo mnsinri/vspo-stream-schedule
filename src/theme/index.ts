@@ -1,8 +1,7 @@
-import { colors } from "./colors";
-import { breakpoints } from "./breakpoints";
-import { Theme } from "../types";
+import { dark } from "./dark";
+import { light } from "./light";
 
-export const theme: Theme = {
-  breakpoints,
-  colors,
+export default {
+  dark,
+  light,
 };

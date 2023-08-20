@@ -1,17 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import { animated } from "@react-spring/web";
-import { theme } from "../theme";
+import { breakpoints } from "../configs";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
 import { useVspoStreams } from "../hooks";
 import { StreamInfo, StreamList } from "../types";
 import { Header } from "./Header";
 
-const Container = styled(animated.div)`
+const Container = styled.div`
   margin: 0 auto;
   background: rgba(240, 240, 240, 0.08);
   box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
+  color: ${(p) => p.theme.text.primary};
+  transition: color 0.3s ease;
 
   height: 100%;
   overflow: scroll;
@@ -22,40 +23,40 @@ const Container = styled(animated.div)`
     display: none;
   }
 
-  ${theme.breakpoints.mediaQueries.sm`
-    width: ${theme.breakpoints.values.sm}px;
+  ${breakpoints.mediaQueries.sm`
+    width: ${breakpoints.values.sm}px;
   `}
 
-  ${theme.breakpoints.mediaQueries.md`
-    width: ${theme.breakpoints.values.md}px;
+  ${breakpoints.mediaQueries.md`
+    width: ${breakpoints.values.md}px;
   `}
 
-  ${theme.breakpoints.mediaQueries.lg`
-    width: ${theme.breakpoints.values.lg}px;
+  ${breakpoints.mediaQueries.lg`
+    width: ${breakpoints.values.lg}px;
   `}
 
-  ${theme.breakpoints.mediaQueries.xl`
-    width: ${theme.breakpoints.values.xl}px;
+  ${breakpoints.mediaQueries.xl`
+    width: ${breakpoints.values.xl}px;
   `}
 
-  ${theme.breakpoints.mediaQueries.xxl`
-    width: ${theme.breakpoints.values.xxl}px;
+  ${breakpoints.mediaQueries.xxl`
+    width: ${breakpoints.values.xxl}px;
   `}
 `;
 
-const InnerContainer = styled(animated.div)`
+const InnerContainer = styled.div`
   margin: 0 auto;
   width: 90%;
 
-  ${theme.breakpoints.mediaQueries.sm`
+  ${breakpoints.mediaQueries.sm`
     width: 88%;
   `}
 
-  ${theme.breakpoints.mediaQueries.lg`
+  ${breakpoints.mediaQueries.lg`
     width: 73%;
   `}
 
-  ${theme.breakpoints.mediaQueries.xl`
+  ${breakpoints.mediaQueries.xl`
     width: 88%;
   `}
 `;
