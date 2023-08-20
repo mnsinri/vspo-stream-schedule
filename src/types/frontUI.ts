@@ -1,4 +1,4 @@
-import { StreamInfo, Service } from "./frontLogic";
+import { StreamInfo, Service, ChildrenNode } from "./frontLogic";
 
 export type WindowSize = {
   width: number;
@@ -55,4 +55,13 @@ export type LinkButtonProps = {
 export type StreamList = {
   date: string;
   streams: StreamInfo[];
+};
+
+export type MarqueeProps = ChildrenNode & {
+  animate?: boolean;
+  speed?: number;
+};
+
+export type MarqueeItemProps = MarqueeProps & {
+  speed?: number;
 };

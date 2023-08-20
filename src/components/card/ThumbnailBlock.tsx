@@ -4,6 +4,7 @@ import { ThumbnailBlockProps } from "../../types";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { breakpoints } from "../../configs";
 import { useWindowSize } from "../../hooks";
+import { Marquee } from "../marquee";
 
 const Panel = styled(animated.div)`
   width: 160px;
@@ -73,13 +74,10 @@ const Contents = styled(animated.div)`
   `}
 `;
 
-const Title = styled.div`
+const MarqueeTitle = styled(Marquee)`
   font-family: "Zen Kaku Gothic New", sans-serif;
   font-size: 10px;
   width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin-top: 2px;
 
   ${breakpoints.mediaQueries.md`
@@ -97,6 +95,7 @@ const Name = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 0 3%;
 
   ${breakpoints.mediaQueries.md`
     font-size: 15px;
@@ -157,7 +156,9 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
       <Header>
         <Icon src={icon} alt={name} style={{ filter: shadow }} loading="lazy" />
         <Contents style={{ opacity }}>
-          <Title>{title}</Title>
+          <MarqueeTitle animate={isExpand} speed={isPhoneSize ? 0.04 : 0.05}>
+            {title}
+          </MarqueeTitle>
           <Name>{name}</Name>
         </Contents>
       </Header>
