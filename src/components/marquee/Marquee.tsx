@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { MarqueeProps } from "../../types";
 import { animated, useSpring, useSpringRef } from "@react-spring/web";

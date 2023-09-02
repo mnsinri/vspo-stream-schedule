@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { ThumbnailBlockProps } from "../../types";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { breakpoints } from "../../configs";
-import { useWindowSize } from "../../hooks";
+import { useConfig, useWindowSize } from "../../hooks";
 import { Marquee } from "../marquee";
+import { ThumbnailBlockProps } from "../../types";
 
 const Panel = styled(animated.div)`
   width: 160px;
@@ -112,6 +112,8 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
   ...props
 }) => {
   const { isPhoneSize } = useWindowSize();
+  const { config } = useConfig();
+
   const baseSpringConfig = {
     height: isExpand ? "240px" : "180px",
     borderRadius: isExpand ? "10px 10px 0px 0px" : "10px 10px 10px 10px",
@@ -156,7 +158,10 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
       <Header>
         <Icon src={icon} alt={name} style={{ filter: shadow }} loading="lazy" />
         <Contents style={{ opacity }}>
-          <MarqueeTitle animate={isExpand} speed={isPhoneSize ? 0.04 : 0.05}>
+          <MarqueeTitle
+            animate={isExpand && config.isMarquee}
+            speed={isPhoneSize ? 0.03 : 0.05}
+          >
             {title}
           </MarqueeTitle>
           <Name>{name}</Name>

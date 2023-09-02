@@ -4,6 +4,7 @@ import {
   WindowSizeProvider,
   ThemeProvider,
   MainContainer,
+  ConfigProvider,
   Background,
 } from "./components";
 
@@ -12,9 +13,11 @@ export const App: React.FC = () => {
     <WindowSizeProvider>
       <ThemeProvider>
         <Background>
-          <VspoStreamingProvider>
-            <MainContainer />
-          </VspoStreamingProvider>
+          <ConfigProvider>
+            <VspoStreamingProvider>
+              <MainContainer />
+            </VspoStreamingProvider>
+          </ConfigProvider>
         </Background>
       </ThemeProvider>
     </WindowSizeProvider>

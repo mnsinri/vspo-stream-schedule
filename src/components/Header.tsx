@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ThemeButton, GithubLinkButton } from "./buttons";
+import { SettingMenu } from "./settingMenu";
 import { breakpoints } from "../configs";
 import logo from "../logo.png";
 import { useWindowSize } from "../hooks";
@@ -19,11 +19,11 @@ const Container = styled.div`
   `}
 `;
 
-const Title = styled.div`
-  flex-grow: 1;
+const Title = styled.div<{ isPhone: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-left: ${(p) => (p.isPhone ? "40px" : "0px")};
 
   ${breakpoints.mediaQueries.md`
     justify-content: start;
@@ -49,29 +49,21 @@ const TitleText = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 35px;
+  width: 40px;
   display: flex;
-  justify-content: center;
-
-  ${breakpoints.mediaQueries.md`
-    width: 120px;
-    justify-content: flex-end;
-  `}
+  justify-content: flex-end;
 `;
 
 export const Header: React.FC = () => {
   const { isPhoneSize } = useWindowSize();
   return (
     <Container>
-      <Title>
+      <Title isPhone={isPhoneSize}>
         <Icon src={logo} alt="logo" />
         {!isPhoneSize && <TitleText>Vspo stream schedule</TitleText>}
       </Title>
-      <Wrapper style={{ order: isPhoneSize ? -1 : 0 }}>
-        <GithubLinkButton />
-      </Wrapper>
       <Wrapper>
-        <ThemeButton />
+        <SettingMenu />
       </Wrapper>
     </Container>
   );

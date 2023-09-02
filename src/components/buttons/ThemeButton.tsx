@@ -13,7 +13,7 @@ const Wrapper = styled(animated.div)`
 export const ThemeButton: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
-  const { themeType, toggleTheme } = useTheme();
+  const { themeType, setThemeDark } = useTheme();
 
   const transitions = useTransition(themeType, {
     from: { opacity: 0 },
@@ -23,7 +23,7 @@ export const ThemeButton: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   });
 
   return (
-    <BaseButton onClickHandler={toggleTheme} {...props}>
+    <BaseButton onClickHandler={() => setThemeDark(true)} {...props}>
       {transitions((style, themeType) => (
         <Wrapper style={style}>
           {themeType === "dark" ? <IoMdSunny /> : <IoMdMoon />}

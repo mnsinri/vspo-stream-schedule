@@ -4,3 +4,5 @@ export { useTheme } from "./useTheme";
 export { useDB } from "./useDB";
 export { useStreamInfo } from "./useStreamInfo";
 export { useWindowSize } from "./useWindowSize";
+export { useConfig } from "./useConfig";
+export { useBoolStateCache } from "./useBoolStateCache";
