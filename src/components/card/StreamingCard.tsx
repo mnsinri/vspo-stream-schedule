@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StreamingCardProps } from "../../types";
 import { ServiceIcon } from "./ServiceIcon";
 import { ThumbnailBlock } from "./ThumbnailBlock";
 import styled from "styled-components";
-import { useHover, useWindowSize } from "../../hooks";
+import { useConfig, useHover, useWindowSize } from "../../hooks";
 import { animated } from "@react-spring/web";
 import { breakpoints } from "../../configs";
 
@@ -27,11 +27,9 @@ export const StreamingCard = React.memo<StreamingCardProps>(
   ({ title, thumbnail, name, icon, service, url, startAt }) => {
     const { hovered, hoverSpread } = useHover();
     const { isMobile, isDesktopSize } = useWindowSize();
+    const { config } = useConfig();
 
-    const isHoverable = useMemo(
-      () => !isMobile && isDesktopSize,
-      [isMobile, isDesktopSize]
-    );
+    const isHoverable = !isMobile && isDesktopSize;
 
     return (
       <Container>
@@ -43,7 +41,7 @@ export const StreamingCard = React.memo<StreamingCardProps>(
           <ServiceIcon
             service={service}
             startAt={startAt}
-            isExpand={!isHoverable || hovered}
+            isExpand={config.isExpandAlways || !isHoverable || hovered}
             style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}
           />
           <ThumbnailBlock
@@ -51,7 +49,7 @@ export const StreamingCard = React.memo<StreamingCardProps>(
             thumbnail={thumbnail}
             name={name}
             icon={icon}
-            isExpand={!isHoverable || hovered}
+            isExpand={config.isExpandAlways || !isHoverable || hovered}
           />
         </Card>
       </Container>

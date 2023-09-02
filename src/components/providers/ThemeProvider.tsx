@@ -13,7 +13,7 @@ const cacheKey = "themeType";
 export const ThemeContext = createContext<ThemeContextType>({
   themeType: "light",
   theme: {} as ColorTheme,
-  toggleTheme: () => {},
+  setThemeDark: (isOn) => {},
 });
 
 export const ThemeProvider: React.FC<ChildrenNode> = ({ children }) => {
@@ -29,8 +29,8 @@ export const ThemeProvider: React.FC<ChildrenNode> = ({ children }) => {
     () => ({
       themeType,
       theme: themes[themeType],
-      toggleTheme: () => {
-        setTheme((p) => ("light" === p ? "dark" : "light"));
+      setThemeDark: (isOn) => {
+        setTheme(isOn ? "dark" : "light");
       },
     }),
     [themeType]

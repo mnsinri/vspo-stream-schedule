@@ -6,7 +6,8 @@ import { IconContext } from "react-icons";
 import { FaYoutube, FaTwitch } from "react-icons/fa";
 import { TbBroadcast } from "react-icons/tb";
 import { useTheme, useWindowSize } from "../../hooks";
-import { breakpoints, baseColors } from "../../configs";
+import { breakpoints } from "../../configs";
+import { icon } from "../../colors";
 import { parseToJST } from "../../utils";
 
 const Panel = styled(animated.div)`
@@ -71,11 +72,11 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   const serviceColor = useMemo(() => {
     switch (service) {
       case "youtube":
-        return baseColors.logo.youtube;
+        return icon.youtube;
       case "twitch":
-        return baseColors.logo.twitch;
+        return icon.twitch;
       case "twitCasting":
-        return baseColors.logo.twitCasting;
+        return icon.twitCasting;
     }
   }, [service]);
   const startDate = useMemo(() => new Date(startAt), [startAt]);

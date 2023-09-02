@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { breakpoints } from "../configs";
 import { StreamingTable } from "./StreamingTable";
 import { DateBorder } from "./DateBorder";
-import { useVspoStreams } from "../hooks";
+import { useConfig, useVspoStreams } from "../hooks";
 import { StreamInfo, StreamList } from "../types";
 import { Header } from "./Header";
 
 const Container = styled.div`
   margin: 0 auto;
-  background: rgba(240, 240, 240, 0.08);
+  background: rgba(240, 240, 240, 0.03);
   box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
   color: ${(p) => p.theme.text.primary};
   transition: color 0.3s ease;
@@ -73,6 +73,7 @@ const TableContainer = styled.div`
 
 export const MainContainer = React.memo(() => {
   const streams = useVspoStreams();
+  const { config } = useConfig();
 
   const parseToStreamList = (streams: StreamInfo[]): StreamList[] => {
     const dateSet = new Set(streams.map((s) => s.scheduledDate));
@@ -85,7 +86,7 @@ export const MainContainer = React.memo(() => {
   };
 
   return (
-    <Container>
+    <Container ref={config.scrollContainerRef}>
       <InnerContainer>
         <Header />
         {parseToStreamList(streams).map((s) => (

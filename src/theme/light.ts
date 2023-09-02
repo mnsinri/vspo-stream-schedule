@@ -1,21 +1,23 @@
 import { ColorTheme } from "../types";
-import { baseColors } from "../configs";
+import { common, grey, pink, blue } from "../colors";
 
 export const light: ColorTheme = {
   text: {
-    primary: baseColors.black[50],
-    secondary: baseColors.black[100],
+    primary: common.black,
   },
   bg: {
-    primary: baseColors.white[50],
-    secondary: baseColors.white[100],
+    primary: grey[50],
+    secondary: grey[100],
+  },
+  hoverd: {
+    primary: grey[200],
+    secondary: grey[300],
   },
   border: {
-    primary: baseColors.black[50],
-    secondary: baseColors.black[100],
+    primary: grey[900],
   },
   vspo: {
-    primary: baseColors.logo.vspo.blue,
-    secondary: baseColors.logo.vspo.pink,
+    primary: blue[400],
+    secondary: pink[300],
   },
 };
