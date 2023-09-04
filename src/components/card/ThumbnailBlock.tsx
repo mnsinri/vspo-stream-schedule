@@ -140,10 +140,10 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
     ...(isPhoneSize ? mobileSpringConfig : {}),
   });
 
-  const { opacity } = useSpring({
-    opacity: isExpand ? 1 : 0,
+  const { x } = useSpring({
+    x: isExpand ? 1 : 0,
     config: {
-      duration: 250,
+      duration: 500,
       easing: easings.easeOutExpo,
     },
   });
@@ -160,10 +160,12 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
       />
       <Header>
         <Icon src={icon} alt={name} style={{ filter: shadow }} loading="lazy" />
-        <Contents style={{ opacity }}>
+        <Contents
+          style={{ opacity: x.to({ range: [0, 0.75, 1], output: [0, 0, 1] }) }}
+        >
           <MarqueeTitle
-            isAnimate={config.isMarquee}
-            speed={hovered ? speed / 2 : speed}
+            isAnimate={config.isMarquee && isExpand}
+            speed={config.isExpandAlways && hovered ? speed / 2 : speed}
           >
             {title}
           </MarqueeTitle>

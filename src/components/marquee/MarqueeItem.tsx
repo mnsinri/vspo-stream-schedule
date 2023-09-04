@@ -1,10 +1,4 @@
-import React, {
-  ReactNode,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import React, { ReactNode, forwardRef, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useAnimationFrame, useWindowSize } from "../../hooks";
 import { mergeRefs } from "react-merge-refs";
@@ -22,7 +16,7 @@ type Props = {
 };
 
 export const MarqueeItem = forwardRef<HTMLDivElement, Props>(
-  ({ children, isAnimate, speed = 1, waitTime = 2000 }, forwardedRef) => {
+  ({ children, isAnimate, speed = 1, waitTime = 1500 }, forwardedRef) => {
     const { isPhoneSize } = useWindowSize();
     const item = useRef<HTMLDivElement>(null!);
     const rect = useRef<DOMRect>(null!);
