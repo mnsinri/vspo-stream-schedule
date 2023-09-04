@@ -18,6 +18,7 @@ export type ThumbnailBlockProps = {
   name: string;
   icon: string;
   isExpand: boolean;
+  hovered: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export type ServiceIconProps = {
@@ -29,7 +30,7 @@ export type ServiceIconProps = {
 export type StreamingHeaderProps = Omit<ThumbnailBlockProps, "thumbnail">;
 
 export type StreamingCardProps = Omit<
-  ServiceIconProps & ThumbnailBlockProps,
+  ServiceIconProps & Omit<ThumbnailBlockProps, "hovered">,
   "isExpand"
 > & {
   url: string;
