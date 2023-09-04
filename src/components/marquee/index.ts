@@ -1,1 +1,1 @@
-export { Marquee } from "./Marquee";
+export { MarqueeScroll } from "./MarqueeScroll";

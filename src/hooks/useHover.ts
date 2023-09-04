@@ -5,7 +5,10 @@ export const useHover = () => {
   return {
     hovered,
     hoverSpread: {
-      onPointerOver: (e: any) => (e.stopPropagation(), setHover(true)),
+      onPointerOver: (e: any) => {
+        e.stopPropagation();
+        setHover(true);
+      },
       onPointerOut: () => setHover(false),
     },
   };

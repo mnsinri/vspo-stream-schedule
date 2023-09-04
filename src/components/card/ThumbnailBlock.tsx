@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { breakpoints } from "../../configs";
 import { useConfig, useWindowSize } from "../../hooks";
-import { Marquee } from "../marquee";
+import { MarqueeScroll } from "../marquee";
 import { ThumbnailBlockProps } from "../../types";
 
 const Panel = styled(animated.div)`
@@ -74,7 +74,7 @@ const Contents = styled(animated.div)`
   `}
 `;
 
-const MarqueeTitle = styled(Marquee)`
+const MarqueeTitle = styled(MarqueeScroll)`
   font-family: "Zen Kaku Gothic New", sans-serif;
   font-size: 10px;
   width: 100%;
@@ -109,6 +109,7 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
   name,
   icon,
   isExpand,
+  hovered,
   ...props
 }) => {
   const { isPhoneSize } = useWindowSize();
@@ -147,6 +148,8 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
     },
   });
 
+  const speed = useMemo(() => (isPhoneSize ? 0.45 : 0.9), [isPhoneSize]);
+
   return (
     <Panel style={{ height }} {...props}>
       <Thumbnail
@@ -159,8 +162,8 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
         <Icon src={icon} alt={name} style={{ filter: shadow }} loading="lazy" />
         <Contents style={{ opacity }}>
           <MarqueeTitle
-            animate={isExpand && config.isMarquee}
-            speed={isPhoneSize ? 0.03 : 0.05}
+            isAnimate={config.isMarquee}
+            speed={hovered ? speed / 2 : speed}
           >
             {title}
           </MarqueeTitle>

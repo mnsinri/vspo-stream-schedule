@@ -29,19 +29,19 @@ export const StreamingCard = React.memo<StreamingCardProps>(
     const { isMobile, isDesktopSize } = useWindowSize();
     const { config } = useConfig();
 
-    const isHoverable = !isMobile && isDesktopSize;
+    const expand = isMobile || !isDesktopSize;
 
     return (
       <Container>
         <Card
           onClick={() => window.open(url)}
           aria-label={title}
-          {...(isHoverable ? hoverSpread : {})}
+          {...hoverSpread}
         >
           <ServiceIcon
             service={service}
             startAt={startAt}
-            isExpand={config.isExpandAlways || !isHoverable || hovered}
+            isExpand={config.isExpandAlways || expand || hovered}
             style={{ position: "absolute", top: 5, right: 5, zIndex: 10 }}
           />
           <ThumbnailBlock
@@ -49,7 +49,8 @@ export const StreamingCard = React.memo<StreamingCardProps>(
             thumbnail={thumbnail}
             name={name}
             icon={icon}
-            isExpand={config.isExpandAlways || !isHoverable || hovered}
+            isExpand={config.isExpandAlways || expand || hovered}
+            hovered={hovered}
           />
         </Card>
       </Container>
