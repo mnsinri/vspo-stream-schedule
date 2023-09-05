@@ -50,7 +50,7 @@ export const StreamingCard = React.memo<StreamingCardProps>(
             name={name}
             icon={icon}
             isExpand={config.isExpandAlways || expand || hovered}
-            hovered={hovered}
+            hovered={!isMobile && hovered}
           />
         </Card>
       </Container>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { animated, easings, useSpring } from "@react-spring/web";
 import { breakpoints } from "../../configs";
 import { useConfig, useWindowSize } from "../../hooks";
-import { MarqueeScroll } from "../marquee";
+import { Marquee } from "../marquee";
 import { ThumbnailBlockProps } from "../../types";
 
 const Panel = styled(animated.div)`
@@ -74,7 +74,7 @@ const Contents = styled(animated.div)`
   `}
 `;
 
-const MarqueeTitle = styled(MarqueeScroll)`
+const MarqueeTitle = styled(Marquee)`
   font-family: "Zen Kaku Gothic New", sans-serif;
   font-size: 10px;
   width: 100%;

@@ -1,20 +1,23 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export const useAnimationFrame = (
   callback = (timestamp: DOMHighResTimeStamp) => {}
 ) => {
   const ref = useRef<number>(0);
-
-  const loop = useCallback(
-    (timestamp: DOMHighResTimeStamp) => {
-      ref.current = requestAnimationFrame(loop);
-      callback(timestamp);
-    },
-    [callback]
-  );
+  const rafCallback = useRef<(timestamp: DOMHighResTimeStamp) => void>(null!);
 
   useEffect(() => {
+    rafCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    const loop = (timestamp: DOMHighResTimeStamp) => {
+      rafCallback.current(timestamp);
+      ref.current = requestAnimationFrame(loop);
+    };
     ref.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(ref.current);
-  }, [loop]);
+    return () => {
+      ref.current && cancelAnimationFrame(ref.current);
+    };
+  }, []);
 };

@@ -1,4 +1,4 @@
-import React, { ReactNode, forwardRef, useEffect, useRef } from "react";
+import React, { ReactNode, forwardRef, useLayoutEffect, useRef } from "react";
 import styled from "styled-components";
 import { useAnimationFrame, useWindowSize } from "../../hooks";
 import { mergeRefs } from "react-merge-refs";
@@ -23,18 +23,18 @@ export const MarqueeItem = forwardRef<HTMLDivElement, Props>(
     const start = useRef<number | null>(null);
     const x = useRef<number>(0);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       rect.current = item.current.getBoundingClientRect();
     }, [children, isPhoneSize]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       item.current.style.transform = `translateX(0)`;
       x.current = 0;
       start.current = null;
     }, [isAnimate]);
 
     useAnimationFrame((timestamp) => {
-      if (!isAnimate || !item.current || !rect.current) return;
+      if (!(isAnimate && item.current && rect.current)) return;
 
       if (!start.current) start.current = timestamp;
 

@@ -57,12 +57,3 @@ export type StreamList = {
   date: string;
   streams: StreamInfo[];
 };
-
-export type MarqueeProps = ChildrenNode & {
-  animate?: boolean;
-  speed?: number;
-};
-
-export type MarqueeItemProps = MarqueeProps & {
-  speed?: number;
-};
