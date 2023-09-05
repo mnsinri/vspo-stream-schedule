@@ -55,7 +55,7 @@ export const MarqueeForMobile: React.FC<Props> = ({
 
   const reset = () => {
     animation.start({
-      to: {
+      from: {
         x: "0%",
       },
       immediate: true,
