@@ -52,9 +52,6 @@ export const MarqueeForMobile: React.FC<Props> = ({
     from: {
       x: "0%",
     },
-    reset: true,
-    loop: true,
-    delay: 1500,
   });
 
   const reset = useCallback(() => {
@@ -72,6 +69,9 @@ export const MarqueeForMobile: React.FC<Props> = ({
         to: {
           x: "-100%",
         },
+        reset: true,
+        loop: true,
+        delay: 1500,
         immediate: false,
         config: {
           duration,
@@ -90,7 +90,9 @@ export const MarqueeForMobile: React.FC<Props> = ({
   }, [children, isPhoneSize]);
 
   useEffect(() => {
-    canMarquee && isAnimate ? restart(rect.current.width / speed) : reset();
+    canMarquee && isAnimate
+      ? restart((rect.current.width * 15) / speed)
+      : reset();
   }, [canMarquee, isAnimate, speed]);
 
   return (
