@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { MenuItem } from "./MenuItem";
 import { ToggleButtonItem } from "./ToggleButtonItem";
 import { animated, useTransition } from "@react-spring/web";
@@ -59,17 +65,20 @@ export const SettingMenu: React.FC = () => {
     [width]
   );
 
-  useEffect(() => {
-    const checkIfClickedOutside = (e: MouseEvent) => {
+  const checkIfClickedOutside = useCallback(
+    (e: MouseEvent) => {
       if (!(e.target instanceof Node)) return;
 
       const isOutSideMenu = refOl.current && !refOl.current.contains(e.target);
       const isOutSideBtn = refBtn.current && !refBtn.current.contains(e.target);
 
       if (isOutSideMenu && isOutSideBtn) setOpen(false);
-    };
+    },
+    [setOpen]
+  );
 
-    if (config.scrollContainerRef.current != undefined) {
+  useEffect(() => {
+    if (config.scrollContainerRef.current !== null) {
       config.scrollContainerRef.current.style.overflow = isOpen
         ? "hidden"
         : "scroll";

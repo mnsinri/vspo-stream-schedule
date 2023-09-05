@@ -1,10 +1,4 @@
-import React, {
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { animated, useSpring, useSpringRef } from "@react-spring/web";
 import { useWindowSize } from "../../hooks";
@@ -53,32 +47,13 @@ export const MarqueeForMobile: React.FC<Props> = ({
     },
   });
 
-  const reset = () => {
+  useEffect(() => {
     animation.start({
       from: {
         x: "0%",
       },
       immediate: true,
     });
-  };
-
-  const restart = (duration: number) => {
-    animation.start({
-      to: {
-        x: "-100%",
-      },
-      reset: true,
-      loop: true,
-      delay: 1500,
-      immediate: false,
-      config: {
-        duration,
-      },
-    });
-  };
-
-  useLayoutEffect(() => {
-    reset();
     const parent = refParent.current.getBoundingClientRect();
     const child = refChild.current.getBoundingClientRect();
     rect.current = child;
@@ -86,10 +61,25 @@ export const MarqueeForMobile: React.FC<Props> = ({
   }, [children, isPhoneSize]);
 
   useEffect(() => {
-    canMarquee && isAnimate
-      ? restart((rect.current.width * 15) / speed)
-      : reset();
-  }, [canMarquee, isAnimate, speed]);
+    animation.start({
+      from: {
+        x: "0%",
+      },
+      ...(canMarquee && isAnimate
+        ? {
+            to: {
+              x: "-100%",
+            },
+            reset: true,
+            loop: true,
+            delay: 1500,
+            config: {
+              duration: (rect.current.width * 15) / speed,
+            },
+          }
+        : { immediate: true }),
+    });
+  }, [canMarquee && isAnimate, speed]);
 
   return (
     <Container ref={refParent} {...props}>

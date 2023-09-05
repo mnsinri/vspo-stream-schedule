@@ -1,5 +1,5 @@
 import { animated, useSpring } from "@react-spring/web";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useShakeAnimation } from "../../hooks/useShakeAnimation";
 import styled from "styled-components";
 import { useTheme } from "../../hooks";
@@ -57,22 +57,28 @@ export const ToggleButton: React.FC<Props> = ({
 
   const [shakeStyle, shakeAnim] = useShakeAnimation(5);
 
-  const onClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    if (!disabled) return;
+  const onClick = useCallback(
+    (e: React.MouseEvent<HTMLInputElement>) => {
+      if (!disabled) return;
 
-    e.preventDefault();
-    shakeAnim();
-  };
-
-  const onChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (disabled) {
       e.preventDefault();
-      return;
-    }
+      shakeAnim();
+    },
+    [disabled, shakeAnim]
+  );
 
-    setOn(e.target.checked);
-    onChange(e.target.checked);
-  };
+  const onChangeStatus = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) {
+        e.preventDefault();
+        return;
+      }
+
+      setOn(e.target.checked);
+      onChange(e.target.checked);
+    },
+    [disabled, onChange]
+  );
 
   const { x, backgroundColor, opacity } = useSpring({
     from: {
