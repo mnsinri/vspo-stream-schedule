@@ -1,6 +1,5 @@
 import React, {
   ReactNode,
-  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -54,32 +53,29 @@ export const MarqueeForMobile: React.FC<Props> = ({
     },
   });
 
-  const reset = useCallback(() => {
+  const reset = () => {
     animation.start({
-      from: {
+      to: {
         x: "0%",
       },
       immediate: true,
     });
-  }, [animation]);
+  };
 
-  const restart = useCallback(
-    (duration: number) => {
-      animation.start({
-        to: {
-          x: "-100%",
-        },
-        reset: true,
-        loop: true,
-        delay: 1500,
-        immediate: false,
-        config: {
-          duration,
-        },
-      });
-    },
-    [animation]
-  );
+  const restart = (duration: number) => {
+    animation.start({
+      to: {
+        x: "-100%",
+      },
+      reset: true,
+      loop: true,
+      delay: 1500,
+      immediate: false,
+      config: {
+        duration,
+      },
+    });
+  };
 
   useLayoutEffect(() => {
     reset();
