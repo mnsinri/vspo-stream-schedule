@@ -17,7 +17,7 @@ export const Marquee: React.FC<Props> = ({
 }) => {
   const { isMobile } = useWindowSize();
 
-  return true ? (
+  return isMobile ? (
     <MarqueeForMobile isAnimate={isAnimate} speed={speed} {...props}>
       {children}
     </MarqueeForMobile>
