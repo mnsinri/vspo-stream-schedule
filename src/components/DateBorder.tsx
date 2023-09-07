@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import { animated, useSpring, useSpringRef } from "@react-spring/web";
+import { animated, useInView } from "@react-spring/web";
 import { DateBorderProps, ColorLevel } from "../types";
 import { getFormattedDate, parseToJST } from "../utils";
 import { springConfig } from "../configs";
@@ -25,7 +25,7 @@ const Bar = styled(animated.div)<{ type: keyof ColorLevel }>`
   transition: background-color 0.3s ease;
 `;
 
-const DateLabel = styled.div`
+const DateLabel = styled(animated.div)`
   font-size: 48px;
   font-family: "Itim", cursive;
   letter-spacing: -0.03em;
@@ -63,35 +63,40 @@ export const DateBorder = React.memo<DateBorderProps>(
 
     const calcHeight = (max: number) => max - 7 * Math.random();
 
-    const animApi = useSpringRef();
-    const { lh, mh, rh } = useSpring({
-      ref: animApi,
-      from: {
-        lh: 0,
-        mh: 0,
-        rh: 0,
-      },
-      to: {
-        lh: calcHeight(30),
-        mh: calcHeight(20),
-        rh: calcHeight(16),
-      },
-      delay: 200,
-      config: springConfig,
-    });
-
-    useEffect(() => {
-      animApi.start();
-    }, []);
+    const [ref, { lh, mh, rh, x }] = useInView(
+      () => ({
+        from: {
+          lh: 0,
+          mh: 0,
+          rh: 0,
+          x: 0,
+        },
+        to: {
+          lh: calcHeight(30),
+          mh: calcHeight(20),
+          rh: calcHeight(16),
+          x: 1,
+        },
+        delay: 200,
+        config: springConfig,
+      }),
+      { once: true }
+    );
 
     return (
-      <Container {...props}>
+      <Container ref={ref} {...props}>
         <Icon>
           <Bar style={{ height: lh }} type="primary" />
           <Bar style={{ height: mh }} type="secondary" />
           <Bar style={{ height: rh }} type="primary" />
         </Icon>
-        <DateLabel>{parseToViewDate(dateString)}</DateLabel>
+        <DateLabel
+          style={{
+            opacity: x.to({ range: [0, 0.7, 1], output: [0, 0.3, 1] }),
+          }}
+        >
+          {parseToViewDate(dateString)}
+        </DateLabel>
       </Container>
     );
   }
