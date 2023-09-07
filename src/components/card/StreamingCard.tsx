@@ -4,8 +4,8 @@ import { ServiceIcon } from "./ServiceIcon";
 import { ThumbnailBlock } from "./ThumbnailBlock";
 import styled from "styled-components";
 import { useConfig, useHover, useWindowSize } from "../../hooks";
-import { animated } from "@react-spring/web";
-import { breakpoints } from "../../configs";
+import { animated, useInView } from "@react-spring/web";
+import { breakpoints, springConfig } from "../../configs";
 
 const Container = styled(animated.div)`
   width: 160px;
@@ -31,8 +31,23 @@ export const StreamingCard = React.memo<StreamingCardProps>(
 
     const expand = isMobile || !isDesktopSize;
 
+    const [ref, style] = useInView(
+      () => ({
+        from: {
+          opacity: 0,
+          y: 30,
+        },
+        to: {
+          opacity: 1,
+          y: 0,
+        },
+        config: springConfig,
+      }),
+      { once: true, amount: 0.5 }
+    );
+
     return (
-      <Container>
+      <Container ref={ref} style={style}>
         <Card
           onClick={() => window.open(url)}
           aria-label={title}
