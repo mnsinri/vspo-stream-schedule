@@ -112,7 +112,7 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
   hovered,
   ...props
 }) => {
-  const { isPhoneSize } = useWindowSize();
+  const { isPhoneSize, isMobile, isDesktopSize } = useWindowSize();
   const { config } = useConfig();
 
   const baseSpringConfig = {
@@ -148,7 +148,15 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
     },
   });
 
-  const speed = useMemo(() => (isPhoneSize ? 0.45 : 0.9), [isPhoneSize]);
+  const speed = useMemo(() => {
+    const speed = isPhoneSize ? 0.45 : 0.9;
+    if (!isMobile && (!isDesktopSize || config.isExpandAlways) && hovered)
+      return speed / 2;
+    return speed;
+  }, [
+    !isMobile && (!isDesktopSize || config.isExpandAlways) && hovered,
+    isPhoneSize,
+  ]);
 
   return (
     <Panel style={{ height }} {...props}>
@@ -163,10 +171,7 @@ export const ThumbnailBlock: React.FC<ThumbnailBlockProps> = ({
         <Contents
           style={{ opacity: x.to({ range: [0, 0.75, 1], output: [0, 0, 1] }) }}
         >
-          <MarqueeTitle
-            isAnimate={config.isMarquee && isExpand}
-            speed={config.isExpandAlways && hovered ? speed / 2 : speed}
-          >
+          <MarqueeTitle isAnimate={config.isMarquee && isExpand} speed={speed}>
             {title}
           </MarqueeTitle>
           <Name>{name}</Name>
