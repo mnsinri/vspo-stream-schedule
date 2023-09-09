@@ -2,8 +2,7 @@
 
 [本サイト](https://vspo-stream-schedule.web.app/)では、ぶいすぽ所属Vtuberの配信情報を一覧できます。
 
-<img width="1074" alt="image" src="https://github.com/mnsinri/vspo-stream-schedule/assets/44370583/a3fe1b7f-f8c8-428b-9c72-632f274ec491">
-
+<img width="651" alt="image" src="https://github.com/mnsinri/vspo-stream-schedule/assets/44370583/18764ca7-39dd-4e25-95f3-b9a9e246e47f">
 
 ## 対応している配信プラットフォーム
 * Youtube
