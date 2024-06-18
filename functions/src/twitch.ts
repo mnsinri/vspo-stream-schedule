@@ -1,17 +1,25 @@
 import axios from "axios";
 import { ChannelInfo, StreamInfo } from "./types";
 
+const authURL = "https://id.twitch.tv/oauth2/token";
 const baseURL = "https://api.twitch.tv/helix";
 
 const doGetRequestTwitch = async (
   url: string,
-  token: string,
-  clientId: string
+  clientId: string,
+  clientSecret: string
 ) => {
   try {
+    // get app access token
+    const authRes = await axios.post(authURL, {
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "client_credentials",
+    });
+
     const res = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authRes.data.access_token}`,
         "Client-Id": clientId,
         "Content-Type": "application/json",
       },
@@ -24,8 +32,8 @@ const doGetRequestTwitch = async (
 };
 
 export const getChannels = async (
-  token: string,
   clientId: string,
+  clientSecret: string,
   channelIds: string[]
 ) => {
   const url = `${baseURL}/users?${channelIds
@@ -34,8 +42,8 @@ export const getChannels = async (
 
   const contents: { data: any[] } = await doGetRequestTwitch(
     url,
-    token,
-    clientId
+    clientId,
+    clientSecret
   );
 
   return contents.data.map(
@@ -48,8 +56,8 @@ export const getChannels = async (
 };
 
 export const getStreams = async (
-  token: string,
   clientId: string,
+  clientSecret: string,
   channelIds: string[]
 ) => {
   const url = `${baseURL}/streams?first=50&${channelIds
@@ -58,8 +66,8 @@ export const getStreams = async (
 
   const contents: { data: any[] } = await doGetRequestTwitch(
     url,
-    token,
-    clientId
+    clientId,
+    clientSecret,
   );
 
   return contents.data.map(
