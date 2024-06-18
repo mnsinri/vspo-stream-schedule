@@ -11,6 +11,7 @@ const doGetRequestTwitch = async (
 ) => {
   try {
     // get app access token
+    // https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
     const authRes = await axios.post(authURL, {
       client_id: clientId,
       client_secret: clientSecret,
