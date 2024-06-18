@@ -12,11 +12,19 @@ const doGetRequestTwitch = async (
   try {
     // get app access token
     // https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
-    const authRes = await axios.post(authURL, {
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: "client_credentials",
-    });
+    const authRes = await axios.post(
+      authURL,
+      {
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: "client_credentials",
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
 
     const res = await axios.get(url, {
       headers: {
