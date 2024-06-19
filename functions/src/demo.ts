@@ -27,17 +27,17 @@ export const getVspoYoutube = onRequest(
 );
 
 export const getVspoTwitch = onRequest(
-  { secrets: ["TWITCH_TOKEN", "TWITCH_CLIENT_ID"] },
+  { secrets: ["TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET"] },
   async (req, res) => {
-    const TW_TOKEN = process.env.TWITCH_TOKEN;
     const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+    const TW_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
     const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
 
     const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
     if (twChSnap.exists()) {
       const twStreams = await twitch.getStreams(
-        TW_TOKEN,
         TW_CLIENT_ID,
+        TW_CLIENT_SECRET,
         twChSnap.val()
       );
       res.send(twStreams);

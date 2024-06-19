@@ -17,8 +17,8 @@ export const updateChannels = onSchedule(
     schedule: "0 15 * * *",
     secrets: [
       "YOUTUBE_API",
-      "TWITCH_TOKEN",
       "TWITCH_CLIENT_ID",
+      "TWITCH_CLIENT_SECRET",
       "TWIT_CASTING_TOKEN",
     ],
   },
@@ -40,15 +40,15 @@ export const updateChannels = onSchedule(
     }
 
     //twitch
-    const TW_TOKEN = process.env.TWITCH_TOKEN;
     const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+    const TW_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
     const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
 
     const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
     if (twChSnap.exists()) {
       const twChannels = await twitch.getChannels(
-        TW_TOKEN,
         TW_CLIENT_ID,
+        TW_CLIENT_SECRET,
         twChSnap.val()
       );
       db.ref(`${DATA_URI}/twitch/channels`).set(twChannels);
@@ -103,20 +103,20 @@ export const updateYoutubeStreams = onSchedule(
 export const updateTwitchAndTwitCastingStreams = onSchedule(
   {
     schedule: "1,11,21,31,41,51 * * * *",
-    secrets: ["TWITCH_TOKEN", "TWITCH_CLIENT_ID", "TWIT_CASTING_TOKEN"],
+    secrets: ["TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET", "TWIT_CASTING_TOKEN"],
   },
   async (_) => {
     const DATA_URI = process.env.DATA_URI;
 
-    const TW_TOKEN = process.env.TWITCH_TOKEN;
     const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
+    const TW_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
     const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
 
     const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
     if (twChSnap.exists()) {
       const twStreams = await twitch.getStreams(
-        TW_TOKEN,
         TW_CLIENT_ID,
+        TW_CLIENT_SECRET,
         twChSnap.val()
       );
       db.ref(`${DATA_URI}/twitch/streams`).set(twStreams);
