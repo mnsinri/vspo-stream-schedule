@@ -14,7 +14,7 @@ export const getChannels = async (apiKey: string, channelIds: string[]) => {
 
   return (
     res.data.items?.map(
-      (item): ChannelInfo => ({
+      (item: youtube_v3.Schema$Channel): ChannelInfo => ({
         id: item.id ?? "",
         name: item.snippet?.title ?? "",
         thumbnail: item.snippet?.thumbnails?.default?.url ?? "",
