@@ -11,8 +11,7 @@
       "env.d.ts",
       "*.log",
       ".secret.local",
-      "*.http",
-      "test.mjs"
+      "*.http"
     ]
   },
   "hosting": {

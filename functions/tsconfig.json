@@ -11,8 +11,5 @@
     "esModuleInterop": true,
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ],
-  "files": ["./env.d.ts"],
+  "include": ["src/**/*"],
 }
