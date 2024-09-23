@@ -1,0 +1,10 @@
+{
+  "key1": {
+    "youtube": "value",
+    "twitch": "value",
+    "twitCasting": "value"
+  },
+  "key2": {
+    "youtube": "value"
+  }
+}

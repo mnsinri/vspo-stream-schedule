@@ -1,145 +1,143 @@
-import * as admin from "firebase-admin";
-import { getDatabase } from "firebase-admin/database";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import * as youtube from "./youtube";
-import * as twitch from "./twitch";
-import * as twitCasting from "./twitCasting";
-import * as logger from "firebase-functions/logger";
+import { Streamer } from "../types";
+import { YoutubeClient, TwitchClient, TwitCastingClient } from "./api";
+import { defineConfig, sortStreams } from "./utils";
 
-admin.initializeApp();
+initializeApp();
+const config = defineConfig();
+const db = getFirestore();
+db.settings({ ignoreUndefinedProperties: true });
 
-// export * from "./demo";
+const getStreamerMaster = async () => {
+  const youtubeChannelIdMap = new Map<string, string>();
+  const twitchChannelIdMap = new Map<string, string>();
+  const twitCastingChannelIdMap = new Map<string, string>();
 
-const db = getDatabase();
+  const master = await db.collection(config.collection.master.value()).get();
+  master.forEach((doc) => {
+    const { youtube, twitch, twitCasting } = doc.data();
 
-export const updateChannels = onSchedule(
+    if (youtube) youtubeChannelIdMap.set(youtube, doc.id);
+    if (twitch) twitchChannelIdMap.set(twitch, doc.id);
+    if (twitCasting) twitCastingChannelIdMap.set(twitCasting, doc.id);
+  });
+
+  return {
+    youtube: youtubeChannelIdMap,
+    twitch: twitchChannelIdMap,
+    twitCasting: twitCastingChannelIdMap,
+  };
+};
+
+export const getStreamers = onSchedule(
   {
-    schedule: "0 15 * * *",
+    schedule: "every day 23:55",
     secrets: [
-      "YOUTUBE_API",
-      "TWITCH_CLIENT_ID",
-      "TWITCH_CLIENT_SECRET",
-      "TWIT_CASTING_TOKEN",
+      ...Object.values(config.twitch),
+      ...Object.values(config.twitCasting),
     ],
+    timeZone: "Asia/Tokyo",
+    region: "asia-northeast1",
   },
-  async (_) => {
-    const DATA_URI = process.env.DATA_URI;
+  async () => {
+    // init
+    const master = await getStreamerMaster();
+    const tokenDoc = db
+      .collection(config.collection.secrets.value())
+      .doc(config.document.token.value());
+    const youtubeClient = new YoutubeClient(tokenDoc);
+    const twitchClient = new TwitchClient(tokenDoc, config.twitch);
+    const twitClient = new TwitCastingClient(tokenDoc, config.twitCasting);
 
-    //youtube
-    const YT_CHANNELIDS_PATH = process.env.YOUTUBE_CHANNELIDS_PATH;
-    const YT_API_KEY = process.env.YOUTUBE_API;
+    // get channels
+    const getChannels = [
+      youtubeClient.getChannels([...master.youtube.keys()]),
+      twitchClient.getChannels([...master.twitch.keys()]),
+      twitClient.getChannels([...master.twitCasting.keys()]),
+    ];
+    const channels = (await Promise.all(getChannels)).flat();
 
-    const ytChSnap = await db.ref(YT_CHANNELIDS_PATH).get();
-    if (ytChSnap.exists()) {
-      const ytChannels = await youtube.getChannels(YT_API_KEY, ytChSnap.val());
-      db.ref(`${DATA_URI}/youtube/channels`).set(ytChannels);
-    } else {
-      logger.error(
-        "[vspo-stream-schedule:updateChannels] youtube channels dont exist in rtdb"
-      );
-    }
+    const streamers = channels.reduce(
+      (result, ch) => {
+        const key = master[ch.platform].get(ch.id);
+        if (!key) return result;
 
-    //twitch
-    const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
-    const TW_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
-    const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
+        result[key] = { ...result[key], [ch.platform]: ch };
 
-    const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
-    if (twChSnap.exists()) {
-      const twChannels = await twitch.getChannels(
-        TW_CLIENT_ID,
-        TW_CLIENT_SECRET,
-        twChSnap.val()
-      );
-      db.ref(`${DATA_URI}/twitch/channels`).set(twChannels);
-    } else {
-      logger.error(
-        "[vspo-stream-schedule:updateChannels] twitch channels dont exist in rtdb"
-      );
-    }
+        return result;
+      },
+      {} as Record<string, Streamer>,
+    );
 
-    //twit casting
-    const TWC_TOKEN = process.env.TWIT_CASTING_TOKEN;
-    const TWC_USERIDS_PATH = process.env.TWIT_CASTING_USERIDS_PATH;
+    // create and update db
+    const batch = db.batch();
+    const streamerRef = db.collection(config.collection.streamers.value());
 
-    const twcUserIdsSnap = await db.ref(TWC_USERIDS_PATH).get();
-    if (twcUserIdsSnap.exists()) {
-      const twcChannels = await twitCasting.getChannels(
-        TWC_TOKEN,
-        twcUserIdsSnap.val()
-      );
-      db.ref(`${DATA_URI}/twitCasting/channels`).set(twcChannels);
-    } else {
-      logger.error(
-        "[vspo-stream-schedule:updateStreams] twit casting userIds dont exist in rtdb"
-      );
-    }
-  }
+    for (const [key, data] of Object.entries(streamers))
+      batch.set(streamerRef.doc(key), data);
+
+    await batch.commit();
+  },
 );
 
-export const updateYoutubeStreams = onSchedule(
+export const getStreams = onSchedule(
   {
-    schedule: "0,10,20,30,40,50 * * * *",
-    secrets: ["YOUTUBE_API"],
+    schedule: "every 10 minutes synchronized",
+    secrets: [
+      ...Object.values(config.twitch),
+      ...Object.values(config.twitCasting),
+    ],
+    timeZone: "Asia/Tokyo",
+    region: "asia-northeast1",
   },
-  async (_) => {
-    const DATA_URI = process.env.DATA_URI;
+  async () => {
+    // init
+    const master = await getStreamerMaster();
+    const tokenDoc = db
+      .collection(config.collection.secrets.value())
+      .doc(config.document.token.value());
+    const youtubeClient = new YoutubeClient(tokenDoc);
+    const twitchClient = new TwitchClient(tokenDoc, config.twitch);
+    const twitClient = new TwitCastingClient(tokenDoc, config.twitCasting);
 
-    const YT_CHANNELIDS_PATH = process.env.YOUTUBE_CHANNELIDS_PATH;
-    const YT_API_KEY = process.env.YOUTUBE_API;
+    // get streams
+    const getStreams = [
+      youtubeClient.getStreams([...master.youtube.keys()]),
+      twitchClient.getStreams([...master.twitch.keys()]),
+      twitClient.getStreams([...master.twitCasting.keys()]),
+    ];
+    const streams = (await Promise.all(getStreams)).flat();
 
-    const ytChSnap = await db.ref(YT_CHANNELIDS_PATH).get();
-    if (ytChSnap.exists()) {
-      const ytStreams = await youtube.getStreams(YT_API_KEY, ytChSnap.val());
-      db.ref(`${DATA_URI}/youtube/streams`).set(ytStreams);
-    } else {
-      logger.error(
-        "[vspo-stream-schedule:updateStreams] youtube channels dont exist in rtdb"
-      );
+    // create and update db
+    const batch = db.batch();
+    const streamRef = db.collection(config.collection.streams.value());
+    const snap = await streamRef.get();
+    const { endedStreams, newStreams } = sortStreams(streams, snap.docs);
+
+    const endTime = new Date().toISOString();
+    for await (const { id, data } of endedStreams) {
+      let stream = data;
+
+      // if twitch stream, update stream info
+      if (data.platform === "twitch") {
+        try {
+          stream = await twitchClient.updateStreamToVideo(data);
+        } catch {
+          batch.delete(streamRef.doc(id));
+          continue;
+        }
+      }
+
+      batch.update(streamRef.doc(id), { ...stream, endTime });
     }
-  }
-);
 
-export const updateTwitchAndTwitCastingStreams = onSchedule(
-  {
-    schedule: "1,11,21,31,41,51 * * * *",
-    secrets: ["TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET", "TWIT_CASTING_TOKEN"],
+    for (const newStream of newStreams) {
+      const streamerId = master[newStream.platform].get(newStream.channelId);
+      batch.set(streamRef.doc(), { ...newStream, streamerId });
+    }
+
+    await batch.commit();
   },
-  async (_) => {
-    const DATA_URI = process.env.DATA_URI;
-
-    const TW_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
-    const TW_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
-    const TW_CHANNELIDS_PATH = process.env.TWITCH_CHANNELIDS_PATH;
-
-    const twChSnap = await db.ref(TW_CHANNELIDS_PATH).get();
-    if (twChSnap.exists()) {
-      const twStreams = await twitch.getStreams(
-        TW_CLIENT_ID,
-        TW_CLIENT_SECRET,
-        twChSnap.val()
-      );
-      db.ref(`${DATA_URI}/twitch/streams`).set(twStreams);
-    } else {
-      logger.error(
-        "[vspo-stream-schedule:updateStreams] twitch channels dont exist in rtdb"
-      );
-    }
-
-    const TWC_TOKEN = process.env.TWIT_CASTING_TOKEN;
-    const TWC_USERIDS_PATH = process.env.TWIT_CASTING_USERIDS_PATH;
-
-    const twcUserIdsSnap = await db.ref(TWC_USERIDS_PATH).get();
-    if (twcUserIdsSnap.exists()) {
-      const twcStreams = await twitCasting.getStreams(
-        TWC_TOKEN,
-        twcUserIdsSnap.val()
-      );
-      db.ref(`${DATA_URI}/twitCasting/streams`).set(twcStreams);
-    } else {
-      logger.error(
-        "[vspo-stream-schedule:updateStreams] twit casting userIds dont exist in rtdb"
-      );
-    }
-  }
 );

@@ -4,6 +4,8 @@
     "ignore": [
       "**/node_modules/**",
       "**/src/**",
+      "**/types/**",
+      "**/arc/**",
       ".eslintrc.js",
       ".gitignore",
       "tsconfig.dev.json",
