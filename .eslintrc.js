@@ -23,6 +23,12 @@ module.exports = {
   rules: {
     quotes: ["error", "double"],
     "import/no-unresolved": "off",
-    "no-case-declarations": "off"
+    "no-case-declarations": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: 'auto'
+      }
+    ]
   },
 };
