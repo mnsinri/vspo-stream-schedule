@@ -2,8 +2,8 @@ import { breakpointMediaQueries } from "src/configs";
 import styled from "styled-components";
 
 export const Background = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100svw;
+  height: 100svh;
   background-color: ${({ theme }) => theme.bg};
   transition: background-color 0.3s ease;
 `;
