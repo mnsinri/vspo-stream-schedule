@@ -1,25 +1,22 @@
 import React from "react";
+import { MainContainer } from "./components";
 import {
-  VspoStreamingProvider,
-  WindowSizeProvider,
+  DisplaySizeProvider,
+  SettingProvider,
   ThemeProvider,
-  MainContainer,
-  ConfigProvider,
-  Background,
-} from "./components";
+  VspoStreamProvider,
+} from "./providers";
 
 export const App: React.FC = () => {
   return (
-    <WindowSizeProvider>
-      <ThemeProvider>
-        <Background>
-          <ConfigProvider>
-            <VspoStreamingProvider>
-              <MainContainer />
-            </VspoStreamingProvider>
-          </ConfigProvider>
-        </Background>
-      </ThemeProvider>
-    </WindowSizeProvider>
+    <DisplaySizeProvider>
+      <SettingProvider>
+        <ThemeProvider>
+          <VspoStreamProvider>
+            <MainContainer />
+          </VspoStreamProvider>
+        </ThemeProvider>
+      </SettingProvider>
+    </DisplaySizeProvider>
   );
 };

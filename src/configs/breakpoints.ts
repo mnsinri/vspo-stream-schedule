@@ -1,74 +1,30 @@
-import {
-  CSSObject,
-  FlattenSimpleInterpolation,
-  SimpleInterpolation,
-  css,
-} from "styled-components";
-import {
-  BreakpointMediaQueries,
-  BreakpointValues,
-  Breakpoints,
-} from "../types";
-
-const values: BreakpointValues = {
-  xs: 0,
-  sm: 576,
-  md: 768,
-  lg: 992,
-  xl: 1200,
-  xxl: 1600,
-};
-
-const mediaQueries: BreakpointMediaQueries = {
-  xs: (
-    xs: CSSObject | TemplateStringsArray,
-    ...interpolations: SimpleInterpolation[]
-  ): FlattenSimpleInterpolation => css`
-    ${css(xs, ...interpolations)}
-  `,
-  sm: (
-    sm: CSSObject | TemplateStringsArray,
-    ...interpolations: SimpleInterpolation[]
-  ): FlattenSimpleInterpolation => css`
-    @media (min-width: ${values.sm}px) {
-      ${css(sm, ...interpolations)}
-    }
-  `,
-  md: (
-    md: CSSObject | TemplateStringsArray,
-    ...interpolations: SimpleInterpolation[]
-  ): FlattenSimpleInterpolation => css`
-    @media (min-width: ${values.md}px) {
-      ${css(md, ...interpolations)}
-    }
-  `,
-  lg: (
-    lg: CSSObject | TemplateStringsArray,
-    ...interpolations: SimpleInterpolation[]
-  ): FlattenSimpleInterpolation => css`
-    @media (min-width: ${values.lg}px) {
-      ${css(lg, ...interpolations)}
-    }
-  `,
-  xl: (
-    xl: CSSObject | TemplateStringsArray,
-    ...interpolations: SimpleInterpolation[]
-  ): FlattenSimpleInterpolation => css`
-    @media (min-width: ${values.xl}px) {
-      ${css(xl, ...interpolations)}
-    }
-  `,
-  xxl: (
-    xxl: CSSObject | TemplateStringsArray,
-    ...interpolations: SimpleInterpolation[]
-  ): FlattenSimpleInterpolation => css`
-    @media (min-width: ${values.xxl}px) {
-      ${css(xxl, ...interpolations)}
-    }
-  `,
-};
+import { BreakpointMediaQueries, Breakpoints, BreakpointKey } from "types";
+import { css } from "styled-components";
 
 export const breakpoints: Breakpoints = {
-  values,
-  mediaQueries,
+  mobile: 0,
+  tablet: 768,
+  desktop: 1024,
+};
+
+export const breakpointMediaQueries: BreakpointMediaQueries = {
+  mobile: (mobile, ...interpolations) => css`
+    ${css(mobile, ...interpolations)}
+  `,
+  tablet: (tablet, ...interpolations) => css`
+    @media (min-width: ${breakpoints.tablet}px) {
+      ${css(tablet, ...interpolations)}
+    }
+  `,
+  desktop: (desktop, ...interpolations) => css`
+    @media (min-width: ${breakpoints.desktop}px) {
+      ${css(desktop, ...interpolations)}
+    }
+  `,
+};
+
+export const calcBreakPoint = (width: number): BreakpointKey => {
+  if (breakpoints.desktop <= width) return "desktop";
+  if (breakpoints.tablet <= width) return "tablet";
+  return "mobile";
 };
