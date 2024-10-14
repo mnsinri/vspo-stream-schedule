@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { firestore } from "src/firebase";
+import { firestore } from "src/Firebase";
 import {
   vspoStreamContext,
   vspoStreamerContext,
