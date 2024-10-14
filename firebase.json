@@ -4,6 +4,8 @@
     "ignore": [
       "**/node_modules/**",
       "**/src/**",
+      "**/types/**",
+      "**/arc/**",
       ".eslintrc.js",
       ".gitignore",
       "tsconfig.dev.json",
@@ -11,8 +13,7 @@
       "env.d.ts",
       "*.log",
       ".secret.local",
-      "*.http",
-      "test.mjs"
+      "*.http"
     ]
   },
   "hosting": {
@@ -20,7 +21,8 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/functions/**"
     ]
   },
   "emulators": {

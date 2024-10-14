@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "files.eol": "\n",
+  "cSpell.words": [
+    "easings",
+    "Firestore",
+    "HHMM",
+    "hoverable",
+    "Vspo",
+    "vssdb"
+  ]
+}
