@@ -20,11 +20,7 @@ type Props = {
   children: ReactNode;
 };
 
-const parseToStream = (
-  streamRes: StreamResponse,
-  streamerId: string,
-  channel: Channel,
-): Stream => {
+const parseToStream = (streamRes: StreamResponse, channel: Channel): Stream => {
   const endAt = streamRes.endTime ? new Date(streamRes.endTime) : undefined;
 
   return {
@@ -32,7 +28,7 @@ const parseToStream = (
     title: streamRes.title,
     thumbnail: streamRes.thumbnail,
     url: streamRes.url,
-    streamerId,
+    streamerId: streamRes.streamerId,
     streamerName: channel.name,
     icon: channel.icon,
     platform: streamRes.platform,
@@ -99,15 +95,14 @@ export const VspoStreamProvider = ({ children }: Props) => {
 
   const streams = useMemo<Stream[]>(() => {
     return streamResponses.reduce((results: Stream[], streamRes) => {
-      const streamerId = streamRes.streamerId;
-      const channel = streamerMap[streamerId][streamRes.platform];
+      const channel = streamerMap[streamRes.streamerId][streamRes.platform];
 
       if (!channel) {
-        console.error(`streamerId is not found: ${streamerId}`);
+        console.error(`streamerId is not found: ${streamRes.streamerId}`);
         return results;
       }
 
-      return results.concat(parseToStream(streamRes, streamerId, channel));
+      return results.concat(parseToStream(streamRes, channel));
     }, []);
   }, [streamResponses, streamerMap]);
 
