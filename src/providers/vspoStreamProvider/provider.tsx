@@ -94,6 +94,7 @@ export const VspoStreamProvider = ({ children }: Props) => {
   }, []);
 
   const streams = useMemo<Stream[]>(() => {
+    console.log("update streams");
     return streamResponses.reduce((results: Stream[], streamRes) => {
       const channel = streamerMap[streamRes.streamerId][streamRes.platform];
 
