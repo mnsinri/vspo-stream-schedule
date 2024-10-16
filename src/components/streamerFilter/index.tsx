@@ -28,7 +28,7 @@ const StreamerFilterTrigger = memo(
     icons,
   }: DropdownItemContents & { icons: StreamerIcons }) => {
     return (
-      <DropdownItem contents={triggerContents}>
+      <DropdownItem contents={triggerContents} hoverable>
         <PreviewContainer>
           {icons.slice(0, 7).map((src, n, arr) => (
             <PreviewStreamerIcon key={src} src={src} n={arr.length - n - 1} />

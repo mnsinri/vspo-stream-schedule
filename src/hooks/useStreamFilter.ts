@@ -14,6 +14,7 @@ export const useStreamFilter = (streams: Stream[]) => {
   const {
     filter: { streamerIds },
   } = useSetting();
+  console.log("render useStreamFilter");
   const settingDispatch = useSettingDispatch();
 
   const filter = useCallback(
@@ -46,6 +47,8 @@ export const useStreamFilter = (streams: Stream[]) => {
   }, []);
 
   const filteredStreams = useMemo(() => {
+    console.log("update filteredStreams; streams are... ");
+    console.log(streams);
     return streams.filter((s) => {
       return streamerIds.length === 0 || streamerIds.includes(s.streamerId);
     });
