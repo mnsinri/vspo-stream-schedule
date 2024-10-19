@@ -28,6 +28,8 @@ type Props = {
   position?: Partial<Position>;
   entry?: Partial<EntryConfig>;
   children?: ReactNode;
+  onOpen?: () => void;
+  onClose?: () => void;
 } & DropdownContainerProps;
 
 const calcPosition = ({
@@ -49,7 +51,15 @@ const calcPosition = ({
 };
 
 export const Dropdown: FC<Props> = memo(
-  ({ trigger, width, position = {}, entry = {}, children }) => {
+  ({
+    trigger,
+    width,
+    position = {},
+    entry = {},
+    children,
+    onOpen,
+    onClose,
+  }) => {
     const [isOpen, setOpen] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const refDropdown = useRef<HTMLOListElement>(null!);
@@ -73,7 +83,13 @@ export const Dropdown: FC<Props> = memo(
     );
 
     useEffect(() => {
-      if (isOpen) document.addEventListener("mousedown", checkClicksOutside);
+      if (isOpen) {
+        onOpen?.();
+        document.addEventListener("mousedown", checkClicksOutside);
+      } else {
+        onClose?.();
+      }
+
       return () =>
         document.removeEventListener("mousedown", checkClicksOutside);
     }, [isOpen]);

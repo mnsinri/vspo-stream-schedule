@@ -93,6 +93,8 @@ export const getStreams = onSchedule(
     region: "asia-northeast1",
   },
   async () => {
+    const endTime = new Date().toISOString();
+
     // init
     const master = await getStreamerMaster();
     const tokenDoc = db
@@ -116,7 +118,6 @@ export const getStreams = onSchedule(
     const snap = await streamRef.get();
     const { endedStreams, newStreams } = sortStreams(streams, snap.docs);
 
-    const endTime = new Date().toISOString();
     for await (const { id, data } of endedStreams) {
       let stream = data;
 

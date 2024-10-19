@@ -48,6 +48,7 @@ export const MainContainer: FC = () => {
     column: number;
     gap: number;
   }>({ column: 0, gap: 0 });
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   const displaySize = useDisplaySize();
   const { isDisplayHistory } = useSetting();
@@ -57,32 +58,50 @@ export const MainContainer: FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const containerRef = useRef<HTMLDivElement>(null!);
   useEffect(() => {
+    const ref = containerRef.current;
+
     const [cardWidth, gapRange] = displaySize.mobile
       ? [160, [10, 40]]
-      : [320, [20, 80]];
+      : [320, [20, 80]]; // TODO: 別のとこに定義ておく
 
-    const resize = () => {
-      const style = window.getComputedStyle(containerRef.current);
-      const width = getPixel(style, "width");
+    const onResize = () => {
+      const style = window.getComputedStyle(ref);
+      const width = getPixel(style, "width") - 40;
       setGridProperties(calcGridProperties(width, cardWidth, { gapRange }));
     };
-    resize();
+    onResize();
+    window.addEventListener("resize", onResize);
 
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    const onScroll = () => {
+      setIsScrolled(ref.scrollTop > 0);
+    };
+    ref.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ref.removeEventListener("scroll", onScroll);
+    };
   }, [displaySize.mobile]);
 
   const calcStreamGridMinHeight = useCallback(
     (streamNum: number) => {
       const [cardHeight, expandSize, gap] = displaySize.mobile
         ? [90, 30, 20]
-        : [180, 60, 40];
+        : [180, 60, 40]; // TODO: 別のとこに定義ておく
       const row = Math.ceil(streamNum / gridProperties.column);
 
       return row * (cardHeight + gap) - gap + expandSize;
     },
     [gridProperties.column, displaySize.mobile],
   );
+
+  const disableScroll = useCallback(() => {
+    containerRef.current.style.overflow = "hidden";
+  }, []);
+
+  const enableScroll = useCallback(() => {
+    containerRef.current.style.overflow = "scroll";
+  }, []);
 
   const dailyStreams: DailyStream[] = useMemo(() => {
     const now = Date.now();
@@ -110,7 +129,11 @@ export const MainContainer: FC = () => {
   return (
     <Background>
       <Container ref={containerRef}>
-        <Header />
+        <Header
+          isScrolled={isScrolled}
+          onOpenMenu={disableScroll}
+          onCloseMenu={enableScroll}
+        />
         {dailyStreams.map(({ date, streams }) => (
           <DailyStreamContainer key={date}>
             <StreamGridHeader dateString={date} />

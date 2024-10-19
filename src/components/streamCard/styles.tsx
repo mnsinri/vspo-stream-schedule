@@ -51,6 +51,7 @@ export const StreamInfo = styled.div<StyleProps>`
   background-color: ${({ theme }) => theme.card.bg};
   border-radius: 10px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
   z-index: 10;
   ${baseTransition}
 
@@ -60,6 +61,7 @@ export const StreamInfo = styled.div<StyleProps>`
     gap: 4px;
     border-radius: 15px;
     box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
   `}
 `;
 

@@ -63,10 +63,10 @@ export const VspoStreamProvider = ({ children }: Props) => {
     const unSubStream = onSnapshot(
       collection(firestore, streamCollectionName),
       (snapshot) => {
+        const newStreams = snapshot.docs.map(
+          (doc) => doc.data() as StreamResponse,
+        );
         setStreamsResponse((prev) => {
-          const newStreams = snapshot.docs.map(
-            (doc) => doc.data() as StreamResponse,
-          );
           return [
             ...newStreams,
             ...prev.filter((s) => !newStreams.some(({ id }) => id === s.id)),
@@ -94,7 +94,6 @@ export const VspoStreamProvider = ({ children }: Props) => {
   }, []);
 
   const streams = useMemo<Stream[]>(() => {
-    console.log("update streams");
     return streamResponses.reduce((results: Stream[], streamRes) => {
       const channel = streamerMap[streamRes.streamerId][streamRes.platform];
 

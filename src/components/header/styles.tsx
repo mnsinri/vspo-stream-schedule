@@ -1,16 +1,27 @@
 import { breakpointMediaQueries } from "src/configs";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Container = styled.div`
-  width: 100%;
-  margin: 25px 0;
-  /* position: sticky;
+export const Container = styled.div<{ isScrolled: boolean }>`
+  padding: 10px 20px;
+  margin-bottom: 5px;
+  position: sticky;
   top: 0;
-  left: 0; */
+  left: 0;
   display: flex;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
   z-index: 10;
+  background-color: ${({ theme }) => theme.bg};
+  transition:
+    background-color 0.3s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+
+  ${({ isScrolled }) =>
+    isScrolled &&
+    css`
+      box-shadow: 0px 10px 10px -3px rgba(0, 0, 0, 0.2);
+      -webkit-box-shadow: 0px 10px 10px -3px rgba(0, 0, 0, 0.2);
+    `}
 `;
 
 export const Title = styled.div`

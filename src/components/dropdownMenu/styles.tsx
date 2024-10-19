@@ -23,6 +23,7 @@ export const DropdownContainer = styled(animated.ol)<DropdownContainerProps>`
   border: 5px solid ${({ theme }) => theme.dropdown.bg};
   border-radius: 7px;
   box-shadow: 0px 3px 6px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0px 3px 6px 2px rgba(0, 0, 0, 0.2);
   background-color: ${({ theme }) => theme.dropdown.bg};
   padding: 2px;
   color: ${({ theme }) => theme.dropdown.text};

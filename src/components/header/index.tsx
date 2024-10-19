@@ -1,17 +1,27 @@
-import React from "react";
+import React, { FC } from "react";
 import logo from "../../logo.png";
 import { SettingMenu } from "../settingMenu";
 import { Container, Icon, Title, TitleText, DropdownWrapper } from "./styles";
 
-export const Header: React.FC = () => {
+type Props = {
+  isScrolled: boolean;
+  onOpenMenu?: () => void;
+  onCloseMenu?: () => void;
+};
+
+export const Header: FC<Props> = ({ isScrolled, onOpenMenu, onCloseMenu }) => {
   return (
-    <Container>
+    <Container isScrolled={isScrolled}>
       <Title>
         <Icon src={logo} alt="logo" />
         <TitleText>Vspo stream schedule</TitleText>
       </Title>
       <DropdownWrapper>
-        <SettingMenu />
+        <SettingMenu
+          position={{ y: 40 }}
+          onOpen={onOpenMenu}
+          onClose={onCloseMenu}
+        />
       </DropdownWrapper>
     </Container>
   );
