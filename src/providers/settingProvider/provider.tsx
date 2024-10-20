@@ -80,10 +80,11 @@ export const SettingProvider = ({ children }: Props) => {
     const onUnmount = () => {
       setLocalSetting(setting);
     };
+    onUnmount();
     window.addEventListener("beforeunload", onUnmount);
 
     return () => {
-      setLocalSetting(setting);
+      onUnmount();
       window.removeEventListener("beforeunload", onUnmount);
     };
   }, [setting]);

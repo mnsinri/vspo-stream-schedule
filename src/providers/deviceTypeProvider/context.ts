@@ -1,6 +1,4 @@
 import { createContext } from "react";
-import { DisplaySizeInfo } from "types";
+import { BreakpointKey } from "types";
 
-export const displaySizeContext = createContext<DisplaySizeInfo>(
-  {} as DisplaySizeInfo,
-);
+export const displaySizeContext = createContext<BreakpointKey>("desktop");

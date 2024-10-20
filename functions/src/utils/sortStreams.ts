@@ -20,7 +20,7 @@ export const sortStreams = <T extends BaseStream>(
     ({ data }) =>
       !streams.find(
         ({ id, platform }) => data.id === id && data.platform === platform,
-      ),
+      ) && !data.endTime,
   );
 
   const newStreams = streams.filter(

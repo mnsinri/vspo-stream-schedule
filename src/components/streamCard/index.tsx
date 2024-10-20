@@ -40,8 +40,8 @@ export const StreamCard: FC<Props> = ({ stream }) => {
 
   const displaySize = useDisplaySize();
   const titleFontSize = useMemo(
-    () => (displaySize.mobile ? "11px" : "20px"),
-    [displaySize.mobile],
+    () => (displaySize === "mobile" ? "10px" : "20px"),
+    [displaySize],
   );
 
   const isLive = streamState === "live";

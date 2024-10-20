@@ -1,5 +1,8 @@
 import styled from "styled-components";
-import { breakpointMediaQueries } from "src/configs";
+import { breakpointMediaQueries, responsiveProperties } from "src/configs";
+
+const mobileParams = responsiveProperties.mobile.card;
+const notMobileParams = responsiveProperties.desktop.card;
 
 export const Container = styled.div<{ gap: number; minHeight: number }>`
   min-height: ${({ minHeight }) => minHeight}px;
@@ -20,9 +23,9 @@ export const ColumnContainer = styled.div`
 `;
 
 export const DummyCard = styled.div`
-  width: 160px;
+  width: ${mobileParams.width}px;
 
   ${breakpointMediaQueries.tablet`
-    width: 320px;
+    width: ${notMobileParams.width}px;
   `}
 `;

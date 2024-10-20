@@ -13,6 +13,7 @@ import { StreamGrid } from "../streamGrid";
 import { StreamGridHeader } from "../streamGridHeader";
 import { useDisplaySize, useSetting, useVspoStream } from "src/providers";
 import { toYYYYMMDD } from "src/utils";
+import { responsiveProperties } from "src/configs";
 
 type DailyStream = {
   date: string;
@@ -48,6 +49,7 @@ export const MainContainer: FC = () => {
     column: number;
     gap: number;
   }>({ column: 0, gap: 0 });
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   const displaySize = useDisplaySize();
   const { isDisplayHistory } = useSetting();
@@ -57,32 +59,66 @@ export const MainContainer: FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const containerRef = useRef<HTMLDivElement>(null!);
   useEffect(() => {
-    const [cardWidth, gapRange] = displaySize.mobile
-      ? [160, [10, 40]]
-      : [320, [20, 80]];
+    const ref = containerRef.current;
 
-    const resize = () => {
-      const style = window.getComputedStyle(containerRef.current);
-      const width = getPixel(style, "width");
-      setGridProperties(calcGridProperties(width, cardWidth, { gapRange }));
+    const {
+      card: {
+        width: cardWidth,
+        gap: { x },
+      },
+    } = responsiveProperties[displaySize];
+
+    const onResize = () => {
+      const resize = () => {
+        const style = window.getComputedStyle(ref);
+        const width = getPixel(style, "width") - 40;
+        console.log("onResize", width);
+        setGridProperties(
+          calcGridProperties(width, cardWidth, { gapRange: [x, x * 4] }),
+        );
+      };
+      // windowを最大化する際に即時にgetComputedStyleを実行するとその結果に不整合が生じるため、タイミングをずらす
+      setTimeout(resize, 200);
     };
-    resize();
+    onResize();
+    window.addEventListener("resize", onResize);
 
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [displaySize.mobile]);
+    const onScroll = () => {
+      setIsScrolled(ref.scrollTop > 0);
+    };
+    ref.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ref.removeEventListener("scroll", onScroll);
+      window.removeEventListener("onload", onResize);
+    };
+  }, [displaySize]);
 
   const calcStreamGridMinHeight = useCallback(
     (streamNum: number) => {
-      const [cardHeight, expandSize, gap] = displaySize.mobile
-        ? [90, 30, 20]
-        : [180, 60, 40];
+      const {
+        card: {
+          height,
+          expandedHeight,
+          gap: { y },
+        },
+      } = responsiveProperties[displaySize];
+
       const row = Math.ceil(streamNum / gridProperties.column);
 
-      return row * (cardHeight + gap) - gap + expandSize;
+      return (row - 1) * (height + y) + expandedHeight;
     },
-    [gridProperties.column, displaySize.mobile],
+    [gridProperties.column, displaySize],
   );
+
+  const disableScroll = useCallback(() => {
+    containerRef.current.style.overflow = "hidden";
+  }, []);
+
+  const enableScroll = useCallback(() => {
+    containerRef.current.style.overflow = "scroll";
+  }, []);
 
   const dailyStreams: DailyStream[] = useMemo(() => {
     const now = Date.now();
@@ -110,7 +146,11 @@ export const MainContainer: FC = () => {
   return (
     <Background>
       <Container ref={containerRef}>
-        <Header />
+        <Header
+          isScrolled={isScrolled}
+          onOpenMenu={disableScroll}
+          onCloseMenu={enableScroll}
+        />
         {dailyStreams.map(({ date, streams }) => (
           <DailyStreamContainer key={date}>
             <StreamGridHeader dateString={date} />

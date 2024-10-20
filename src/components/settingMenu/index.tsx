@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { ComponentProps, FC, memo } from "react";
 import {
   Border,
   Dropdown,
@@ -13,10 +13,15 @@ import { FaGithub } from "react-icons/fa";
 import { TbMoonFilled, TbMarquee2, TbHistory } from "react-icons/tb";
 import { IoIosArrowBack } from "react-icons/io";
 
-export const SettingMenu: FC = memo(() => {
+type Props = Pick<
+  ComponentProps<typeof Dropdown>,
+  "position" | "onOpen" | "onClose"
+>;
+
+export const SettingMenu: FC<Props> = memo(({ position, onOpen, onClose }) => {
   const setting = useSetting();
   const configDispatch = useSettingDispatch();
-  const { mobile } = useDisplaySize();
+  const displaySize = useDisplaySize();
 
   const MenuButton = memo(() => (
     <Button>
@@ -95,14 +100,19 @@ export const SettingMenu: FC = memo(() => {
   ));
 
   return (
-    <Dropdown trigger={<MenuButton />}>
+    <Dropdown
+      trigger={<MenuButton />}
+      position={position}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
       <DropdownHeader text="Setting" />
       <ThemeSetting />
       <ExpandSetting />
       <MarqueeSetting />
       <HistorySetting />
       <Border />
-      {!mobile && <DropdownHeader text="Filter" />}
+      {displaySize !== "mobile" && <DropdownHeader text="Filter" />}
       <StreamerFilter
         triggerContents={{
           icon: <IoIosArrowBack size={18} />,

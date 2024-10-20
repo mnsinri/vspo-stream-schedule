@@ -19,6 +19,15 @@ export type Breakpoints = {
   [key in BreakpointKey]: number;
 };
 
-export type DisplaySizeInfo = {
-  [key in BreakpointKey]: boolean;
+export type ResponsiveProperty = {
+  card: {
+    width: number;
+    height: number;
+    expandedHeight: number;
+    gap: { x: number; y: number };
+  };
+};
+
+export type ResponsiveProperties = {
+  [key in BreakpointKey]: ResponsiveProperty;
 };
