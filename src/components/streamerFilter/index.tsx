@@ -13,7 +13,7 @@ import {
   useVspoStreamFilter,
 } from "src/providers";
 import { MdFilterListOff } from "react-icons/md";
-import { Streamer } from "types";
+import { BreakpointKey, Streamer } from "types";
 
 type DropdownItemContents = {
   triggerContents: ComponentProps<typeof DropdownItem>["contents"];
@@ -45,7 +45,7 @@ export const StreamerFilter: FC<Props> = ({
 }) => {
   const streamers = useVspoStreamer();
   const { filter, streamerIds } = useVspoStreamFilter();
-  const { mobile } = useDisplaySize();
+  const displaySize = useDisplaySize();
 
   const filteredStreamerIcons = streamerIds.reduce(
     (result: StreamerIcons, streamerId) => {
@@ -72,14 +72,14 @@ export const StreamerFilter: FC<Props> = ({
     filter({ type: "clearStreamerFilter" });
   };
 
-  const Contents = (isMobile: boolean) => (
+  const Contents = (bp: BreakpointKey) => (
     <>
       <DropdownItem
         contents={{ text: "Filter by streamer" }}
-        style={{ fontSize: isMobile ? 13 : 16 }}
+        style={{ fontSize: bp === "mobile" ? 13 : 16 }}
       >
         <Button onClick={onClear}>
-          <MdFilterListOff size={isMobile ? 16 : 20} />
+          <MdFilterListOff size={bp === "mobile" ? 16 : 20} />
         </Button>
       </DropdownItem>
       <Container>
@@ -95,7 +95,7 @@ export const StreamerFilter: FC<Props> = ({
     </>
   );
 
-  if (mobile) return Contents(mobile);
+  if (displaySize === "mobile") return Contents(displaySize);
 
   return (
     <Dropdown
@@ -107,7 +107,7 @@ export const StreamerFilter: FC<Props> = ({
         />
       }
     >
-      {Contents(mobile)}
+      {Contents(displaySize)}
     </Dropdown>
   );
 };

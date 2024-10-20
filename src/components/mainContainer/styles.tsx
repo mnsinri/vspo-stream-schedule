@@ -9,13 +9,11 @@ export const Background = styled.div`
 `;
 
 export const Container = styled.div`
-  width: 94%;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
-  padding: 0 3%;
   background: rgba(240, 240, 240, 0.03);
   box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
   overflow: scroll;
   scrollbar-width: none;
   display: flex;
@@ -24,6 +22,7 @@ export const Container = styled.div`
 
   ${breakpointMediaQueries.desktop`
     width: 90%;
+    padding: 0 3%;
   `}
 `;
 

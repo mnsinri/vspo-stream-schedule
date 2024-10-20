@@ -21,7 +21,7 @@ type Props = Pick<
 export const SettingMenu: FC<Props> = memo(({ position, onOpen, onClose }) => {
   const setting = useSetting();
   const configDispatch = useSettingDispatch();
-  const { mobile } = useDisplaySize();
+  const displaySize = useDisplaySize();
 
   const MenuButton = memo(() => (
     <Button>
@@ -112,7 +112,7 @@ export const SettingMenu: FC<Props> = memo(({ position, onOpen, onClose }) => {
       <MarqueeSetting />
       <HistorySetting />
       <Border />
-      {!mobile && <DropdownHeader text="Filter" />}
+      {displaySize !== "mobile" && <DropdownHeader text="Filter" />}
       <StreamerFilter
         triggerContents={{
           icon: <IoIosArrowBack size={18} />,

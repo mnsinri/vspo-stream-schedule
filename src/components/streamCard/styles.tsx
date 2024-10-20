@@ -1,5 +1,8 @@
-import { breakpointMediaQueries } from "src/configs";
 import styled, { css, keyframes } from "styled-components";
+import { breakpointMediaQueries, responsiveProperties } from "src/configs";
+
+const mobileParams = responsiveProperties.mobile.card;
+const notMobileParams = responsiveProperties.desktop.card;
 
 const baseTransition = css`
   transition: 0.2s ease;
@@ -10,14 +13,15 @@ type StyleProps = {
 };
 
 export const Card = styled.div<StyleProps>`
-  width: 160px;
-  height: ${({ isExpand }) => (isExpand ? 120 : 90)}px;
+  width: ${mobileParams.width}px;
+  height: ${({ isExpand }) =>
+    isExpand ? mobileParams.expandedHeight : mobileParams.height}px;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.card.bg};
   color: ${({ theme }) => theme.card.text};
   position: relative;
   overflow: hidden;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 3px 6px 3px rgba(0, 0, 0, 0.25);
   ${baseTransition}
 
   @starting-style {
@@ -25,8 +29,8 @@ export const Card = styled.div<StyleProps>`
   }
 
   ${({ isExpand }) => breakpointMediaQueries.tablet`
-    width: 320px;
-    height: ${isExpand ? 240 : 180}px;
+    width: ${notMobileParams.width}px;
+    height: ${isExpand ? notMobileParams.expandedHeight : notMobileParams.height}px;
     border-radius: 10px;
   `}
 `;
@@ -51,8 +55,7 @@ export const StreamInfo = styled.div<StyleProps>`
   background-color: ${({ theme }) => theme.card.bg};
   border-radius: 10px;
   box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
-  -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.25);
-  z-index: 10;
+  z-index: 1;
   ${baseTransition}
 
   ${({ isExpand }) => breakpointMediaQueries.tablet`
@@ -61,7 +64,6 @@ export const StreamInfo = styled.div<StyleProps>`
     gap: 4px;
     border-radius: 15px;
     box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
-    -webkit-box-shadow: inset 0px 3px 3px rgba(0, 0, 0, 0.25);
   `}
 `;
 
@@ -102,7 +104,7 @@ export const StateText = styled.div<StyleProps>`
 `;
 
 export const Details = styled.div`
-  height: 30px;
+  height: ${mobileParams.expandedHeight - mobileParams.height}px;
   position: absolute;
   left: 0;
   bottom: 0;
@@ -112,21 +114,21 @@ export const Details = styled.div`
   padding: 0 3px;
 
   ${breakpointMediaQueries.tablet`
-    height: 60px;
+    height: ${notMobileParams.expandedHeight - notMobileParams.height}px;
     gap: 6px;
     padding: 0 6px;
   `}
 `;
 
 export const StreamerIcon = styled.img`
-  height: 25px;
+  width: ${(mobileParams.width * 5) / 32}px;
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
   z-index: 1;
 
   ${breakpointMediaQueries.tablet`
-    height: 50px;
+    width: ${(notMobileParams.width * 5) / 32}px;
   `}
 `;
 
@@ -143,7 +145,7 @@ const textContainerFadeIn = keyframes`
   }
 `;
 export const TextContainer = styled.div<StyleProps>`
-  width: 125px;
+  width: ${(mobileParams.width * 25) / 32}px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -155,12 +157,12 @@ export const TextContainer = styled.div<StyleProps>`
     `};
 
   ${breakpointMediaQueries.tablet`
-    width: 250px;
+    width: ${(notMobileParams.width * 25) / 32}px;
   `}
 `;
 
 export const Name = styled.div`
-  font-size: 7.5px;
+  font-size: 7px;
   transform-origin: 0 0;
   white-space: nowrap;
   overflow: hidden;

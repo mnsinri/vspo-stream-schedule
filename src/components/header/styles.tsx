@@ -2,7 +2,7 @@ import { breakpointMediaQueries } from "src/configs";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div<{ isScrolled: boolean }>`
-  padding: 10px 20px;
+  padding: 5px 10px;
   margin-bottom: 5px;
   position: sticky;
   top: 0;
@@ -20,8 +20,11 @@ export const Container = styled.div<{ isScrolled: boolean }>`
     isScrolled &&
     css`
       box-shadow: 0px 10px 10px -3px rgba(0, 0, 0, 0.2);
-      -webkit-box-shadow: 0px 10px 10px -3px rgba(0, 0, 0, 0.2);
     `}
+
+  ${breakpointMediaQueries.tablet`
+    padding: 10px 20px;
+  `}
 `;
 
 export const Title = styled.div`

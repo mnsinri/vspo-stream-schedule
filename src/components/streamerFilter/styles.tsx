@@ -55,11 +55,6 @@ export const StreamerIcon = styled.img<{ isClicked: boolean }>`
       ? "none"
       : `-1px -1px 3px rgba(240, 240, 240, 0.5), 
         1.5px 1.5px 3px rgba(15, 15, 15, 0.5)`};
-  -webkit-box-shadow: ${({ isClicked }) =>
-    isClicked
-      ? "none"
-      : `-1px -1px 3px rgba(240, 240, 240, 0.5), 
-        1.5px 1.5px 3px rgba(15, 15, 15, 0.5)`};
 
   &:hover {
     border-radius: 40%;
@@ -69,12 +64,6 @@ export const StreamerIcon = styled.img<{ isClicked: boolean }>`
     height: 50px;
     border: 3px outset ${isClicked ? theme.cardHeader.icon[0] : "transparent"};
     box-shadow: ${
-      isClicked
-        ? "none"
-        : `-2px -2px 6px rgba(240, 240, 240, 0.5), 
-         3px 3px 6px rgba(15, 15, 15, 0.5)`
-    };
-    -webkit-box-shadow: ${
       isClicked
         ? "none"
         : `-2px -2px 6px rgba(240, 240, 240, 0.5), 
