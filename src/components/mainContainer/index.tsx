@@ -91,7 +91,6 @@ export const MainContainer: FC = () => {
     return () => {
       window.removeEventListener("resize", onResize);
       ref.removeEventListener("scroll", onScroll);
-      window.removeEventListener("onload", onResize);
     };
   }, [displaySize]);
 
