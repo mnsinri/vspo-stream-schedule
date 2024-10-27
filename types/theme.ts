@@ -50,6 +50,7 @@ export type DropdownTheme = {
 
 export type DisplayHistoryButtonTheme = ButtonTheme & {
   iconActive: string;
+  shadow: [string, string];
 };
 
 declare module "styled-components" {

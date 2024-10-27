@@ -10,12 +10,12 @@ export const Button = styled.button<{ state: boolean }>`
     state
       ? theme.displayHistoryButton.iconActive
       : theme.displayHistoryButton.icon};
-  ${({ state }) =>
+  ${({ state, theme }) =>
     state &&
     css`
       box-shadow:
-        inset 3px 3px 5px #bbbbbb,
-        inset -3px -3px 5px #ffffff;
+        inset 3px 3px 5px ${theme.displayHistoryButton.shadow[0]},
+        inset -3px -3px 5px ${theme.displayHistoryButton.shadow[1]};
     `}
 
   &:hover {
