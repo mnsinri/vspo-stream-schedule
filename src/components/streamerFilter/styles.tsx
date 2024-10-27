@@ -42,7 +42,7 @@ export const Button = styled.button`
 
 export const StreamerIcon = styled.img<{ isClicked: boolean }>`
   height: 40px;
-  aspect-ratio: 1;
+  width: 40px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
@@ -62,6 +62,7 @@ export const StreamerIcon = styled.img<{ isClicked: boolean }>`
 
   ${({ theme, isClicked }) => breakpointMediaQueries.tablet`
     height: 50px;
+    width: 50px;
     border: 3px outset ${isClicked ? theme.cardHeader.icon[0] : "transparent"};
     box-shadow: ${
       isClicked

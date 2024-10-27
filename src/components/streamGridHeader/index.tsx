@@ -1,6 +1,13 @@
 import React, { FC, useMemo } from "react";
 import { useTheme } from "styled-components";
-import { Bar, Container, DateLabel, Icon } from "./styles";
+import {
+  Bar,
+  Container,
+  DateContainer,
+  DateLabel,
+  DateLabelForOutline,
+  Icon,
+} from "./styles";
 import { toYYYYMMDD } from "src/utils";
 
 type Props = {
@@ -52,7 +59,10 @@ export const StreamGridHeader: FC<Props> = ({ dateString }) => {
           <Bar key={param.height} {...param} />
         ))}
       </Icon>
-      <DateLabel>{parseToViewDate(dateString)}</DateLabel>
+      <DateContainer>
+        <DateLabel>{parseToViewDate(dateString)}</DateLabel>
+        <DateLabelForOutline>{parseToViewDate(dateString)}</DateLabelForOutline>
+      </DateContainer>
     </Container>
   );
 };

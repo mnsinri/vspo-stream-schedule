@@ -11,7 +11,6 @@ type Props = {
 };
 export const StreamGrid: FC<Props> = ({ streams, column, gap, minHeight }) => {
   const streamsMatrix = useMemo(() => {
-    console.log("streamsMatrix", column);
     const sortedStreams = [...streams].sort(
       (a, b) =>
         a.startAt.getTime() - b.startAt.getTime() ||

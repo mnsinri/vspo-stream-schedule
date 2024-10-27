@@ -48,6 +48,10 @@ export type DropdownTheme = {
   };
 };
 
+export type DisplayHistoryButtonTheme = ButtonTheme & {
+  iconActive: string;
+};
+
 declare module "styled-components" {
   export interface DefaultTheme {
     bg: string;
@@ -55,6 +59,7 @@ declare module "styled-components" {
     cardHeader: CardHeaderTheme;
     header: HeaderTheme;
     dropdown: DropdownTheme;
+    displayHistoryButton: DisplayHistoryButtonTheme;
   }
 
   export type Themes = {

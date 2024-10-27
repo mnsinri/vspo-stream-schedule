@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Button = styled.button`
+  width: 40px;
   border: 0;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.dropdown.input.bg.normal};
