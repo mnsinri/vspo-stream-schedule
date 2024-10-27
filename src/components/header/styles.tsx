@@ -2,13 +2,14 @@ import { breakpointMediaQueries } from "src/configs";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div<{ isScrolled: boolean }>`
-  padding: 5px 10px;
+  padding: 10px 10px 10px 20px;
   margin-bottom: 5px;
   position: sticky;
   top: 0;
   left: 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border-radius: 0 0 10px 10px;
   z-index: 10;
   background-color: ${({ theme }) => theme.bg};
@@ -28,15 +29,8 @@ export const Container = styled.div<{ isScrolled: boolean }>`
 `;
 
 export const Title = styled.div`
-  width: 100%;
   display: flex;
-  justify-content: center;
-  margin-left: 40px;
-
-  ${breakpointMediaQueries.tablet`
-    justify-content: start;
-    margin-left: 0px;
-  `}
+  justify-content: start;
 `;
 
 export const Icon = styled.img`
@@ -59,7 +53,7 @@ export const TitleText = styled.div`
 `;
 
 export const DropdownWrapper = styled.div`
-  width: 40px;
   display: flex;
+  gap: 5px;
   justify-content: flex-end;
 `;

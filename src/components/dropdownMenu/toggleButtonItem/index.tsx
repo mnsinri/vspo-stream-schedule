@@ -17,13 +17,16 @@ type Contents = {
 type Props = {
   contents: Contents | ((isOn: boolean) => Contents);
   children?: ReactNode | ((isOn: boolean) => ReactNode);
-} & ComponentProps<typeof ToggleButton>;
+} & Pick<ComponentProps<typeof DropdownItem>, "style"> &
+  ComponentProps<typeof ToggleButton>;
 
 export const ToggleButtonItem: React.FC<Props> = ({
   contents: _contents,
   children: _children,
   onChange: _onChange,
   initState = false,
+  size = 22,
+  style,
   disabled,
 }) => {
   const [isOn, setOn] = useState(initState);
@@ -44,11 +47,11 @@ export const ToggleButtonItem: React.FC<Props> = ({
   );
 
   return (
-    <DropdownItem contents={contents}>
+    <DropdownItem contents={contents} style={{ ...style, cursor: "default" }}>
       {children}
       <FlexEnd>
         <ToggleButton
-          size={22}
+          size={size}
           onChange={onChange}
           initState={initState}
           disabled={disabled}

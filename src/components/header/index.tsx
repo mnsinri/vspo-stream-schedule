@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import logo from "../../logo.png";
+import { DisplayHistoryButton } from "../displayHistoryButton";
 import { SettingMenu } from "../settingMenu";
 import { Container, Icon, Title, TitleText, DropdownWrapper } from "./styles";
 
@@ -17,6 +18,7 @@ export const Header: FC<Props> = ({ isScrolled, onOpenMenu, onCloseMenu }) => {
         <TitleText>Vspo stream schedule</TitleText>
       </Title>
       <DropdownWrapper>
+        <DisplayHistoryButton />
         <SettingMenu
           position={{ y: 40 }}
           onOpen={onOpenMenu}

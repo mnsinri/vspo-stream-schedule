@@ -7,11 +7,12 @@ import {
 } from "../dropdownMenu";
 import { Button } from "./styles";
 import { StreamerFilter } from "../streamerFilter";
-import { useDisplaySize, useSetting, useSettingDispatch } from "src/providers";
-import { BiExpandAlt, BiMenu } from "react-icons/bi";
+import { useDisplaySize } from "src/providers";
+import { BiMenu } from "react-icons/bi";
 import { FaGithub } from "react-icons/fa";
-import { TbMoonFilled, TbMarquee2, TbHistory } from "react-icons/tb";
 import { IoIosArrowBack } from "react-icons/io";
+import { useSettingInterface } from "src/hooks";
+import { SettingComponentProps } from "types";
 
 type Props = Pick<
   ComponentProps<typeof Dropdown>,
@@ -19,8 +20,7 @@ type Props = Pick<
 >;
 
 export const SettingMenu: FC<Props> = memo(({ position, onOpen, onClose }) => {
-  const setting = useSetting();
-  const configDispatch = useSettingDispatch();
+  const settings = useSettingInterface();
   const displaySize = useDisplaySize();
 
   const MenuButton = memo(() => (
@@ -45,59 +45,17 @@ export const SettingMenu: FC<Props> = memo(({ position, onOpen, onClose }) => {
     <DropdownItem contents={{ text }} style={{ fontSize: 13 }} />
   ));
 
-  const ThemeSetting = memo(() => (
+  const SettingMenuItem = (props: SettingComponentProps) => (
     <ToggleButtonItem
-      initState={setting.isDarkTheme.state}
+      initState={props.state}
       contents={{
-        icon: <TbMoonFilled size={18} />,
-        text: "Dark theme",
+        icon: <props.icon size={18} />,
+        text: props.label,
       }}
-      onChange={(payload) => configDispatch({ target: "isDarkTheme", payload })}
-      disabled={setting.isDarkTheme.isReadOnly}
+      onChange={props.onChange}
+      disabled={props.isReadOnly}
     />
-  ));
-
-  const ExpandSetting = memo(() => (
-    <ToggleButtonItem
-      initState={setting.isExpandAlways.state}
-      contents={{
-        icon: <BiExpandAlt size={18} />,
-        text: "Expand always",
-      }}
-      onChange={(payload) =>
-        configDispatch({ target: "isExpandAlways", payload })
-      }
-      disabled={setting.isExpandAlways.isReadOnly}
-    />
-  ));
-
-  const MarqueeSetting = memo(() => (
-    <ToggleButtonItem
-      initState={setting.isMarqueeTitle.state}
-      contents={{
-        icon: <TbMarquee2 size={18} />,
-        text: "Marquee title",
-      }}
-      onChange={(payload) =>
-        configDispatch({ target: "isMarqueeTitle", payload })
-      }
-      disabled={setting.isMarqueeTitle.isReadOnly}
-    />
-  ));
-
-  const HistorySetting = memo(() => (
-    <ToggleButtonItem
-      initState={setting.isDisplayHistory.state}
-      contents={{
-        icon: <TbHistory size={18} />,
-        text: "Stream history",
-      }}
-      onChange={(payload: boolean) =>
-        configDispatch({ target: "isDisplayHistory", payload })
-      }
-      disabled={setting.isDisplayHistory.isReadOnly}
-    />
-  ));
+  );
 
   return (
     <Dropdown
@@ -107,10 +65,10 @@ export const SettingMenu: FC<Props> = memo(({ position, onOpen, onClose }) => {
       onClose={onClose}
     >
       <DropdownHeader text="Setting" />
-      <ThemeSetting />
-      <ExpandSetting />
-      <MarqueeSetting />
-      <HistorySetting />
+      <SettingMenuItem {...settings.isDarkTheme} />
+      <SettingMenuItem {...settings.isExpandAlways} />
+      <SettingMenuItem {...settings.isMarqueeTitle} />
+      <SettingMenuItem {...settings.isDisplayHistory} />
       <Border />
       {displaySize !== "mobile" && <DropdownHeader text="Filter" />}
       <StreamerFilter

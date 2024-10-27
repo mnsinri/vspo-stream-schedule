@@ -14,6 +14,7 @@ import { StreamGridHeader } from "../streamGridHeader";
 import { useDisplaySize, useSetting, useVspoStream } from "src/providers";
 import { toYYYYMMDD } from "src/utils";
 import { responsiveProperties } from "src/configs";
+import { InViewContainer } from "../inViewContainer";
 
 type DailyStream = {
   date: string;
@@ -150,16 +151,20 @@ export const MainContainer: FC = () => {
           onOpenMenu={disableScroll}
           onCloseMenu={enableScroll}
         />
-        {dailyStreams.map(({ date, streams }) => (
-          <DailyStreamContainer key={date}>
-            <StreamGridHeader dateString={date} />
-            <StreamGrid
-              streams={streams}
-              {...gridProperties}
-              minHeight={calcStreamGridMinHeight(streams.length)}
-            />
-          </DailyStreamContainer>
-        ))}
+        <InViewContainer
+          data={dailyStreams}
+          renderItem={({ date, streams }) => (
+            <DailyStreamContainer key={date}>
+              <StreamGridHeader dateString={date} />
+              <StreamGrid
+                streams={streams}
+                {...gridProperties}
+                minHeight={calcStreamGridMinHeight(streams.length)}
+              />
+            </DailyStreamContainer>
+          )}
+          observerHeight={30}
+        />
       </Container>
     </Background>
   );

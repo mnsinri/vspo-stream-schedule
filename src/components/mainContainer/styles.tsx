@@ -28,8 +28,4 @@ export const Container = styled.div`
 
 export const DailyStreamContainer = styled.div`
   padding: 0 20px;
-
-  &:last-child {
-    padding-bottom: 30px;
-  }
 `;

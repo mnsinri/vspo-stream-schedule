@@ -62,4 +62,12 @@ export const lightTheme: DefaultTheme = {
       },
     },
   },
+  displayHistoryButton: {
+    icon: colors.grey[900],
+    iconActive: colors.blue[400],
+    bg: {
+      normal: "transparent",
+      hover: colors.grey[200],
+    },
+  },
 };
