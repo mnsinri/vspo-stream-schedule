@@ -73,7 +73,6 @@ export const MainContainer: FC = () => {
       const resize = () => {
         const style = window.getComputedStyle(ref);
         const width = getPixel(style, "width") - 40;
-        console.log("onResize", width);
         setGridProperties(
           calcGridProperties(width, cardWidth, { gapRange: [x, x * 4] }),
         );

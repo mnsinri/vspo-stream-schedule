@@ -69,5 +69,6 @@ export const darkTheme: DefaultTheme = {
       normal: "transparent",
       hover: colors.grey[700],
     },
+    shadow: [colors.grey[900], colors.grey[800]],
   },
 };
