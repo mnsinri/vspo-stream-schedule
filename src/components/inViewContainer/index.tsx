@@ -28,7 +28,7 @@ export const InViewContainer = <T,>({
       setRenderDataIdx((n) => ++n);
     });
 
-    observer.observe(ref.current);
+    setTimeout(() => observer.observe(ref.current), 0);
 
     return () => {
       observer.unobserve(ref.current);

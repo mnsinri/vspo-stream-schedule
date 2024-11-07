@@ -7,7 +7,9 @@ export type ChannelResponse = {
   platform: Platform;
 };
 
-export type StreamerResponse = { [k in Platform]: ChannelResponse };
+export type StreamerResponse = { [k in Platform]: ChannelResponse } & {
+  order: number;
+};
 
 export type StreamResponse = {
   id: string;
@@ -29,7 +31,10 @@ export type Channel = {
   icon: string;
 };
 
-export type Streamer = { [key in Platform]: Channel } & { id: string };
+export type Streamer = { [key in Platform]: Channel } & {
+  id: string;
+  order: number;
+};
 
 export type StreamerMap = { [id in string]: Streamer };
 

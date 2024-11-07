@@ -17,6 +17,9 @@ export const Button = styled.button<{ state: boolean }>`
         inset 3px 3px 5px ${theme.displayHistoryButton.shadow[0]},
         inset -3px -3px 5px ${theme.displayHistoryButton.shadow[1]};
     `}
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: ${({ theme }) => theme.displayHistoryButton.bg.hover};

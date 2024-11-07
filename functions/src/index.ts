@@ -1,9 +1,11 @@
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onRequest } from "firebase-functions/v2/https";
 import { Streamer } from "../types";
 import { YoutubeClient, TwitchClient, TwitCastingClient } from "./api";
 import { defineConfig, sortStreams } from "./utils";
+import { createMaster } from "./createMater";
 
 initializeApp();
 const config = defineConfig();
@@ -14,20 +16,24 @@ const getStreamerMaster = async () => {
   const youtubeChannelIdMap = new Map<string, string>();
   const twitchChannelIdMap = new Map<string, string>();
   const twitCastingChannelIdMap = new Map<string, string>();
+  const baseStreamers: Record<string, { order: number }> = {};
 
   const master = await db.collection(config.collection.master.value()).get();
   master.forEach((doc) => {
-    const { youtube, twitch, twitCasting } = doc.data();
+    const id = doc.id;
+    const { youtube, twitch, twitCasting, order } = doc.data();
 
-    if (youtube) youtubeChannelIdMap.set(youtube, doc.id);
-    if (twitch) twitchChannelIdMap.set(twitch, doc.id);
-    if (twitCasting) twitCastingChannelIdMap.set(twitCasting, doc.id);
+    if (youtube) youtubeChannelIdMap.set(youtube, id);
+    if (twitch) twitchChannelIdMap.set(twitch, id);
+    if (twitCasting) twitCastingChannelIdMap.set(twitCasting, id);
+    if (Number.isFinite(order)) baseStreamers[id] = { order };
   });
 
   return {
     youtube: youtubeChannelIdMap,
     twitch: twitchChannelIdMap,
     twitCasting: twitCastingChannelIdMap,
+    baseStreamers,
   };
 };
 
@@ -43,7 +49,7 @@ export const getStreamers = onSchedule(
   },
   async () => {
     // init
-    const master = await getStreamerMaster();
+    const { baseStreamers, ...idMap } = await getStreamerMaster();
     const tokenDoc = db
       .collection(config.collection.secrets.value())
       .doc(config.document.token.value());
@@ -53,22 +59,21 @@ export const getStreamers = onSchedule(
 
     // get channels
     const getChannels = [
-      youtubeClient.getChannels([...master.youtube.keys()]),
-      twitchClient.getChannels([...master.twitch.keys()]),
-      twitClient.getChannels([...master.twitCasting.keys()]),
+      youtubeClient.getChannels([...idMap.youtube.keys()]),
+      twitchClient.getChannels([...idMap.twitch.keys()]),
+      twitClient.getChannels([...idMap.twitCasting.keys()]),
     ];
     const channels = (await Promise.all(getChannels)).flat();
 
     const streamers = channels.reduce(
       (result, ch) => {
-        const key = master[ch.platform].get(ch.id);
-        if (!key) return result;
+        const key = idMap[ch.platform].get(ch.id);
 
-        result[key] = { ...result[key], [ch.platform]: ch };
+        if (key) result[key] = { ...result[key], [ch.platform]: ch };
 
         return result;
       },
-      {} as Record<string, Streamer>,
+      baseStreamers as Record<string, Streamer>,
     );
 
     // create and update db
@@ -140,5 +145,15 @@ export const getStreams = onSchedule(
     }
 
     await batch.commit();
+  },
+);
+
+export const createStreamerMaster = onRequest(
+  {
+    region: "asia-northeast1",
+  },
+  async (_, res) => {
+    createMaster(db, config.collection.master.value());
+    res.status(200).send("updated");
   },
 );

@@ -83,7 +83,8 @@ export const StreamCard: FC<Props> = ({ stream }) => {
     <Card
       {...hoverParams}
       isExpand={isExpand}
-      onClick={() => window.open(stream.url)}
+      href={stream.url}
+      target="_blank"
     >
       <Thumbnail src={stream.thumbnail} loading="lazy" />
       <StreamInfo isExpand={isExpand && !isEnded}>
