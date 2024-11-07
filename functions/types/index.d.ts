@@ -9,7 +9,7 @@ export type Channel = {
   platform: Platform;
 };
 
-export type Streamer = { [k in Platform]: Channel };
+export type Streamer = { [k in Platform]: Channel } & { order: number };
 
 export type BaseStream = {
   id: string;

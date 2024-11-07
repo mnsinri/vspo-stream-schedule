@@ -57,7 +57,7 @@ export const StreamerFilter: FC<Props> = ({
   );
 
   const sortedStreamers = useMemo(
-    () => [...streamers].sort((a, b) => a.id.localeCompare(b.id)),
+    () => [...streamers].sort((a, b) => a.order - b.order),
     [streamers],
   );
 

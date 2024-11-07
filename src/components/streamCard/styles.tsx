@@ -12,7 +12,7 @@ type StyleProps = {
   isExpand: boolean;
 };
 
-export const Card = styled.div<StyleProps>`
+export const Card = styled.a<StyleProps>`
   width: ${mobileParams.width}px;
   height: ${({ isExpand }) =>
     isExpand ? mobileParams.expandedHeight : mobileParams.height}px;

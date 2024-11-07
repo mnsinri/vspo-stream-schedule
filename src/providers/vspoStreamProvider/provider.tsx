@@ -8,6 +8,7 @@ import {
 } from "./context";
 import {
   Channel,
+  ChannelResponse,
   Stream,
   Streamer,
   StreamerMap,
@@ -38,9 +39,12 @@ const parseToStream = (streamRes: StreamResponse, channel: Channel): Stream => {
 };
 
 const parseToStreamer = (streamerRes: StreamerResponse): Streamer => {
-  const entries = Object.entries(streamerRes).map(
-    ([key, { id, name, icon }]) => [key, { id, name, icon }],
-  );
+  const entries = Object.entries(streamerRes).map(([key, data]) => {
+    if (key === "order") return [key, data];
+
+    const { id, name, icon } = data as ChannelResponse;
+    return [key, { id, name, icon }];
+  });
 
   return Object.fromEntries(entries);
 };
