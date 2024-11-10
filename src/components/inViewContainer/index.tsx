@@ -22,14 +22,10 @@ export const InViewContainer = <T,>({
   const ref = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    console.log("renderDataIdx", renderDataIdx);
-  }, [renderDataIdx]);
-
-  useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
 
-      setRenderDataIdx((n) => n + 2);
+      setRenderDataIdx((n) => n + 10); // TODO
     });
 
     setTimeout(() => observer.observe(ref.current), 0);
