@@ -29,7 +29,7 @@ export const InViewContainer = <T,>({
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
 
-      setRenderDataIdx((n) => n + 2);
+      setRenderDataIdx((n) => n + 10); // TODO
     });
 
     setTimeout(() => observer.observe(ref.current), 0);
