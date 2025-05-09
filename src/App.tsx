@@ -1,22 +1,15 @@
-import React from "react";
-import { MainContainer } from "./components";
-import {
-  DisplaySizeProvider,
-  SettingProvider,
-  ThemeProvider,
-  VspoStreamProvider,
-} from "./providers";
+import { SettingProvider } from "@/providers/setting";
+import { VspoStreamProvider } from "@/providers/vspoStream";
+import { Main } from "@/features/main";
 
-export const App: React.FC = () => {
+function App() {
   return (
-    <DisplaySizeProvider>
-      <SettingProvider>
-        <ThemeProvider>
-          <VspoStreamProvider>
-            <MainContainer />
-          </VspoStreamProvider>
-        </ThemeProvider>
-      </SettingProvider>
-    </DisplaySizeProvider>
+    <SettingProvider>
+      <VspoStreamProvider>
+        <Main />
+      </VspoStreamProvider>
+    </SettingProvider>
   );
-};
+}
+
+export default App;
