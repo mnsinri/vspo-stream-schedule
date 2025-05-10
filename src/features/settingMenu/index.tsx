@@ -9,7 +9,7 @@ export function SettingMenu() {
   const { isDesktop, open, setOpen, ...rest } = useSettingMenu();
 
   const MenuButton = (
-    <Button variant="ghost" size="icon">
+    <Button variant="outline" size="icon">
       <BiMenu className="!size-5" />
     </Button>
   );

@@ -13,5 +13,9 @@ export function useHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return { isScrolled };
+  function onClickGithubIcon() {
+    window.open("https://github.com/mnsinri/vspo-stream-schedule");
+  }
+
+  return { isScrolled, onClickGithubIcon };
 }
