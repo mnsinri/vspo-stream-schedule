@@ -53,6 +53,7 @@ export function Main({
           description="Make a marquee on the stream title"
           checked={isMarqueeTitle.state}
           onCheckedChange={isMarqueeTitle.onChange}
+          className="border-b"
         />
         <SwitchItem
           label="History"
