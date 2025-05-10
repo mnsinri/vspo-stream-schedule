@@ -70,3 +70,15 @@ export function StreamCard({ stream: _stream, className, ...props }: Props) {
     </StreamCardContainer>
   );
 }
+
+export function DummyStreamCard({
+  className,
+  ...props
+}: ComponentProps<typeof StreamCardContainer>) {
+  return (
+    <StreamCardContainer className={cn("block w-full", className)} {...props}>
+      <div className="relative w-full aspect-video" />
+      <StreamCardFooter className="p-1 h-10 sm:h-14" />
+    </StreamCardContainer>
+  );
+}

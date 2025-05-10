@@ -1,7 +1,7 @@
 import { InView } from "react-intersection-observer";
 import { DailyStream } from "@types";
 import { DateLabel } from "../dateLabel";
-import { StreamCard } from "../streamCard";
+import { DummyStreamCard, StreamCard } from "../streamCard";
 import { useStreamGirdList } from "./viewModel";
 
 function DailyStreamGrid({ date, streams }: DailyStream) {
@@ -13,7 +13,7 @@ function DailyStreamGrid({ date, streams }: DailyStream) {
           <InView key={stream.id}>
             {({ ref, inView }) => (
               <div ref={ref} className="flex justify-center">
-                {inView && <StreamCard stream={stream} />}
+                {inView ? <StreamCard stream={stream} /> : <DummyStreamCard />}
               </div>
             )}
           </InView>

@@ -1,11 +1,13 @@
 import {
   ComponentProps,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import { useAnimationFrame } from "@/hooks/useAnimationFrame";
+import { useThrottle } from "@/hooks/useThrottle";
 
 type MarqueeProps = {
   isAnimate?: boolean;
@@ -17,7 +19,6 @@ export function useMarquee({
   isAnimate: _isAnimate,
   speed = 1,
   waitTime = 1500,
-  children,
 }: MarqueeProps) {
   const parentRef = useRef<HTMLDivElement>(null!);
   const childRef = useRef<HTMLDivElement>(null!);
@@ -30,13 +31,21 @@ export function useMarquee({
 
   const isAnimate = _isAnimate && canMarquee;
 
-  useLayoutEffect(() => {
+  const _onResize = useCallback(() => {
     rect.current = itemRef.current.getBoundingClientRect();
     setCanMarquee(
       parentRef.current.getBoundingClientRect().width <
         childRef.current.getBoundingClientRect().width
     );
-  }, [children]);
+  }, []);
+  const onResize = useThrottle(_onResize);
+
+  useEffect(() => {
+    onResize();
+    window.addEventListener("resize", onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [onResize]);
 
   useLayoutEffect(() => {
     itemRef.current.style.transform = `translateX(0)`;

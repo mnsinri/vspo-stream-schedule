@@ -34,7 +34,7 @@ export function useStreamCard(stream: Stream) {
           minute: "2-digit",
         });
 
-  const speed = hovering ? 0.5 : 1;
+  const speed = hovering ? 0.8 : 1.5;
 
   return {
     stream,
