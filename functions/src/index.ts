@@ -2,7 +2,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onRequest } from "firebase-functions/v2/https";
-import { Streamer } from "../types";
+import { Streamer, Stream } from "../types";
 import { YoutubeClient, TwitchClient, TwitCastingClient } from "./api";
 import { defineConfig, sortStreams } from "./utils";
 import { createMaster } from "./createMater";
@@ -73,7 +73,7 @@ export const getStreamers = onSchedule(
 
         return result;
       },
-      baseStreamers as Record<string, Streamer>,
+      baseStreamers as Record<string, Streamer>
     );
 
     // create and update db
@@ -84,7 +84,7 @@ export const getStreamers = onSchedule(
       batch.set(streamerRef.doc(key), data);
 
     await batch.commit();
-  },
+  }
 );
 
 export const getStreams = onSchedule(
@@ -98,8 +98,6 @@ export const getStreams = onSchedule(
     region: "asia-northeast1",
   },
   async () => {
-    const endTime = new Date().toISOString();
-
     // init
     const master = await getStreamerMaster();
     const tokenDoc = db
@@ -115,15 +113,20 @@ export const getStreams = onSchedule(
       twitchClient.getStreams([...master.twitch.keys()]),
       twitClient.getStreams([...master.twitCasting.keys()]),
     ];
-    const streams = (await Promise.all(getStreams)).flat();
+    const currentStreams = (await Promise.all(getStreams)).flat();
 
     // create and update db
     const batch = db.batch();
     const streamRef = db.collection(config.collection.streams.value());
     const snap = await streamRef.get();
-    const { endedStreams, newStreams } = sortStreams(streams, snap.docs);
+    const pastStreams = snap.docs.map((doc) => ({
+      id: doc.id,
+      data: doc.data() as Stream,
+    }));
+    const streams = sortStreams(currentStreams, pastStreams);
 
-    for await (const { id, data } of endedStreams) {
+    const endTime = new Date().toISOString();
+    for await (const { id, data } of streams.ended) {
       let stream = data;
 
       // if twitch stream, update stream info
@@ -139,13 +142,16 @@ export const getStreams = onSchedule(
       batch.update(streamRef.doc(id), { ...stream, endTime });
     }
 
-    for (const newStream of newStreams) {
+    for (const { id, data } of streams.updated)
+      batch.update(streamRef.doc(id), data);
+
+    for (const newStream of streams.new) {
       const streamerId = master[newStream.platform].get(newStream.channelId);
       batch.set(streamRef.doc(), { ...newStream, streamerId });
     }
 
     await batch.commit();
-  },
+  }
 );
 
 export const createStreamerMaster = onRequest(
@@ -155,5 +161,5 @@ export const createStreamerMaster = onRequest(
   async (_, res) => {
     createMaster(db, config.collection.master.value());
     res.status(200).send("updated");
-  },
+  }
 );

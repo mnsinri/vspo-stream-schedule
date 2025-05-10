@@ -50,3 +50,8 @@ export type Stream = {
   startAt: Date;
   endAt?: Date;
 };
+
+export type DailyStream = {
+  date: string;
+  streams: Stream[];
+};

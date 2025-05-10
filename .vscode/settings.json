@@ -1,5 +1,5 @@
 {
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
@@ -9,6 +9,7 @@
     "Firestore",
     "HHMM",
     "hoverable",
+    "VITE",
     "Vspo",
     "vssdb"
   ]

@@ -1,10 +1,10 @@
-import { useState, PointerEvent } from "react";
+import { PointerEvent, useState } from "react";
 
 export const useHover = () => {
-  const [hovered, setHover] = useState<boolean>(false);
+  const [hovering, setHover] = useState<boolean>(false);
 
   return {
-    hovered,
+    hovering,
     hoverParams: {
       onPointerOver: (e: PointerEvent<HTMLElement>) => {
         e.stopPropagation();
