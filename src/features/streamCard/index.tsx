@@ -9,7 +9,7 @@ import {
   StreamCardFooter,
 } from "@/components/streamCard";
 import { PlatformIcon } from "@/components/platformIcon";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useStreamCard } from "./viewModel";
 import { Marquee } from "../marquee";
 
