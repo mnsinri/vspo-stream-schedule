@@ -6,7 +6,7 @@ import { useStreamGirdList } from "./viewModel";
 
 function DailyStreamGrid({ date, streams }: DailyStream) {
   return (
-    <>
+    <div>
       <DateLabel dateString={date} />
       <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 ">
         {streams.map((stream) => (
@@ -19,7 +19,7 @@ function DailyStreamGrid({ date, streams }: DailyStream) {
           </InView>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -29,13 +29,7 @@ export function StreamGridList() {
   return (
     <div className="px-5 lg:px-15 pb-8">
       {dailyStreams.map(({ date, streams }) => (
-        <InView key={date}>
-          {({ ref, inView }) => (
-            <div ref={ref}>
-              {inView && <DailyStreamGrid date={date} streams={streams} />}
-            </div>
-          )}
-        </InView>
+        <DailyStreamGrid key={date} date={date} streams={streams} />
       ))}
     </div>
   );
