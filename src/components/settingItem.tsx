@@ -77,7 +77,9 @@ function SelectItem({
         </SelectTrigger>
         <SelectContent>
           {values.map((v) => (
-            <_SelectItem value={v}>{capitalizeFirstLetter(v)}</_SelectItem>
+            <_SelectItem key={v} value={v}>
+              {capitalizeFirstLetter(v)}
+            </_SelectItem>
           ))}
         </SelectContent>
       </Select>

@@ -11,6 +11,7 @@ type Props = Omit<
 export function Contents({
   className,
   tab,
+  isInitialRender,
   goBack,
   selectStreamer,
   clearStreamer,
@@ -21,7 +22,7 @@ export function Contents({
       return (
         <Main
           {...props}
-          data-motion={!props.isInitialRender}
+          data-motion={!isInitialRender}
           className="data-[motion=true]:animate-enter-from-left"
         />
       );

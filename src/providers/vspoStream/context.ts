@@ -1,4 +1,4 @@
-import { type Stream, type Streamer } from "@types";
+import { Stream, Streamer } from "@types";
 import { createContext } from "react";
 
 export const vspoStreamContext = createContext<Stream[]>([]);

@@ -98,8 +98,6 @@ export const getStreams = onSchedule(
     region: "asia-northeast1",
   },
   async () => {
-    const endTime = new Date().toISOString();
-
     // init
     const master = await getStreamerMaster();
     const tokenDoc = db
@@ -127,6 +125,7 @@ export const getStreams = onSchedule(
     }));
     const streams = sortStreams(currentStreams, pastStreams);
 
+    const endTime = new Date().toISOString();
     for await (const { id, data } of streams.ended) {
       let stream = data;
 

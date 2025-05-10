@@ -1,4 +1,6 @@
-import { type Stream } from "@types";
+import { ComponentProps } from "react";
+import { Stream } from "@types";
+import { cn } from "@/lib/utils";
 import {
   StreamCard as StreamCardContainer,
   StreamCardThumbnail,
@@ -13,9 +15,9 @@ import { Marquee } from "../marquee";
 
 type Props = {
   stream: Stream;
-};
+} & ComponentProps<typeof StreamCardContainer>;
 
-export function StreamCard({ stream: _stream }: Props) {
+export function StreamCard({ stream: _stream, className, ...props }: Props) {
   const {
     stream,
     streamState,
@@ -29,9 +31,13 @@ export function StreamCard({ stream: _stream }: Props) {
 
   return (
     <StreamCardContainer
-      className="w-full transition-opacity duration-250 starting:opacity-0"
+      className={cn(
+        "block w-full transition-opacity duration-250 starting:opacity-0",
+        className
+      )}
       href={stream.url}
       target="_blank"
+      {...props}
       {...hoverParams}
     >
       <StreamCardThumbnail src={stream.thumbnail} />
@@ -45,9 +51,8 @@ export function StreamCard({ stream: _stream }: Props) {
         </StreamCardStatus>
       </StreamCardHeader>
       <StreamCardFooter className="p-1 h-10 sm:h-14 flex items-center gap-1">
-        <Avatar className="size-auto h-full">
+        <Avatar className="h-full aspect-square">
           <AvatarImage src={stream.icon} alt={stream.streamerName} />
-          <AvatarFallback>{stream.streamerName.slice(0, 2)}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex flex-col justify-center">
           <Marquee

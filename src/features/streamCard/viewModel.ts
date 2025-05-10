@@ -1,7 +1,7 @@
-import { type Stream } from "@types";
+import { Stream } from "@types";
 import { useState } from "react";
-import { useInterval } from "@/hooks/useInterval";
 import { useSettings } from "@/providers/setting";
+import { useInterval } from "@/hooks/useInterval";
 import { useHover } from "@/hooks/useHover";
 
 type StreamState = "upcoming" | "live" | "ended";
@@ -40,7 +40,7 @@ export function useStreamCard(stream: Stream) {
     stream,
     streamState,
     scheduledTimeHHMM,
-    isMarqueeTitle,
+    isMarqueeTitle: isMarqueeTitle,
     hoverParams,
     speed,
   };
