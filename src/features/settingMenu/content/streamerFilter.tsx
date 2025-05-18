@@ -18,24 +18,27 @@ export function StreamerFilter({
   const renderIcon = (streamer: Streamer) => {
     const isSelected = ids.includes(streamer.id);
     return (
-      <img
-        key={streamer.id}
-        src={streamer.youtube.icon}
-        alt={streamer.youtube.name}
-        data-selected={isSelected}
-        className="border-3 rounded-xl shadow-md data-[selected=true]:border-vspo-primary hover:scale-95 transition-all duration-150"
-        onClick={() => onClickIcon(streamer.id, isSelected)}
-      />
+      <div key={streamer.id} className="flex justify-center items-center">
+        <img
+          src={streamer.youtube.icon}
+          alt={streamer.youtube.name}
+          data-selected={isSelected}
+          className="border-3 rounded-xl shadow-md data-[selected=true]:border-vspo-primary hover:scale-95 transition-all duration-150"
+          onClick={() => onClickIcon(streamer.id, isSelected)}
+        />
+      </div>
     );
   };
 
   function getClearButton() {
     return (
-      <div
-        className="border-3 rounded-[50%] shadow-md hover:scale-95 transition-all duration-150 flex justify-center items-center text-4xl bg-card"
-        onClick={onClickClear}
-      >
-        <MdFilterListOff />
+      <div className="flex justify-center items-center">
+        <div
+          className="aspect-square h-full border-3 rounded-[50%] shadow-md hover:scale-95 transition-all duration-150 flex justify-center items-center text-4xl bg-card"
+          onClick={onClickClear}
+        >
+          <MdFilterListOff />
+        </div>
       </div>
     );
   }
@@ -44,7 +47,6 @@ export function StreamerFilter({
     <div {...props}>
       <Header className="mb-4">Filter by streamer</Header>
       <StreamerIconList
-        {...props}
         renderIcon={renderIcon}
         className="grid grid-cols-5 gap-3 mb-1"
       >
