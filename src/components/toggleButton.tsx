@@ -27,7 +27,7 @@ export function ToggleButton({
             {...props}
             variant="outline"
             className={cn(
-              "data-[state=on]:bg-vspo-primary transition-colors",
+              "data-[state=on]:bg-vspo-primary transition-colors data-[state=on]:border-secondary/30",
               className
             )}
             children={children}
