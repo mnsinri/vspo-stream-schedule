@@ -16,7 +16,7 @@ type MarqueeProps = {
 } & ComponentProps<"div">;
 
 export function useMarquee({
-  isAnimate: _isAnimate,
+  isAnimate,
   speed = 1,
   waitTime = 1500,
 }: MarqueeProps) {
@@ -29,7 +29,7 @@ export function useMarquee({
   const start = useRef<number | null>(null);
   const x = useRef<number>(0);
 
-  const isAnimate = _isAnimate && canMarquee;
+  const isMarquee = isAnimate && canMarquee;
 
   const _onResize = useCallback(() => {
     rect.current = itemRef.current.getBoundingClientRect();
@@ -51,11 +51,11 @@ export function useMarquee({
     itemRef.current.style.transform = `translateX(0)`;
     x.current = 0;
     start.current = null;
-  }, [isAnimate]);
+  }, [isMarquee]);
 
   const animateCallback = useCallback(
     (timestamp: DOMHighResTimeStamp) => {
-      if (!(isAnimate && itemRef.current && rect.current)) return;
+      if (!(isMarquee && itemRef.current && rect.current)) return;
 
       if (!start.current) start.current = timestamp;
 
@@ -71,10 +71,10 @@ export function useMarquee({
         (x.current / rect.current.width) * 50
       }%)`;
     },
-    [isAnimate, speed, waitTime]
+    [isMarquee, speed, waitTime]
   );
 
   useAnimationFrame(animateCallback);
 
-  return { parentRef, childRef, itemRef, canMarquee };
+  return { parentRef, childRef, itemRef, isMarquee };
 }

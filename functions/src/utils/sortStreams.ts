@@ -39,6 +39,10 @@ type Returns<T extends BaseStream> = {
   ended: { id: string; data: T }[]; // {document id, document data}[]
 };
 
+const isStreamEnd = <T extends BaseStream>(stream: T, now: number) => {
+  return stream.endTime && new Date(stream.endTime).getTime() <= now;
+};
+
 const diff = <T extends BaseStream>(a: T, b: T) => {
   return (
     a.title !== b.title ||
@@ -49,7 +53,8 @@ const diff = <T extends BaseStream>(a: T, b: T) => {
 
 export const sortStreams = <T extends BaseStream>(
   currentStreams: T[],
-  pastStreams: { id: string; data: T }[]
+  pastStreams: { id: string; data: T }[],
+  now: number
 ): Returns<T> => {
   const currentStreamMap = new Map(currentStreams.map((s) => [s.id, s]));
 
@@ -59,6 +64,12 @@ export const sortStreams = <T extends BaseStream>(
 
       if (!currentStream) {
         result.ended.push(pastStream);
+        return result;
+      }
+
+      if (isStreamEnd(currentStream, now)) {
+        result.ended.push(pastStream);
+        currentStreamMap.delete(currentStream.id);
         return result;
       }
 

@@ -1,11 +1,25 @@
 import logo from "@/assets/logo.png";
+import { IoMoon } from "react-icons/io5";
+import { MdHistory } from "react-icons/md";
+import { TiFilter } from "react-icons/ti";
+import { TbTextDirectionRtl } from "react-icons/tb";
 import { IoLogoGithub } from "react-icons/io";
+import { BiMenu } from "react-icons/bi";
+import { ToggleButton } from "@/components/toggleButton";
 import { Button } from "@/components/ui/button";
 import { SettingMenu } from "../settingMenu";
 import { useHeader } from "./viewModel";
 
 export function Header() {
-  const { isScrolled, onClickGithubIcon } = useHeader();
+  const {
+    isScrolled,
+    onClickGithubIcon,
+    themeState,
+    marqueeTitleState,
+    displayHistoryState,
+    filterState,
+    isDesktop,
+  } = useHeader();
   const cn = isScrolled ? "shadow-lg border-b" : "shadow-none";
 
   return (
@@ -22,10 +36,43 @@ export function Header() {
         Vspo stream schedule
       </div>
       <div className="ml-auto flex gap-2">
+        {isDesktop && (
+          <div>
+            <ToggleButton {...themeState} className="rounded-none rounded-l-md">
+              <IoMoon className="!size-5" />
+            </ToggleButton>
+            <ToggleButton {...displayHistoryState} className="rounded-none">
+              <MdHistory className="!size-5" />
+            </ToggleButton>
+            <ToggleButton {...marqueeTitleState} className="rounded-none">
+              <TbTextDirectionRtl className="!size-5" />
+            </ToggleButton>
+            <SettingMenu
+              trigger={
+                <ToggleButton
+                  {...filterState}
+                  className="rounded-none rounded-r-md"
+                >
+                  <TiFilter className="!size-5" />
+                </ToggleButton>
+              }
+              initTab="streamerFilter"
+            />
+          </div>
+        )}
         <Button variant="outline" size="icon" onClick={onClickGithubIcon}>
           <IoLogoGithub className="!size-5" />
         </Button>
-        <SettingMenu />
+        {!isDesktop && (
+          <SettingMenu
+            trigger={
+              <Button variant="outline" size="icon">
+                <BiMenu className="!size-5" />
+              </Button>
+            }
+            showGoBackButton
+          />
+        )}
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import { onRequest } from "firebase-functions/v2/https";
+// import { onRequest } from "firebase-functions/v2/https";
 import { Streamer, Stream } from "../types";
 import { YoutubeClient, TwitchClient, TwitCastingClient } from "./api";
 import { defineConfig, sortStreams } from "./utils";
-import { createMaster } from "./createMater";
+// import { createMaster } from "./createMater";
 
 initializeApp();
 const config = defineConfig();
@@ -123,9 +123,9 @@ export const getStreams = onSchedule(
       id: doc.id,
       data: doc.data() as Stream,
     }));
-    const streams = sortStreams(currentStreams, pastStreams);
+    const now = new Date();
+    const streams = sortStreams(currentStreams, pastStreams, now.getTime());
 
-    const endTime = new Date().toISOString();
     for await (const { id, data } of streams.ended) {
       let stream = data;
 
@@ -139,11 +139,14 @@ export const getStreams = onSchedule(
         }
       }
 
-      batch.update(streamRef.doc(id), { ...stream, endTime });
+      batch.update(streamRef.doc(id), {
+        ...stream,
+        endTime: now.toISOString(),
+      });
     }
 
-    for (const { id, data } of streams.updated)
-      batch.update(streamRef.doc(id), data);
+    // for (const { id, data } of streams.updated)
+    //   batch.update(streamRef.doc(id), data);
 
     for (const newStream of streams.new) {
       const streamerId = master[newStream.platform].get(newStream.channelId);
@@ -154,12 +157,12 @@ export const getStreams = onSchedule(
   }
 );
 
-export const createStreamerMaster = onRequest(
-  {
-    region: "asia-northeast1",
-  },
-  async (_, res) => {
-    createMaster(db, config.collection.master.value());
-    res.status(200).send("updated");
-  }
-);
+// export const createStreamerMaster = onRequest(
+//   {
+//     region: "asia-northeast1",
+//   },
+//   async (_, res) => {
+//     createMaster(db, config.collection.master.value());
+//     res.status(200).send("updated");
+//   }
+// );

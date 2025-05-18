@@ -4,24 +4,25 @@ import { useSettings, useSettingDispatch, Setting } from "@/providers/setting";
 import { Streamer } from "@types";
 
 type Tab = "main" | "streamerFilter";
+type Props = { initTab?: Tab; showGoBackButton?: boolean };
 
-export function useSettingMenu() {
+export function useSettingMenu({ initTab = "main", showGoBackButton }: Props) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
 
-  const [tab, setTab] = useState<Tab>("main");
+  const [tab, setTab] = useState<Tab>(initTab);
   const dispatch = useSettingDispatch();
   const settings = useSettings();
   const isInitialRender = useRef(true);
 
   function changeTab(tab: SetStateAction<Tab>) {
-    if (tab !== "main" && isInitialRender) isInitialRender.current = false;
+    if (isInitialRender) isInitialRender.current = false;
     setTab(tab);
   }
 
   useEffect(() => {
     if (!open) {
-      changeTab("main");
+      changeTab(initTab);
       isInitialRender.current = true;
     }
   }, [open]);
@@ -50,9 +51,10 @@ export function useSettingMenu() {
     onClickTrigger: () => changeTab("streamerFilter"),
   };
 
-  function goBack() {
-    changeTab("main");
-  }
+  const goBack =
+    showGoBackButton && !["main"].includes(tab)
+      ? () => changeTab("main")
+      : undefined;
 
   function selectStreamer(id: Streamer["id"], isSelect: boolean) {
     dispatch({

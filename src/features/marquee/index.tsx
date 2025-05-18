@@ -15,7 +15,7 @@ export function Marquee({
   className,
   ...props
 }: MarqueeProps) {
-  const { parentRef, childRef, itemRef, canMarquee } = useMarquee({
+  const { parentRef, childRef, itemRef, isMarquee } = useMarquee({
     isAnimate,
     speed,
   });
@@ -23,7 +23,7 @@ export function Marquee({
   return (
     <div
       ref={parentRef}
-      data-marquee={canMarquee}
+      data-marquee={isMarquee}
       className={cn(
         "w-full flex overflow-hidden data-[marquee=true]:mask-[linear-gradient(to_right,transparent,#fff_5%,#fff_95%,transparent)]",
         className
@@ -36,7 +36,7 @@ export function Marquee({
           className="whitespace-nowrap pr-2"
           children={children}
         />
-        {canMarquee && (
+        {isMarquee && (
           <div className="whitespace-nowrap pr-2" children={children} />
         )}
       </div>
