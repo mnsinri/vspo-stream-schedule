@@ -1,22 +1,16 @@
 import { Streamer } from "@types";
 import { ComponentProps } from "react";
-import { cn } from "@/lib/utils";
 import { StreamerIconList } from "@/components/streamerIconList";
-import { Button } from "@/components/ui/button";
 import { Header } from "@/components/settingItem";
-import { IoIosArrowBack } from "react-icons/io";
 import { MdFilterListOff } from "react-icons/md";
 
 type Props = Omit<ComponentProps<typeof StreamerIconList>, "renderIcon"> & {
-  onClickBack: () => void;
   onClickIcon: (id: Streamer["id"], isSelected: boolean) => void;
   onClickClear: () => void;
-};
+} & ComponentProps<"div">;
 
 export function StreamerFilter({
-  className,
   ids = [],
-  onClickBack,
   onClickIcon,
   onClickClear,
   ...props
@@ -47,23 +41,15 @@ export function StreamerFilter({
   }
 
   return (
-    <>
-      <Button
-        variant="ghost"
-        onClick={onClickBack}
-        className="text-sm absolute top-2 left-1 hidden sm:flex"
-      >
-        <IoIosArrowBack />
-        <p className="mb-0.5">Back</p>
-      </Button>
-      <Header className="mt-6 mb-4">Filter by streamer</Header>
+    <div {...props}>
+      <Header className="mb-4">Filter by streamer</Header>
       <StreamerIconList
         {...props}
         renderIcon={renderIcon}
-        className={cn("grid grid-cols-5 gap-3", className)}
+        className="grid grid-cols-5 gap-3 mb-1"
       >
         {getClearButton()}
       </StreamerIconList>
-    </>
+    </div>
   );
 }

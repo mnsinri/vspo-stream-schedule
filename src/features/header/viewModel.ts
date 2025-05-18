@@ -1,7 +1,14 @@
+import { getSystemTheme } from "@/lib/utils";
+import { useSettingDispatch, useSettings } from "@/providers/setting";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 export function useHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { theme, isMarqueeTitle, isDisplayHistory, filteredStreamerIds } =
+    useSettings();
+  const dispatch = useSettingDispatch();
+  const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
 
   useEffect(() => {
     const el = document.scrollingElement;
@@ -17,5 +24,54 @@ export function useHeader() {
     window.open("https://github.com/mnsinri/vspo-stream-schedule");
   }
 
-  return { isScrolled, onClickGithubIcon };
+  const isDark = (() => {
+    if (theme === "system") return getSystemTheme() === "dark";
+    return theme === "dark";
+  })();
+  const themeState = {
+    pressed: isDark,
+    onPressedChange: (state: boolean) => {
+      console.log("hi");
+      dispatch({
+        target: "theme",
+        payload: state ? "dark" : "light",
+      });
+    },
+    description: isDark ? "Light mode" : "Dark mode",
+  };
+
+  const marqueeTitleState = {
+    pressed: isMarqueeTitle,
+    onPressedChange: (state: boolean) =>
+      dispatch({
+        target: "isMarqueeTitle",
+        payload: state,
+      }),
+    description: "Marquee title",
+  };
+
+  const displayHistoryState = {
+    pressed: isDisplayHistory,
+    onPressedChange: (state: boolean) =>
+      dispatch({
+        target: "isDisplayHistory",
+        payload: state,
+      }),
+    description: "Display history",
+  };
+
+  const filterState = {
+    pressed: !!filteredStreamerIds.length,
+    description: "Filter by streamer",
+  };
+
+  return {
+    isScrolled,
+    onClickGithubIcon,
+    themeState,
+    marqueeTitleState,
+    displayHistoryState,
+    filterState,
+    isDesktop,
+  };
 }

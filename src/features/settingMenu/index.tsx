@@ -1,26 +1,24 @@
-import { BiMenu } from "react-icons/bi";
+import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { DialogMenu } from "./dialogMenu";
 import { DrawerMenu } from "./drawerMenu";
 import { useSettingMenu } from "./viewModel";
-import { Contents } from "./contents";
+import { Content } from "./content";
 
-export function SettingMenu() {
-  const { isDesktop, open, setOpen, ...rest } = useSettingMenu();
-
-  const MenuButton = (
-    <Button variant="outline" size="icon">
-      <BiMenu className="!size-5" />
-    </Button>
-  );
+type Props = {
+  trigger: ReactNode;
+} & Parameters<typeof useSettingMenu>[0];
+export function SettingMenu({ trigger, ...props }: Props) {
+  const { isDesktop, open, setOpen, goBack, ...rest } = useSettingMenu(props);
 
   if (isDesktop)
     return (
       <DialogMenu
         open={open}
         onOpenChange={setOpen}
-        trigger={MenuButton}
-        contents={<Contents {...rest} />}
+        trigger={trigger}
+        content={<Content {...rest} />}
+        onClickBack={goBack}
       />
     );
 
@@ -28,16 +26,16 @@ export function SettingMenu() {
     <DrawerMenu
       open={open}
       onOpenChange={setOpen}
-      trigger={MenuButton}
-      contents={<Contents {...rest} className="px-4 pb-2" />}
+      trigger={trigger}
+      content={<Content {...rest} className="px-4 pb-2" />}
       footer={
         <div
           data-tab={rest.tab}
           className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-4"
         >
           <Button onClick={() => setOpen(false)}>Close</Button>
-          {rest.tab === "streamerFilter" && (
-            <Button variant="secondary" onClick={rest.goBack}>
+          {goBack && (
+            <Button variant="secondary" onClick={goBack}>
               Back
             </Button>
           )}

@@ -5,19 +5,19 @@ import { useSettingMenu } from "../viewModel";
 
 type Props = Omit<
   ReturnType<typeof useSettingMenu>,
-  "isDesktop" | "open" | "setOpen"
+  "isDesktop" | "open" | "setOpen" | "goBack"
 > & { className?: string };
 
-export function Contents({
+export function Content({
   className,
   tab,
   isInitialRender,
-  goBack,
   selectStreamer,
   clearStreamer,
   ...props
 }: Props) {
-  const getContents = () => {
+  console.log(isInitialRender);
+  const getContent = () => {
     if (tab === "main")
       return (
         <Main
@@ -30,15 +30,15 @@ export function Contents({
       return (
         <StreamerFilter
           ids={props.streamer.state}
-          onClickBack={goBack}
+          data-motion={!isInitialRender}
+          className="data-[motion=true]:animate-enter-from-right"
           onClickIcon={selectStreamer}
           onClickClear={clearStreamer}
-          className="animate-enter-from-right"
         />
       );
   };
 
   return (
-    <div className={cn("w-full space-y-6", className)}>{getContents()}</div>
+    <div className={cn("w-full space-y-6", className)}>{getContent()}</div>
   );
 }

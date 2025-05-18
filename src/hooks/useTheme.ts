@@ -1,5 +1,6 @@
-import { useSettings } from "@/providers/setting";
 import { useEffect } from "react";
+import { useSettings } from "@/providers/setting";
+import { getSystemTheme } from "@/lib/utils";
 
 export function useTheme() {
   const { theme } = useSettings();
@@ -10,12 +11,7 @@ export function useTheme() {
     root.classList.remove("light", "dark");
 
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
+      root.classList.add(getSystemTheme());
       return;
     }
 
