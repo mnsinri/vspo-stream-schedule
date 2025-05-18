@@ -16,7 +16,6 @@ export function Content({
   clearStreamer,
   ...props
 }: Props) {
-  console.log(isInitialRender);
   const getContent = () => {
     if (tab === "main")
       return (

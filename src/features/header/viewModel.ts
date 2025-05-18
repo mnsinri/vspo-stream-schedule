@@ -31,7 +31,6 @@ export function useHeader() {
   const themeState = {
     pressed: isDark,
     onPressedChange: (state: boolean) => {
-      console.log("hi");
       dispatch({
         target: "theme",
         payload: state ? "dark" : "light",
