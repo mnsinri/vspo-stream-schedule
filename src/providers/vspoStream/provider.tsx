@@ -12,6 +12,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { firestore } from "@/firebase";
 import { vspoStreamContext, vspoStreamerContext } from "./context";
 import { useSettings } from "../setting";
+import { mockStreamers, mockStreams } from "@/mocks";
 
 const parseToStream = (streamRes: StreamResponse, channel: Channel): Stream => {
   const endAt = streamRes.endTime ? new Date(streamRes.endTime) : undefined;
@@ -50,6 +51,24 @@ export const VspoStreamProvider = ({ children }: { children: ReactNode }) => {
   const { filteredStreamerIds } = useSettings();
 
   useEffect(() => {
+    const useMockData = import.meta.env.VITE_USE_MOCK_DATA === "true";
+
+    if (useMockData) {
+      // Use mock data for local development
+      console.log("Using mock data for local development");
+      setStreamsResponse(mockStreams);
+      
+      const map = Object.fromEntries(
+        Object.entries(mockStreamers).map(([id, data]) => [
+          id,
+          parseToStreamer(id, data),
+        ])
+      );
+      setStreamerMap(map);
+      return;
+    }
+
+    // Use Firebase for production
     const streamCollectionName = import.meta.env.VITE_STREAM_COLLECTION_NAME;
     const streamerCollectionName = import.meta.env
       .VITE_STREAMER_COLLECTION_NAME;
