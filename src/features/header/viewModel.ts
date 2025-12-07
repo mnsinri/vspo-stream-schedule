@@ -5,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 
 export function useHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme, isMarqueeTitle, isDisplayHistory, filteredStreamerIds } =
+  const { theme, isMarqueeTitle, isDisplayHistory, filteredStreamerIds, filteredTitle } =
     useSettings();
   const dispatch = useSettingDispatch();
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
@@ -64,6 +64,16 @@ export function useHeader() {
     description: "Filter by streamer",
   };
 
+  const titleFilter = {
+    value: filteredTitle,
+    onChange: (value: string) => {
+      dispatch({
+        target: "filteredTitle",
+        payload: value,
+      });
+    },
+  };
+
   return {
     isScrolled,
     onClickGithubIcon,
@@ -71,6 +81,7 @@ export function useHeader() {
     marqueeTitleState,
     displayHistoryState,
     filterState,
+    titleFilter,
     isDesktop,
   };
 }
