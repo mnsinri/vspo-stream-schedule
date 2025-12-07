@@ -47,7 +47,7 @@ const parseToStreamer = (
 export const VspoStreamProvider = ({ children }: { children: ReactNode }) => {
   const [streamResponses, setStreamsResponse] = useState<StreamResponse[]>([]);
   const [streamerMap, setStreamerMap] = useState<StreamerMap>({});
-  const { filteredStreamerIds } = useSettings();
+  const { filteredStreamerIds, filteredTitle } = useSettings();
 
   useEffect(() => {
     const streamCollectionName = import.meta.env.VITE_STREAM_COLLECTION_NAME;
@@ -97,6 +97,8 @@ export const VspoStreamProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const streams = useMemo<Stream[]>(() => {
+    const titleFilterLower = filteredTitle.trim().toLowerCase();
+    
     return streamResponses.reduce((results: Stream[], streamRes) => {
       const channel = streamerMap[streamRes.streamerId][streamRes.platform];
 
@@ -113,9 +115,17 @@ export const VspoStreamProvider = ({ children }: { children: ReactNode }) => {
         return results;
       }
 
+      // filter by title
+      if (
+        titleFilterLower !== "" &&
+        !streamRes.title.toLowerCase().includes(titleFilterLower)
+      ) {
+        return results;
+      }
+
       return results.concat(parseToStream(streamRes, channel));
     }, []);
-  }, [streamResponses, streamerMap, filteredStreamerIds]);
+  }, [streamResponses, streamerMap, filteredStreamerIds, filteredTitle]);
 
   const streamers = useMemo<Streamer[]>(
     () => Object.values(streamerMap),
