@@ -7,6 +7,7 @@ import { IoLogoGithub } from "react-icons/io";
 import { BiMenu } from "react-icons/bi";
 import { ToggleButton } from "@/components/toggleButton";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SettingMenu } from "../settingMenu";
 import { useHeader } from "./viewModel";
 
@@ -18,6 +19,7 @@ export function Header() {
     marqueeTitleState,
     displayHistoryState,
     filterState,
+    titleFilter,
     isDesktop,
   } = useHeader();
   const cn = isScrolled ? "shadow-lg border-b" : "shadow-none";
@@ -35,6 +37,13 @@ export function Header() {
       <div className="font-[Itim] text-2xl tracking-tighter text-primary hidden sm:block">
         Vspo stream schedule
       </div>
+      <Input
+        type="text"
+        placeholder="Filter by stream title..."
+        value={titleFilter.value}
+        onChange={(e) => titleFilter.onChange(e.target.value)}
+        className="max-w-xs ml-2 hidden md:block"
+      />
       <div className="ml-auto flex gap-2">
         {isDesktop && (
           <div>
